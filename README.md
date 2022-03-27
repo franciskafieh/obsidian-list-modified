@@ -1,6 +1,8 @@
 # Obsidian List Modified
 This plugin lists all modified files meeting certain criteria to a daily note.
 
+![plugin demo gif](preview/obsidian-list-modified.gif)
+
 # Why?
 As of now, dataview queries cannot be "frozen" in time. There are hacky solutions using templater, but I wanted something really simple.
 
@@ -8,7 +10,24 @@ As of now, dataview queries cannot be "frozen" in time. There are hacky solution
 When a file is modified, the plugin checks if there is already a link to the modified file inside of your daily note. If so, it doesn't need to link it again. Otherwise, If this modified file meets the criteria, it appends a link to the daily note.
 
 # Criteria supported
-- blacklist tags
+## Blacklist tags
+Disables a modified note from linking if it contains a certain tag.
+
+These tags will be recognized if they are in the note's content (#tag anywhere in your note)
+
+or in its frontmatter in the following formats:
+```yaml
+---
+tags: ['#your', '#tags', '#here']
+
+# OR
+
+tags:
+    - '#your'
+    - '#tags'
+    - '#here'
+---
+```
 
 # Instalation
 1. open your vault's folder in your file explorer
