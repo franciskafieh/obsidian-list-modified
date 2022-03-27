@@ -8,7 +8,6 @@ As of now, dataview queries cannot be "frozen" in time. There are hacky solution
 When a file is modified, the plugin checks if there is already a link to the modified file inside of your daily note. If not, it appends a link to the daily note.
 
 # Criteria supported
-- date
 - tags
 
 # Usage
