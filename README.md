@@ -10,5 +10,16 @@ When a file is modified, the plugin checks if there is already a link to the mod
 # Criteria supported
 - blacklist tags
 
+# Instalation
+1. open your vault's folder in your file explorer
+2. make sure showing hidden files is enabled
+3. open the `.obsidian` folder
+4. create a new folder called `obsidian-list-modified`
+5. Head over to the releases page and dowmload the `manifest.json` and `main.js`
+6. Add these files to the new folder you've created
+7. Reload/restart Obsidian and enable the plugin in your community plugin settings
+
+**NOTE:** You must have safe mode shut off to be able to install community plugins!
+
 # Usage
 The only things you need to configure are in the settings tab! After this is configured, the plugin should be automatically working. Read the descriptions of each setting carefully!
