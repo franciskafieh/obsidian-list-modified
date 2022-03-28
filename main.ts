@@ -39,7 +39,16 @@ export default class ListModified extends Plugin {
 
 			if (tags[0] !== '' && !this.fileMeetsTagRequirements(currentFile, tags)) return
 
-			await this.app.vault.append(dailyFile, '\n' + resolvedOutputFormat)
+			const contents: string = await this.app.vault.cachedRead(dailyFile)
+
+			// If the daily file ends with a new line character, put the new
+			// modified file link onto that line and add a new line. Otherwise,
+			// add a new line first, then append the new modified file link.
+			if (contents.slice(-1) == '\n') {
+				await this.app.vault.append(dailyFile, resolvedOutputFormat + '\n')
+			} else {
+				await this.app.vault.append(dailyFile, '\n' + resolvedOutputFormat)
+			}
 		}))
 
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this))
