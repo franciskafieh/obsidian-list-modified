@@ -39,15 +39,15 @@ export default class ListModified extends Plugin {
 
 			if (tags[0] !== '' && !this.fileMeetsTagRequirements(currentFile, tags)) return
 
-			const contents: string = await this.app.vault.cachedRead(dailyFile)
+			const contents: string = await this.app.vault.read(dailyFile)
 
 			// If the daily file ends with a new line character, put the new
 			// modified file link onto that line and add a new line. Otherwise,
-			// add a new line first, then append the new modified file link.
+			// add a new line first, then add the new modified file link.
 			if (contents.slice(-1) == '\n') {
-				await this.app.vault.append(dailyFile, resolvedOutputFormat + '\n')
+				await this.app.vault.modify(dailyFile, contents + resolvedOutputFormat + '\n')
 			} else {
-				await this.app.vault.append(dailyFile, '\n' + resolvedOutputFormat)
+				await this.app.vault.modify(dailyFile, contents + '\n' + resolvedOutputFormat)
 			}
 		}))
 
