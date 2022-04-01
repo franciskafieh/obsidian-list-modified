@@ -32,7 +32,7 @@ tags:
 # Instalation
 1. open your vault's folder in your file explorer
 2. make sure showing hidden files is enabled
-3. open the `.obsidian` folder
+3. open the `.obsidian` folder, then open the `plugins` folder.
 4. create a new folder called `obsidian-list-modified`
 5. Head over to the releases page and dowmload the `manifest.json` and `main.js`
 6. Add these files to the new folder you've created
