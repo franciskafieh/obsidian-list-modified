@@ -12,6 +12,11 @@ const DEFAULT_SETTINGS: ListModifiedSettings = {
 	tags: ''
 }
 
+// const templates: [string[], string[]] = [
+// 	['[[link]]', 'f'],
+// 	['fsdf', 'dsfdsf'],
+// ]
+
 export default class ListModified extends Plugin {
 	settings: ListModifiedSettings
 
@@ -115,10 +120,9 @@ class ListModifiedSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName('Daily Note Format')
 			.setDesc('You can find this in your daily note settings menu. ' +
-			'BE SURE TO include the folder path in square brackets if your ' +
-			'daily notes do not reside in the root folder of your vault!')
+			'BE SURE TO include non-date-format characters in square brackets!')
 			.addText(text => text
-				.setPlaceholder('e.g. [Daily/]YYYY-MM-DD')
+				.setPlaceholder('e.g. [Daily/]YYYY[/]YYYY-MM-DD')
 				.setValue(this.plugin.settings.dailyNoteFormat)
 				.onChange(async (value) => {
 					this.plugin.settings.dailyNoteFormat = value
