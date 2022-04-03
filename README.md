@@ -2,7 +2,16 @@
 
 This plugin lists all modified files meeting certain criteria to a daily note.
 
+Example:
+
+Using these settings...
+
+![plugin settings](preview/settings-preview.png)
+
+This is the result...
+
 ![plugin demo gif](preview/obsidian-list-modified.gif)
+
 
 # Why?
 
