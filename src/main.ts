@@ -21,7 +21,7 @@ import {
 
 export default class ListModified extends Plugin {
 	settings: ListModifiedSettings;
-	blacklistedTags: string[];
+	ignoredTags: string[];
 	currentFile: TFile;
 	dailyFile: TFile;
 	resolvedOutput: string;
@@ -42,7 +42,7 @@ export default class ListModified extends Plugin {
 	}
 
 	onModify = async (file: TAbstractFile) => {
-		this.blacklistedTags = this.settings.tags.replace(/\s/g, "").split(",");
+		this.ignoredTags = this.settings.tags.replace(/\s/g, "").split(",");
 		this.currentFile = file as TFile;
 
 		const dailyNoteFormat: string = this.settings.dailyNoteFormat;
@@ -103,7 +103,7 @@ export default class ListModified extends Plugin {
 	}
 
 	fileMeetsTagRequirements(): boolean {
-		for (const tag of this.blacklistedTags) {
+		for (const tag of this.ignoredTags) {
 			if (
 				this.tagMetadataContainsTag(tag) ||
 				this.frontmatterMetadataContainsTag(tag)
