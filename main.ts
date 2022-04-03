@@ -61,6 +61,7 @@ export default class ListModified extends Plugin {
 
 	fileIsLinked(fileToCheck: TFile, link: string): boolean {
 		const cache: CachedMetadata = this.app.metadataCache.getFileCache(fileToCheck)
+		if (cache === undefined || cache.links === undefined) return false
 		return cache.links.some(l => l.link === link)
 	}
 
