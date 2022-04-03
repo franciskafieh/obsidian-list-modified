@@ -33,7 +33,7 @@ export default class ListModified extends Plugin {
 			const outputFormat: string = this.settings.outputFormat
 			const resolvedOutputFormat: string = outputFormat.replace('[[link]]', `[[${currentFile.basename}]]`)
 
-			if (dailyFile === null) {
+			if (!dailyFile) {
 				new Notice(`A daily file with format ${dailyNoteFormat} doesn't exist! Cannot append link`) 
 				return
 			}
@@ -42,14 +42,11 @@ export default class ListModified extends Plugin {
 			
 			if (this.fileIsLinked(dailyFile, currentFile.basename)) return
 
-			if (tags[0] !== '' && !this.fileMeetsTagRequirements(currentFile, tags)) return
+			if (tags[0] && !this.fileMeetsTagRequirements(currentFile, tags)) return
 
 			const contents: string = await this.app.vault.read(dailyFile)
 
-			// If the daily file ends with a new line character, put the new
-			// modified file link onto that line and add a new line. Otherwise,
-			// add a new line first, then add the new modified file link.
-			if (contents.slice(-1) == '\n') {
+			if (contents.slice(-1) === '\n') {
 				await this.app.vault.modify(dailyFile, contents + resolvedOutputFormat + '\n')
 			} else {
 				await this.app.vault.modify(dailyFile, contents + '\n' + resolvedOutputFormat)
@@ -61,7 +58,7 @@ export default class ListModified extends Plugin {
 
 	fileIsLinked(fileToCheck: TFile, link: string): boolean {
 		const cache: CachedMetadata = this.app.metadataCache.getFileCache(fileToCheck)
-		if (cache === undefined || cache.links === undefined) return false
+		if (!cache.links) return false
 		return cache.links.some(l => l.link === link)
 	}
 
@@ -80,13 +77,13 @@ export default class ListModified extends Plugin {
 
 	tagMetadataContainsTag(cache: CachedMetadata, tagToMatch: string): boolean {
 		const tagCache: TagCache[] = cache.tags
-		if (tagCache === undefined) return false
+		if (!tagCache) return false
 		return tagCache.some(tag => tag.tag === tagToMatch)
 	}
 
 	frontmatterMetadataContainsTag(cache: CachedMetadata, tagToMatch: string): boolean {
 		const frontmatterCache: FrontMatterCache = cache.frontmatter
-		if (frontmatterCache === undefined) return false
+		if (!frontmatterCache) return false
 		return frontmatterCache.tags.some((tag: string) => tag === tagToMatch)
 	}
 
