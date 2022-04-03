@@ -12,13 +12,15 @@ const DEFAULT_SETTINGS: ListModifiedSettings = {
 	tags: ''
 }
 
-// const templates: [string[], string[]] = [
+// const templates: readonly [string[], string[]] = [
 // 	['[[link]]', 'f'],
 // 	['fsdf', 'dsfdsf'],
 // ]
 
 export default class ListModified extends Plugin {
 	settings: ListModifiedSettings
+
+	
 
 	async onload() {
 		await this.loadSettings()
