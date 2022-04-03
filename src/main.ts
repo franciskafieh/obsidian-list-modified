@@ -1,16 +1,5 @@
-import { App, CachedMetadata, Notice, Plugin, PluginSettingTab, Setting, TFile, moment, TagCache, FrontMatterCache } from 'obsidian'
-
-interface ListModifiedSettings {
-	dailyNoteFormat: string
-	outputFormat: string
-	tags: string
-}
-
-const DEFAULT_SETTINGS: ListModifiedSettings = {
-	dailyNoteFormat: '',
-	outputFormat: '- [[link]]',
-	tags: ''
-}
+import { CachedMetadata, Notice, Plugin, TFile, moment, TagCache, FrontMatterCache, TAbstractFile } from 'obsidian'
+import { ListModifiedSettings, DEFAULT_SETTINGS, ListModifiedSettingTab } from './settings'
 
 // const templates: readonly [string[], string[]] = [
 // 	['[[link]]', 'f'],
@@ -19,78 +8,92 @@ const DEFAULT_SETTINGS: ListModifiedSettings = {
 
 export default class ListModified extends Plugin {
 	settings: ListModifiedSettings
-
-	
+	blacklistedTags: string[]
+	currentFile: TFile
+	dailyFile: TFile
+	resolvedOutput: string
+	currentFileCache: CachedMetadata
+	dailyFileCache: CachedMetadata
+	dailyFileContent: string
 
 	async onload() {
 		await this.loadSettings()
 
-		this.registerEvent(this.app.vault.on('modify', async (file) => {
-			const currentFile: TFile = file as TFile
-			const tags: string[] = this.settings.tags.replace(/\s/g, '').split(',')
-			const dailyNoteFormat: string = this.settings.dailyNoteFormat
-			const dailyFile: TFile = this.app.vault.getAbstractFileByPath(
-				moment().format(dailyNoteFormat) + '.md'
-			) as TFile
-			const outputFormat: string = this.settings.outputFormat
-			const resolvedOutputFormat: string = outputFormat.replace('[[link]]', `[[${currentFile.basename}]]`)
-
-			if (!dailyFile) {
-				new Notice(`A daily file with format ${dailyNoteFormat} doesn't exist! Cannot append link`) 
-				return
-			}
-
-			if (currentFile === dailyFile) return
-			
-			if (this.fileIsLinked(dailyFile, currentFile.basename)) return
-
-			if (tags[0] && !this.fileMeetsTagRequirements(currentFile, tags)) return
-
-			const contents: string = await this.app.vault.read(dailyFile)
-
-			if (contents.slice(-1) === '\n') {
-				await this.app.vault.modify(dailyFile, contents + resolvedOutputFormat + '\n')
-			} else {
-				await this.app.vault.modify(dailyFile, contents + '\n' + resolvedOutputFormat)
-			}
-		}))
+		this.registerEvent(this.app.vault.on('modify', this.onModify))
 
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this))
 	}
 
-	fileIsLinked(fileToCheck: TFile, link: string): boolean {
-		const cache: CachedMetadata = this.app.metadataCache.getFileCache(fileToCheck)
-		if (!cache.links) return false
-		return cache.links.some(l => l.link === link)
+	onunload() {
+		this.app.vault.off('modify', this.onModify)
 	}
 
-	fileMeetsTagRequirements(file: TFile, tags: string[]): boolean {
-		for (const tag of tags) {
-			if (this.fileHasTag(file, tag)) return false
+	onModify = async (file: TAbstractFile) => {
+		this.blacklistedTags = this.settings.tags.replace(/\s/g, '').split(',')
+		this.currentFile = file as TFile
+
+
+		const dailyNoteFormat: string = this.settings.dailyNoteFormat
+		this.dailyFile = this.app.vault.getAbstractFileByPath(
+		moment().format(dailyNoteFormat) + '.md'
+		) as TFile
+
+
+		const outputFormat: string = this.settings.outputFormat
+		this.resolvedOutput = outputFormat.replace('[[link]]', `[[${this.currentFile.basename}]]`)
+
+		if (!this.dailyFile) {
+			new Notice(`A daily file with format ${dailyNoteFormat} doesn't exist! Cannot append link`) 
+			return
+		}
+
+		this.currentFileCache = this.app.metadataCache.getFileCache(this.currentFile)
+		this.dailyFileCache = this.app.metadataCache.getFileCache(this.dailyFile)
+
+		if (this.currentFile === this.dailyFile) return
+
+		if (this.fileIsLinked()) return
+
+		if (!this.fileMeetsTagRequirements()) return
+
+		this.dailyFileContent = await this.app.vault.read(this.dailyFile)
+
+		await this.appendLink()
+	}
+
+	async appendLink(): Promise<void> {
+		if (this.dailyFileContent.slice(-1) === '\n') {
+			await this.app.vault.modify(this.dailyFile, this.dailyFileContent + this.resolvedOutput + '\n')
+		} else {
+			await this.app.vault.modify(this.dailyFile, this.dailyFileContent + '\n' + this.resolvedOutput)
+		}
+	}
+
+	fileIsLinked(): boolean {
+		if (!this.dailyFileCache.links) return false
+		return this.dailyFileCache.links.some(l => l.link === this.currentFile.basename)
+	}
+
+	// broken
+	fileMeetsTagRequirements(): boolean {
+		for (const tag of this.blacklistedTags) {
+			if (this.tagMetadataContainsTag(tag) || 
+			this.frontmatterMetadataContainsTag(tag)) return false;
 		}
 		return true
 	}
 
-	fileHasTag(file: TFile, tag: string): boolean {
-		const cache: CachedMetadata = this.app.metadataCache.getFileCache(file)
-		return this.tagMetadataContainsTag(cache, tag) || 
-		this.frontmatterMetadataContainsTag(cache, tag)
-	}
-
-	tagMetadataContainsTag(cache: CachedMetadata, tagToMatch: string): boolean {
-		const tagCache: TagCache[] = cache.tags
+	tagMetadataContainsTag(tagToMatch: string): boolean {
+		const tagCache: TagCache[] = this.currentFileCache.tags
 		if (!tagCache) return false
+		// console.log('tag cache is ' + tagCache.forEach(console.log))
 		return tagCache.some(tag => tag.tag === tagToMatch)
 	}
 
-	frontmatterMetadataContainsTag(cache: CachedMetadata, tagToMatch: string): boolean {
-		const frontmatterCache: FrontMatterCache = cache.frontmatter
+	frontmatterMetadataContainsTag(tagToMatch: string): boolean {
+		const frontmatterCache: FrontMatterCache = this.currentFileCache.frontmatter
 		if (!frontmatterCache) return false
 		return frontmatterCache.tags.some((tag: string) => tag === tagToMatch)
-	}
-
-	onunload() {
-
 	}
 
 	async loadSettings() {
@@ -102,58 +105,4 @@ export default class ListModified extends Plugin {
 	}
 }
 
-class ListModifiedSettingTab extends PluginSettingTab {
-	plugin: ListModified
 
-	constructor(app: App, plugin: ListModified) {
-		super(app, plugin)
-		this.plugin = plugin
-	}
-
-	display(): void {
-		const {containerEl} = this
-
-		containerEl.empty()
-
-		containerEl.createEl('h2', {text: 'Formatting'})
-
-		new Setting(containerEl)
-			.setName('Daily Note Format')
-			.setDesc('You can find this in your daily note settings menu. ' +
-			'BE SURE TO include non-date-format characters in square brackets!')
-			.addText(text => text
-				.setPlaceholder('e.g. [Daily/]YYYY[/]YYYY-MM-DD')
-				.setValue(this.plugin.settings.dailyNoteFormat)
-				.onChange(async (value) => {
-					this.plugin.settings.dailyNoteFormat = value
-					await this.plugin.saveSettings()
-		}))
-
-		new Setting(containerEl)
-			.setName('Output Format')
-			.setDesc('The format to output added links. Use [[link]] as a placeholder to represent a link.')
-			.addText(text => text
-				.setPlaceholder('e.g. - [[link]]')
-				.setValue(this.plugin.settings.outputFormat)
-				.onChange(async (value) => {
-					this.plugin.settings.outputFormat = value
-					await this.plugin.saveSettings()
-		}))
-
-
-		containerEl.createEl('h2', {text: 'Criteria'})
-
-		new Setting(containerEl)
-			.setName('Blacklisted Tags')
-			.setDesc('Comma-separated list of tags. ' +
-					'If a file has a tag present on this list, it won\'t be linked to! ' +
-					'Leave this blank to disable this feature.')
-			.addText(text => text
-				.setPlaceholder('e.g. #daily, #💡, #🔧')
-				.setValue(this.plugin.settings.tags)
-				.onChange(async (value) => {
-					this.plugin.settings.tags = value
-					await this.plugin.saveSettings()
-		}))
-	}
-}
