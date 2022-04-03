@@ -14,7 +14,7 @@ When a file is modified, the plugin checks if there is already a link to the mod
 
 # Criteria supported
 
-## Blacklist tags
+## Ignored tags
 
 Disables a modified note from linking if it contains a certain tag.
 
