@@ -50,3 +50,7 @@ tags:
 # Usage
 
 The only things you need to configure are in the settings tab! After these are configured, the plugin should work automatically. Read the description of each setting carefully!
+
+# Disclaimer
+
+This plugin should not do any harm, but **you should back up just in case**. I am not responsible for any damage!

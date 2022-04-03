@@ -102,7 +102,6 @@ export default class ListModified extends Plugin {
 		);
 	}
 
-	// broken
 	fileMeetsTagRequirements(): boolean {
 		for (const tag of this.blacklistedTags) {
 			if (
