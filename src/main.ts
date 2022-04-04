@@ -54,7 +54,7 @@ export default class ListModified extends Plugin {
 		const outputFormat: string = this.settings.outputFormat;
 		this.resolvedOutput = outputFormat.replace(
 			"[[link]]",
-			`[[${this.currentFile.basename}]]`
+			this.app.fileManager.generateMarkdownLink(this.currentFile, '')
 		);
 
 		if (!this.dailyFile) {
