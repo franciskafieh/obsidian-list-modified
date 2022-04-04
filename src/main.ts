@@ -46,7 +46,12 @@ export default class ListModified extends Plugin {
 		this.ignoredTags = this.settings.tags.replace(/\s/g, "").split(",");
 		this.currentFile = file as TFile;
 
-		const dailyNoteFormat: string = this.settings.dailyNoteFormat;
+		// @ts-ignore
+		// prettier-ignore
+		const dailyNoteFormat: string = window.app.internalPlugins
+				.getPluginById("daily-notes")
+				.instance.options.format;
+
 		this.dailyFile = this.app.vault.getAbstractFileByPath(
 			moment().format(dailyNoteFormat) + ".md"
 		) as TFile;
@@ -54,7 +59,7 @@ export default class ListModified extends Plugin {
 		const outputFormat: string = this.settings.outputFormat;
 		this.resolvedOutput = outputFormat.replace(
 			"[[link]]",
-			this.app.fileManager.generateMarkdownLink(this.currentFile, '')
+			this.app.fileManager.generateMarkdownLink(this.currentFile, "")
 		);
 
 		if (!this.dailyFile) {

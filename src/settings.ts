@@ -2,13 +2,11 @@ import { App, PluginSettingTab, Setting } from "obsidian";
 import ListModified from "./main";
 
 export interface ListModifiedSettings {
-	dailyNoteFormat: string;
 	outputFormat: string;
 	tags: string;
 }
 
 export const DEFAULT_SETTINGS: ListModifiedSettings = {
-	dailyNoteFormat: "",
 	outputFormat: "- [[link]]",
 	tags: "",
 };
@@ -28,22 +26,6 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		containerEl.createEl("h2", { text: "Formatting" });
-
-		new Setting(containerEl)
-			.setName("Daily Note Format")
-			.setDesc(
-				"You can find this in your daily note settings menu. " +
-					"BE SURE TO include non-date-format characters in square brackets!"
-			)
-			.addText((text) =>
-				text
-					.setPlaceholder("e.g. [Daily/]YYYY[/]YYYY-MM-DD")
-					.setValue(this.plugin.settings.dailyNoteFormat)
-					.onChange(async (value) => {
-						this.plugin.settings.dailyNoteFormat = value;
-						await this.plugin.saveSettings();
-					})
-			);
 
 		new Setting(containerEl)
 			.setName("Output Format")
