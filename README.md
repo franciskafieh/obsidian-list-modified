@@ -12,7 +12,6 @@ This is the result...
 
 ![plugin demo gif](preview/obsidian-list-modified.gif)
 
-
 # Why?
 
 As of now, dataview queries cannot be "frozen" in time. There are hacky solutions using templater, but I wanted something really simple.

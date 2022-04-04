@@ -7,6 +7,7 @@ import {
 	TagCache,
 	FrontMatterCache,
 	TAbstractFile,
+	getAllTags,
 } from "obsidian";
 import {
 	ListModifiedSettings,
@@ -103,28 +104,10 @@ export default class ListModified extends Plugin {
 	}
 
 	fileMeetsTagRequirements(): boolean {
-		for (const tag of this.ignoredTags) {
-			if (
-				this.tagMetadataContainsTag(tag) ||
-				this.frontmatterMetadataContainsTag(tag)
-			)
-				return false;
-		}
-		return true;
-	}
-
-	tagMetadataContainsTag(tagToMatch: string): boolean {
-		const tagCache: TagCache[] = this.currentFileCache.tags;
-		if (!tagCache) return false;
-		// console.log('tag cache is ' + tagCache.forEach(console.log))
-		return tagCache.some((tag) => tag.tag === tagToMatch);
-	}
-
-	frontmatterMetadataContainsTag(tagToMatch: string): boolean {
-		const frontmatterCache: FrontMatterCache =
-			this.currentFileCache.frontmatter;
-		if (!frontmatterCache) return false;
-		return frontmatterCache.tags.some((tag: string) => tag === tagToMatch);
+		const currentFileTags: string[] = getAllTags(this.currentFileCache);
+		return !this.ignoredTags.some((ignoredTag) =>
+			currentFileTags.contains(ignoredTag)
+		);
 	}
 
 	async loadSettings() {
