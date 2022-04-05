@@ -4,8 +4,6 @@ import {
 	Plugin,
 	TFile,
 	moment,
-	TagCache,
-	FrontMatterCache,
 	TAbstractFile,
 	getAllTags,
 } from "obsidian";
@@ -38,9 +36,7 @@ export default class ListModified extends Plugin {
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
 	}
 
-	onunload() {
-		this.app.vault.off("modify", this.onModify);
-	}
+	onunload() {}
 
 	onModify = async (file: TAbstractFile) => {
 		this.ignoredTags = this.settings.tags.replace(/\s/g, "").split(",");
@@ -48,7 +44,7 @@ export default class ListModified extends Plugin {
 
 		// @ts-ignore
 		// prettier-ignore
-		const dailyNoteFormat: string = window.app.internalPlugins
+		const dailyNoteFormat: string = this.app.internalPlugins
 				.getPluginById("daily-notes")
 				.instance.options.format;
 
