@@ -32,9 +32,17 @@ export default class ListModified extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		this.registerEvent(this.app.vault.on("modify", this.onModify));
+		this.registerEvent(this.app.vault.on('modify', this.onModify))
+		// this.registerEvent(this.app.metadataCache.on('changed', this.onCacheChange));
 
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
+	}
+
+	onCacheChange = async (file: TFile, data: string, cache: CachedMetadata) => {
+		console.log(data.slice(-1) === '\n')
+
+		// console.log('cache is ' + getAllTags(cache))
+		console.log(data)
 	}
 
 	onModify = async (file: TAbstractFile) => {

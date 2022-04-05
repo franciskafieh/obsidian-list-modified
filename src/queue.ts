@@ -1,16 +1,20 @@
 export interface Queue<T> {
-	add(t: T): void;
+	add(promise: Promise<T>): void;
 	remove(): Promise<T>;
 	peek(): Promise<T>;
 }
 
 export class AsyncBlockingQueue<T> implements Queue<T> {
-	promises: Promise<T>[];
-	resolvers: T | PromiseLike<T>[];
+	queue: any[];
 
-	constructor() {}
+	constructor() {
+		
+	}
 
-	add(t: T): void {
+	add(promise: Promise<T>): void {
+		new Promise((resolve, reject) =>
+			this.queue.push({promise, resolve, reject})	
+		)
 	}
 
 	remove(): Promise<T> {

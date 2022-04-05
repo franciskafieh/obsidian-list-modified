@@ -3,9 +3,13 @@ import { App } from "obsidian";
 
 
 export function getDailyNoteFormat(app: App): string {
-	const dailyNotesPlugin: string =
-			app.internalPlugins.getPluginById("daily-notes").instance
+	const dailyNotesPlugin =
+			app.internalPlugins?.getPluginById("daily-notes")?.instance
 				.options;
+
+	if (!dailyNotesPlugin) {
+		return '';
+	}
 
     return `[${dailyNotesPlugin.folder}]/${dailyNotesPlugin.format}`
 }
