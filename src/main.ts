@@ -12,6 +12,7 @@ import {
 	DEFAULT_SETTINGS,
 	ListModifiedSettingTab,
 } from "./settings";
+import { getDailyNoteFormat } from "./utils";
 
 // const templates: readonly [string[], string[]] = [
 // 	['[[link]]', 'f'],
@@ -36,21 +37,24 @@ export default class ListModified extends Plugin {
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
 	}
 
-	onunload() {}
-
 	onModify = async (file: TAbstractFile) => {
 		this.ignoredTags = this.settings.tags.replace(/\s/g, "").split(",");
 		this.currentFile = file as TFile;
 
-		// @ts-ignore
-		// prettier-ignore
-		const dailyNoteFormat: string = this.app.internalPlugins
-				.getPluginById("daily-notes")
-				.instance.options.format;
+		let abstractFile = this.app.vault.getAbstractFileByPath(
+			moment().format(getDailyNoteFormat(this.app)) + ".md"
+		);
 
-		this.dailyFile = this.app.vault.getAbstractFileByPath(
-			moment().format(dailyNoteFormat) + ".md"
-		) as TFile;
+		if (!(abstractFile instanceof TFile)) {
+			new Notice(
+				`A daily file with format ${getDailyNoteFormat(
+					this.app
+				)} doesn't exist! Cannot append link`
+			);
+			return;
+		}
+
+		this.dailyFile = abstractFile;
 
 		const outputFormat: string = this.settings.outputFormat;
 		this.resolvedOutput = outputFormat.replace(
@@ -60,13 +64,6 @@ export default class ListModified extends Plugin {
 				this.dailyFile.path
 			)
 		);
-
-		if (!this.dailyFile) {
-			new Notice(
-				`A daily file with format ${dailyNoteFormat} doesn't exist! Cannot append link`
-			);
-			return;
-		}
 
 		this.currentFileCache = this.app.metadataCache.getFileCache(
 			this.currentFile
@@ -125,4 +122,6 @@ export default class ListModified extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
+
+	onunload() {}
 }
