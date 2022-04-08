@@ -43,7 +43,7 @@ tags:
 ---
 ```
 
-# Instalation
+# Installation
 
 1. Open your vault's folder in your file explorer
 2. Make sure showing hidden files is enabled
