@@ -27,24 +27,30 @@ export default class ListModified extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		this.registerEvent(this.app.metadataCache.on('changed', this.onCacheChange));
+		this.registerEvent(
+			this.app.metadataCache.on("changed", this.onCacheChange)
+		);
 
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
 	}
 
-	onCacheChange = async (file: TFile, _data: string, cache: CachedMetadata) => {
+	onCacheChange = async (
+		file: TFile,
+		_data: string,
+		cache: CachedMetadata
+	) => {
 		const modifiedFile = file as TFile;
-		const dailyNoteName: string = moment().format(getDailyNoteFormat(this.app)) + ".md"
-		
-		const abstractDailyNote: TAbstractFile = this.app.vault.getAbstractFileByPath(
-			dailyNoteName
+
+		const currentDailyNoteName: string = moment().format(
+			getDailyNoteFormat(this.app)
 		);
+
+		const abstractDailyNote: TAbstractFile =
+			this.app.vault.getAbstractFileByPath(currentDailyNoteName + ".md");
 
 		if (!(abstractDailyNote instanceof TFile)) {
 			new Notice(
-				`A daily file with format ${getDailyNoteFormat(
-					this.app
-				)} doesn't exist! Cannot append link`
+				`A daily file named ${currentDailyNoteName} doesn't exist! Cannot append link`
 			);
 			return;
 		}
@@ -52,11 +58,12 @@ export default class ListModified extends Plugin {
 		const dailyNote: TFile = abstractDailyNote;
 
 		if (modifiedFile === dailyNote) return;
-		if (this.fileIsLinked(modifiedFile, dailyNoteName)) return;
+		if (this.fileIsLinked(modifiedFile, currentDailyNoteName + ".md"))
+			return;
 		if (!this.fileMeetsTagRequirements(cache)) return;
 
 		await this.appendLink(dailyNote, modifiedFile);
-	}
+	};
 
 	appendLink = serialize(async (dailyNote: TFile, currentFile: TFile) => {
 		const content: string = await this.app.vault.read(dailyNote);
@@ -70,18 +77,22 @@ export default class ListModified extends Plugin {
 				dailyNote.path
 			)
 		);
-		
-		const newContent: string = content.slice(-1) === '\n' ? content + resolvedOutput + "\n" : content + "\n" + resolvedOutput
+
+		const newContent: string =
+			content.slice(-1) === "\n"
+				? content + resolvedOutput + "\n"
+				: content + "\n" + resolvedOutput;
 		await this.app.vault.modify(dailyNote, newContent);
-	})
+	});
 
 	fileIsLinked(currentFile: TFile, formattedDailyNote: string): boolean {
-		// @ts-ignore
-		const backlinks: string[] = Object.keys(this.app.metadataCache.getBacklinksForFile(currentFile).data)
-		console.log(backlinks)
+	
+		const backlinks: string[] = Object.keys(
+			// @ts-ignore
+			this.app.metadataCache.getBacklinksForFile(currentFile).data
+		);
 		if (!backlinks) return false;
-		console.log(currentFile.name)
-		return backlinks.some(l => l === formattedDailyNote)
+		return backlinks.some((l) => l === formattedDailyNote);
 	}
 
 	fileMeetsTagRequirements(fileCache: CachedMetadata): boolean {
