@@ -34,11 +34,7 @@ export default class ListModified extends Plugin {
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
 	}
 
-	onCacheChange = async (
-		file: TFile,
-		_data: string,
-		cache: CachedMetadata
-	) => {
+	onCacheChange = serialize(async (file: TFile, _data: string, cache: CachedMetadata) => {
 		const modifiedFile = file as TFile;
 
 		const currentDailyNoteName: string = moment().format(
@@ -62,10 +58,10 @@ export default class ListModified extends Plugin {
 			return;
 		if (!this.fileMeetsTagRequirements(cache)) return;
 
-		await this.appendLink(dailyNote, modifiedFile);
-	};
+		this.appendLink(dailyNote, modifiedFile);
+	});
 
-	appendLink = serialize(async (dailyNote: TFile, currentFile: TFile) => {
+	async appendLink(dailyNote: TFile, currentFile: TFile) {
 		const content: string = await this.app.vault.read(dailyNote);
 
 		const outputFormat: string = this.settings.outputFormat;
@@ -83,7 +79,7 @@ export default class ListModified extends Plugin {
 				? content + resolvedOutput + "\n"
 				: content + "\n" + resolvedOutput;
 		await this.app.vault.modify(dailyNote, newContent);
-	});
+	}
 
 	fileIsLinked(currentFile: TFile, formattedDailyNote: string): boolean {
 	
