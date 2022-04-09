@@ -1,6 +1,6 @@
 # Obsidian List Modified
 
-This plugin lists all modified files meeting certain criteria to a daily note.
+This plugin links all modified files meeting certain criteria to a daily note. This provides an accurate log/archive of files modified on certain days.
 
 Example:
 
