@@ -32,24 +32,24 @@ export default class ListModified extends Plugin {
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
 	}
 
-	onCacheChange = serialize(async (file: TFile, _data: string, cache: CachedMetadata) => {
-		const modifiedFile = file as TFile;
+	onCacheChange = serialize(
+		async (file: TFile, _data: string, cache: CachedMetadata) => {
+			const modifiedFile = file as TFile;
 
-		const dailyNote: TFile = getDailyNote(moment(), getAllDailyNotes())
+			const dailyNote: TFile = getDailyNote(moment(), getAllDailyNotes());
 
-		if (!dailyNote) {
-			new Notice(
-				`Your daily note doesn't exist! Cannot append link`
-			);
-			return;
+			if (!dailyNote) {
+				new Notice(`Your daily note doesn't exist! Cannot append link`);
+				return;
+			}
+
+			if (modifiedFile === dailyNote) return;
+			if (this.fileIsLinked(modifiedFile, dailyNote.path)) return;
+			if (!this.fileMeetsTagRequirements(cache)) return;
+
+			this.appendLink(dailyNote, modifiedFile);
 		}
-
-		if (modifiedFile === dailyNote) return;
-		if (this.fileIsLinked(modifiedFile, dailyNote.path)) return;
-		if (!this.fileMeetsTagRequirements(cache)) return;
-
-		this.appendLink(dailyNote, modifiedFile);
-	});
+	);
 
 	async appendLink(dailyNote: TFile, currentFile: TFile) {
 		const content: string = await this.app.vault.read(dailyNote);
@@ -72,13 +72,12 @@ export default class ListModified extends Plugin {
 	}
 
 	fileIsLinked(currentFile: TFile, formattedDailyNote: string): boolean {
-	
 		const backlinks: string[] = Object.keys(
 			// @ts-ignore
 			this.app.metadataCache.getBacklinksForFile(currentFile).data
 		);
-		console.log(backlinks)
-		console.log(formattedDailyNote)
+		console.log(backlinks);
+		console.log(formattedDailyNote);
 		if (!backlinks) return false;
 		return backlinks.some((l) => l === formattedDailyNote);
 	}
