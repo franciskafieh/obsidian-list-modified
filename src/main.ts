@@ -5,16 +5,14 @@ import {
 	Plugin,
 	TFile,
 	moment,
-	TAbstractFile,
 	getAllTags,
-	MetadataCache,
 } from "obsidian";
+import { getAllDailyNotes, getDailyNote } from "obsidian-daily-notes-interface";
 import {
 	ListModifiedSettings,
 	DEFAULT_SETTINGS,
 	ListModifiedSettingTab,
 } from "./settings";
-import { getDailyNoteFormat } from "./utils";
 
 // const templates: readonly [string[], string[]] = [
 // 	['[[link]]', 'f'],
@@ -37,25 +35,17 @@ export default class ListModified extends Plugin {
 	onCacheChange = serialize(async (file: TFile, _data: string, cache: CachedMetadata) => {
 		const modifiedFile = file as TFile;
 
-		const currentDailyNoteName: string = moment().format(
-			getDailyNoteFormat(this.app)
-		);
+		const dailyNote: TFile = getDailyNote(moment(), getAllDailyNotes())
 
-		const abstractDailyNote: TAbstractFile =
-			this.app.vault.getAbstractFileByPath(currentDailyNoteName + ".md");
-
-		if (!(abstractDailyNote instanceof TFile)) {
+		if (!dailyNote) {
 			new Notice(
-				`A daily file named ${currentDailyNoteName} doesn't exist! Cannot append link`
+				`Your daily note doesn't exist! Cannot append link`
 			);
 			return;
 		}
 
-		const dailyNote: TFile = abstractDailyNote;
-
 		if (modifiedFile === dailyNote) return;
-		if (this.fileIsLinked(modifiedFile, currentDailyNoteName + ".md"))
-			return;
+		if (this.fileIsLinked(modifiedFile, dailyNote.path)) return;
 		if (!this.fileMeetsTagRequirements(cache)) return;
 
 		this.appendLink(dailyNote, modifiedFile);
@@ -87,6 +77,8 @@ export default class ListModified extends Plugin {
 			// @ts-ignore
 			this.app.metadataCache.getBacklinksForFile(currentFile).data
 		);
+		console.log(backlinks)
+		console.log(formattedDailyNote)
 		if (!backlinks) return false;
 		return backlinks.some((l) => l === formattedDailyNote);
 	}
