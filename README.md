@@ -45,6 +45,13 @@ tags:
 
 # Installation
 
+**NOTE:** You must have safe mode shut off to be able to install community plugins such as this one!
+
+## Community Plugin List (Recommended)
+
+Simply search for "List Modified" on the community plugins browsing tab inside of Obsidian!
+
+## Manual
 1. Open your vault's folder in your file explorer
 2. Make sure showing hidden files is enabled
 3. Open the `.obsidian` folder, then open the `plugins` folder.
@@ -52,8 +59,6 @@ tags:
 5. Head over to the releases page and download the `manifest.json` and `main.js`
 6. Add these files to the new folder you've created
 7. Reload/restart Obsidian and enable the plugin in your community plugin settings
-
-**NOTE:** You must have safe mode shut off to be able to install community plugins!
 
 # Usage
 
