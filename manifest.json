@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-list-modfied",
 	"name": "List Modified",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"minAppVersion": "0.12.0",
 	"description": "A simple obsidian plugin that links all modified files meeting certain criteria to a daily note",
 	"author": "Francis Kafieh",

@@ -44,7 +44,8 @@ export default class ListModified extends Plugin {
 			}
 
 			if (modifiedFile === dailyNote) return;
-			if (this.fileIsLinked(modifiedFile, dailyNote.path)) return;
+			console.log(dailyNote);
+			if (this.fileIsLinked(modifiedFile.path, dailyNote.path)) return;
 			if (!this.fileMeetsTagRequirements(cache)) return;
 
 			this.appendLink(dailyNote, modifiedFile);
@@ -71,15 +72,12 @@ export default class ListModified extends Plugin {
 		await this.app.vault.modify(dailyNote, newContent);
 	}
 
-	fileIsLinked(currentFile: TFile, formattedDailyNote: string): boolean {
-		const backlinks: string[] = Object.keys(
-			// @ts-ignore
-			this.app.metadataCache.getBacklinksForFile(currentFile).data
+	fileIsLinked(currentFilePath: string, dailyNotePath: string): boolean {
+		const links: string[] = Object.keys(
+			this.app.metadataCache.resolvedLinks[dailyNotePath]
 		);
-		console.log(backlinks);
-		console.log(formattedDailyNote);
-		if (!backlinks) return false;
-		return backlinks.some((l) => l === formattedDailyNote);
+		if (!links) return false;
+		return links.some((l) => l === currentFilePath);
 	}
 
 	fileMeetsTagRequirements(fileCache: CachedMetadata): boolean {
