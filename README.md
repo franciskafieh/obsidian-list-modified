@@ -52,6 +52,7 @@ tags:
 Simply search for "List Modified" on the community plugins browsing tab inside of Obsidian!
 
 ## Manual
+
 1. Open your vault's folder in your file explorer
 2. Make sure showing hidden files is enabled
 3. Open the `.obsidian` folder, then open the `plugins` folder.

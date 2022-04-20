@@ -36,7 +36,15 @@ export default class ListModified extends Plugin {
 		async (file: TFile, _data: string, cache: CachedMetadata) => {
 			const modifiedFile = file as TFile;
 
-			const dailyNote: TFile = getDailyNote(moment(), getAllDailyNotes());
+			let dailyNote: TFile;
+
+			try {
+				dailyNote = getDailyNote(moment(), getAllDailyNotes());
+			} catch (e) {
+				console.log(
+					"unable to create daily note!: " + (e as Error).message
+				);
+			}
 
 			if (!dailyNote) {
 				new Notice(`Your daily note doesn't exist! Cannot append link`);
@@ -44,7 +52,6 @@ export default class ListModified extends Plugin {
 			}
 
 			if (modifiedFile === dailyNote) return;
-			console.log(dailyNote);
 			if (this.fileIsLinked(modifiedFile.path, dailyNote.path)) return;
 			if (!this.fileMeetsTagRequirements(cache)) return;
 
