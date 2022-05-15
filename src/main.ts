@@ -7,7 +7,7 @@ import {
 	moment,
 	getAllTags,
 } from "obsidian";
-import { getAllDailyNotes, getDailyNote } from "obsidian-daily-notes-interface";
+import { getAllDailyNotes, getDailyNote, createDailyNote } from "obsidian-daily-notes-interface";
 import {
 	ListModifiedSettings,
 	DEFAULT_SETTINGS,
@@ -47,8 +47,8 @@ export default class ListModified extends Plugin {
 			}
 
 			if (!dailyNote) {
-				new Notice(`Your daily note doesn't exist! Cannot append link`);
-				return;
+				new Notice(`Creating Daily Note since it did not exist...`);
+				dailyNote = await createDailyNote(moment());
 			}
 
 			if (modifiedFile === dailyNote) return;
