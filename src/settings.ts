@@ -10,7 +10,7 @@ export interface ListModifiedSettings {
 export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	outputFormat: "- [[link]]",
 	tags: "",
-	excludedFolders: ""
+	excludedFolders: "",
 };
 
 export class ListModifiedSettingTab extends PluginSettingTab {
@@ -64,21 +64,23 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-		.setName("Excluded Folders")
-		.setDesc(
-			"Comma-separated list of folders that should be excluded. " +
-				"If a file is in a folder present on this list, it won't be linked to! " +
-				"Leave this blank to disable this feature. " +
-				"See the GitHub README for more details."
-		)
-		.addText((text) =>
-			text
-				.setPlaceholder("e.g. here is a top folder/nextfolder, another top folder")
-				.setValue(this.plugin.settings.excludedFolders)
-				.onChange(async (value) => {
-					this.plugin.settings.excludedFolders = value;
-					await this.plugin.saveSettings();
-				})
-		);
+			.setName("Excluded Folders")
+			.setDesc(
+				"Comma-separated list of folders that should be excluded. " +
+					"If a file is in a folder present on this list, it won't be linked to! " +
+					"Leave this blank to disable this feature. " +
+					"See the GitHub README for more details."
+			)
+			.addText((text) =>
+				text
+					.setPlaceholder(
+						"e.g. here is a top folder/nextfolder, another top folder"
+					)
+					.setValue(this.plugin.settings.excludedFolders)
+					.onChange(async (value) => {
+						this.plugin.settings.excludedFolders = value;
+						await this.plugin.saveSettings();
+					})
+			);
 	}
 }
