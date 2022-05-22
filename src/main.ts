@@ -111,11 +111,10 @@ export default class ListModified extends Plugin {
 
 		for (let i = 0; i < parentPathFolders.length; i++) {
 			for (let j = 0; j < excludedFolderPaths.length; j++) {
-				if (parentPathFolders[i] === excludedFolderPaths[j][i] && !excludedFolderPaths[j][i + 1]) return true;
+				if (parentPathFolders[i] !== excludedFolderPaths[j][i]) return false;
 			}
 		}
-
-		return false;
+		return true;
 	}
 
 	private async loadSettings() {
