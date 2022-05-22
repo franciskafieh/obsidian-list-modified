@@ -4,11 +4,11 @@ This plugin links all modified files meeting certain criteria to a daily note. T
 
 Example:
 
-Using these settings...
+Using these settings... (must see on GitHub, this won't display on Obsidian)
 
 ![plugin settings](preview/settings-preview.png)
 
-This is the result...
+This is the result... (must see on GitHub, this won't display on Obsidian x2)
 
 ![plugin demo gif](preview/obsidian-list-modified.gif)
 
@@ -42,6 +42,28 @@ tags:
     - '#here'
 ---
 ```
+
+## Excluded Folders
+
+Disables a modified note from linking if it resides in a certain folder.
+
+These folders should be relative to your vault root directory.
+
+If my vault structure looks like this:
+
+MyVault (root folder)
+|_ Top Folder One
+| |_ Second Folder One
+| | |_ FirstFile.md
+| |_ Second Folder Two
+| | |\_ SecondFile.md
+
+|_ Top Folder Two
+| |_ ThirdFile.md
+
+Using the following exclusion settings: "Top Folder One/Second Folder Two, Top Folder Two"
+
+Only the FirstFile.md will be added to your list.
 
 # Installation
 

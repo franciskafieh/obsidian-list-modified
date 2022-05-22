@@ -32,7 +32,13 @@ export default class ListModified extends Plugin {
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
 	}
 
-	onCacheChange = serialize(
+	async saveSettings() {
+		await this.saveData(this.settings);
+	}
+
+	onunload() {}
+
+	private onCacheChange = serialize(
 		async (file: TFile, _data: string, cache: CachedMetadata) => {
 			const modifiedFile = file as TFile;
 
@@ -53,13 +59,14 @@ export default class ListModified extends Plugin {
 
 			if (modifiedFile === dailyNote) return;
 			if (this.fileIsLinked(modifiedFile.path, dailyNote.path)) return;
-			if (!this.fileMeetsTagRequirements(cache)) return;
+			if (this.fileContainsIgnoredTag(cache)) return;
+			if (this.fileIsInExcludedFolder(modifiedFile)) return;
 
 			this.appendLink(dailyNote, modifiedFile);
 		}
 	);
 
-	async appendLink(dailyNote: TFile, currentFile: TFile) {
+	private async appendLink(dailyNote: TFile, currentFile: TFile) {
 		const content: string = await this.app.vault.read(dailyNote);
 
 		const outputFormat: string = this.settings.outputFormat;
@@ -79,7 +86,7 @@ export default class ListModified extends Plugin {
 		await this.app.vault.modify(dailyNote, newContent);
 	}
 
-	fileIsLinked(currentFilePath: string, dailyNotePath: string): boolean {
+	private fileIsLinked(currentFilePath: string, dailyNotePath: string): boolean {
 		const links: string[] = Object.keys(
 			this.app.metadataCache.resolvedLinks[dailyNotePath]
 		);
@@ -87,25 +94,35 @@ export default class ListModified extends Plugin {
 		return links.some((l) => l === currentFilePath);
 	}
 
-	fileMeetsTagRequirements(fileCache: CachedMetadata): boolean {
+	private fileContainsIgnoredTag(fileCache: CachedMetadata): boolean {
 		const currentFileTags: string[] = getAllTags(fileCache);
 		const ignoredTags = this.settings.tags.replace(/\s/g, "").split(",");
-		return !ignoredTags.some((ignoredTag: string) =>
+		return ignoredTags.some((ignoredTag: string) =>
 			currentFileTags.contains(ignoredTag)
 		);
 	}
 
-	async loadSettings() {
+	private fileIsInExcludedFolder(file: TFile): boolean {
+		const excludedFolderPaths: string[][] = this.settings.excludedFolders.replace(/, +/g, ",").split(",")
+			.map(item => item.replace(/^\/|\/$/g, ""))
+			.map(item => item.split('/'));
+
+		const parentPathFolders = file.parent.path.split('/');
+
+		for (let i = 0; i < parentPathFolders.length; i++) {
+			for (let j = 0; j < excludedFolderPaths.length; j++) {
+				if (parentPathFolders[i] === excludedFolderPaths[j][i] && !excludedFolderPaths[j][i + 1]) return true;
+			}
+		}
+
+		return false;
+	}
+
+	private async loadSettings() {
 		this.settings = Object.assign(
 			{},
 			DEFAULT_SETTINGS,
 			await this.loadData()
 		);
 	}
-
-	async saveSettings() {
-		await this.saveData(this.settings);
-	}
-
-	onunload() {}
 }
