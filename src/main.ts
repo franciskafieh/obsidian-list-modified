@@ -113,8 +113,7 @@ export default class ListModified extends Plugin {
 		const excludedFolderPaths: string[][] = this.settings.excludedFolders
 			.replace(/, +/g, ",")
 			.split(",")
-			.map((item) => item.replace(/^\/|\/$/g, ""))
-			.map((item) => item.split("/"));
+			.map((item) => item.replace(/^\/|\/$/g, "").split("/"));
 
 		const parentPathFolders = file.parent.path.split("/");
 
