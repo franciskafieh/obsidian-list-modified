@@ -52,13 +52,19 @@ These folders should be relative to your vault root directory.
 If my vault structure looks like this:
 
 MyVault (root folder)
+
 |\_ Top Folder One
+
 | |\_ Second Folder One
+
 | | |\_ FirstFile.md
+
 | |\_ Second Folder Two
+
 | | |\_ SecondFile.md
 
 |\_ Top Folder Two
+
 | |\_ ThirdFile.md
 
 Using the following exclusion settings: "Top Folder One/Second Folder Two, Top Folder Two"
