@@ -5,17 +5,18 @@ export interface ListModifiedSettings {
 	outputFormat: string;
 	tags: string;
 	excludedFolders: string;
+	automaticallyCreateDailyNote: boolean;
 }
 
 export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	outputFormat: "- [[link]]",
 	tags: "",
 	excludedFolders: "",
+	automaticallyCreateDailyNote: false
 };
 
 export class ListModifiedSettingTab extends PluginSettingTab {
 	plugin: ListModified;
-	tagString: string;
 
 	constructor(app: App, plugin: ListModified) {
 		super(app, plugin);
@@ -26,6 +27,20 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 
 		containerEl.empty();
+
+		containerEl.createEl("h2", { text: "Convenience" });
+		new Setting(containerEl)
+		.setName("Create daily note automatically if it does not exist")
+		.setDesc(
+			"If this setting is not toggled, your modified files will not " +
+			"be linked unless you create your daily note yourself."
+		)
+		.addToggle((toggle) => {
+			toggle.setValue(this.plugin.settings.automaticallyCreateDailyNote).onChange((value) => {
+				this.plugin.settings.automaticallyCreateDailyNote = value
+				this.plugin.saveSettings();
+			});
+		});
 
 		containerEl.createEl("h2", { text: "Formatting" });
 
@@ -82,5 +97,6 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+
 	}
 }

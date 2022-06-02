@@ -51,13 +51,14 @@ export default class ListModified extends Plugin {
 			try {
 				dailyNote = getDailyNote(moment(), getAllDailyNotes());
 			} catch (e) {
-				console.log(
-					"unable to create daily note!: " + (e as Error).message
-				);
+				new Notice("Unable to create daily note. See console for details.")
+				console.log(e.message);
 			}
 
 			if (!dailyNote) {
-				new Notice(`Creating Daily Note since it did not exist...`);
+				if (!this.settings.automaticallyCreateDailyNote) return;
+
+				new Notice(`Creating daily note since it did not exist...`);
 				dailyNote = await createDailyNote(moment());
 			}
 
@@ -65,7 +66,6 @@ export default class ListModified extends Plugin {
 			if (this.fileIsLinked(modifiedFile.path, dailyNote.path)) return;
 			if (this.fileContainsIgnoredTag(cache)) return;
 			if (this.fileIsInExcludedFolder(modifiedFile)) return;
-
 			this.appendLink(dailyNote, modifiedFile);
 		}
 	);
@@ -94,8 +94,10 @@ export default class ListModified extends Plugin {
 		currentFilePath: string,
 		dailyNotePath: string
 	): boolean {
+		const resolvedLinks = this.app.metadataCache.resolvedLinks[dailyNotePath];
+		if (!resolvedLinks) return false;
 		const links: string[] = Object.keys(
-			this.app.metadataCache.resolvedLinks[dailyNotePath]
+			resolvedLinks
 		);
 		if (!links) return false;
 		return links.some((l) => l === currentFilePath);
