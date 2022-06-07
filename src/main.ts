@@ -64,11 +64,23 @@ export default class ListModified extends Plugin {
 				dailyNote = await createDailyNote(moment());
 			}
 
+			console.log(`=============== FILE "${modifiedFile.name}" MODIFIED, DAILY NOTE "${dailyNote.name}" EXISTS (TIME: ${moment().format('HH:mm:ss:SS')}) ===================`)
+
 			if (modifiedFile === dailyNote) return;
+
+			console.log("FILE IS NOT DAILY NOTE");
 			if (this.fileIsLinked(modifiedFile.path, dailyNote.path)) return;
+
+			console.log("FILE IS NOT ALREADY LINKED");
 			if (this.fileContainsIgnoredTag(cache)) return;
+
+			console.log("FILE DOES NOT CONTAIN IGNORED TAGS");
 			if (this.fileIsInExcludedFolder(modifiedFile)) return;
+
+			console.log("FILE IS NOT IN EXCLUDED FOLDER");
 			this.appendLink(dailyNote, modifiedFile);
+
+			console.log("LINK APPENDED")
 		}
 	);
 
@@ -98,9 +110,13 @@ export default class ListModified extends Plugin {
 	): boolean {
 		const resolvedLinks =
 			this.app.metadataCache.resolvedLinks[dailyNotePath];
+		console.log("resolved links: " + resolvedLinks);
 		if (!resolvedLinks) return false;
 		const links: string[] = Object.keys(resolvedLinks);
+
+		console.log("links: " + links);
 		if (!links) return false;
+		console.log("current file path is " + currentFilePath);
 		return links.some((l) => l === currentFilePath);
 	}
 
@@ -113,7 +129,11 @@ export default class ListModified extends Plugin {
 	}
 
 	private fileIsInExcludedFolder(file: TFile): boolean {
-		const excludedFolderPaths: string[] = this.settings.excludedFolders
+		const excludedFolders = this.settings.excludedFolders;
+
+		if (!excludedFolders) return false;
+
+		const excludedFolderPaths: string[] = excludedFolders
 			.replace(/\s*, | \s*,/, ",")
 			.split(",")
 			.map(item => item.replace(/^\/|\/$/g, ""));
