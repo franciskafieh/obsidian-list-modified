@@ -113,20 +113,12 @@ export default class ListModified extends Plugin {
 	}
 
 	private fileIsInExcludedFolder(file: TFile): boolean {
-		const excludedFolderPaths: string[][] = this.settings.excludedFolders
-			.replace(/, +/g, ",")
-			.split(",")
-			.map((item) => item.replace(/^\/|\/$/g, "").split("/"));
+		const excludedFolderPaths: string[] = this.settings.excludedFolders.replace(/^\/|\/$/g, "")
+		.replace(/\s*, | \s*,/, ',').split(',');
 
-		const parentPathFolders = file.parent.path.split("/");
+		const currentFilePath: string = file.parent.path;
 
-		for (let i = 0; i < parentPathFolders.length; i++) {
-			for (let j = 0; j < excludedFolderPaths.length; j++) {
-				if (parentPathFolders[i] !== excludedFolderPaths[j][i])
-					return false;
-			}
-		}
-		return true;
+		return excludedFolderPaths.some((excludedFolder: string) => currentFilePath.startsWith(excludedFolder));
 	}
 
 	private async loadSettings() {
