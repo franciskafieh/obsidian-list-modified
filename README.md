@@ -51,25 +51,27 @@ These folders should be relative to your vault root directory.
 
 If my vault structure looks like this:
 
-MyVault (root folder)
+```
+Vault Folder (Root)
+    Folder 00
+        Folder 00.00
+            A.md
+        Folder 00.10
+            B.md
+    Folder 10
+        Folder 10.10
+        Folder 10.20
+            C.md
+    Folder 20
+        Folder 20.10
+            D.md
+        Folder 20.20
+        E.md
+```
 
-|\_ Top Folder One
+Using the following exclusion settings: "Folder 00/Folder 00.00, Folder 20/"
 
-| |\_ Second Folder One
-
-| | |\_ FirstFile.md
-
-| |\_ Second Folder Two
-
-| | |\_ SecondFile.md
-
-|\_ Top Folder Two
-
-| |\_ ThirdFile.md
-
-Using the following exclusion settings: "Top Folder One/Second Folder Two, Top Folder Two"
-
-Only the FirstFile.md will be added to your list.
+Files `A.md`, `D.md`, and `E.md` will not be added to your daily note.
 
 # Installation
 
