@@ -114,12 +114,12 @@ export default class ListModified extends Plugin {
 
 	private fileIsInExcludedFolder(file: TFile): boolean {
 		const excludedFolderPaths: string[] = this.settings.excludedFolders
-			.replace(/^\/|\/$/g, "")
 			.replace(/\s*, | \s*,/, ",")
-			.split(",");
+			.split(",")
+			.map(item => item.replace(/^\/|\/$/g, ""));
 
 		const currentFilePath: string = file.parent.path;
-
+		console.log(excludedFolderPaths)
 		return excludedFolderPaths.some((excludedFolder: string) =>
 			currentFilePath.startsWith(excludedFolder)
 		);
