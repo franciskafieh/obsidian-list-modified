@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, PluginSettingTab, Setting, TFile } from "obsidian";
 import ListModified from "./main";
 
 export interface ListModifiedSettings {
@@ -6,6 +6,9 @@ export interface ListModifiedSettings {
 	tags: string;
 	excludedFolders: string;
 	automaticallyCreateDailyNote: boolean;
+	lastTrackedDate: string;
+	// cannot use a set because there is no good way to persist it.
+	trackedFiles: string[];
 }
 
 export const DEFAULT_SETTINGS: ListModifiedSettings = {
@@ -13,6 +16,8 @@ export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	tags: "",
 	excludedFolders: "",
 	automaticallyCreateDailyNote: false,
+	lastTrackedDate: "",
+	trackedFiles: [],
 };
 
 export class ListModifiedSettingTab extends PluginSettingTab {
