@@ -9,6 +9,7 @@ export interface ListModifiedSettings {
 	lastTrackedDate: string;
 	// cannot use a set because there is no good way to persist it.
 	trackedFiles: string[];
+	heading: string;
 }
 
 export const DEFAULT_SETTINGS: ListModifiedSettings = {
@@ -18,6 +19,7 @@ export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	automaticallyCreateDailyNote: false,
 	lastTrackedDate: "",
 	trackedFiles: [],
+	heading: "",
 };
 
 export class ListModifiedSettingTab extends PluginSettingTab {
@@ -33,7 +35,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl("h2", { text: "Convenience" });
+		containerEl.createEl("h2", { text: "Output File" });
 		new Setting(containerEl)
 			.setName("Create daily note automatically if it does not exist")
 			.setDesc(
@@ -50,6 +52,26 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					});
 			});
 
+			new Setting(containerEl)
+			.setName("Heading")
+			.setDesc(
+				"Name of the heading (case sensitive) to list modified files under. If none is specified, the plugin WILL NOT WORK! You also must create this heading yourself."
+			)
+			.addText((text) =>
+				text
+					.setPlaceholder(
+						"e.g. Modified Today"
+					)
+					.setValue(this.plugin.settings.heading)
+					.onChange(async (value) => {
+						this.plugin.settings.heading = value;
+						await this.plugin.saveSettings();
+						await this.plugin.updateTrackedFiles();
+					})
+			);
+
+			
+
 		containerEl.createEl("h2", { text: "Formatting" });
 
 		new Setting(containerEl)
@@ -64,6 +86,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.outputFormat = value;
 						await this.plugin.saveSettings();
+						await this.plugin.updateTrackedFiles();
 					})
 			);
 
@@ -83,6 +106,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.tags = value;
 						await this.plugin.saveSettings();
+						await this.plugin.updateTrackedFiles();
 					})
 			);
 
@@ -103,6 +127,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.excludedFolders = value;
 						await this.plugin.saveSettings();
+						await this.plugin.updateTrackedFiles();
 					})
 			);
 	}
