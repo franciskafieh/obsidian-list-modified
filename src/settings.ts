@@ -52,16 +52,14 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					});
 			});
 
-			new Setting(containerEl)
+		new Setting(containerEl)
 			.setName("Heading")
 			.setDesc(
 				"Name of the heading (case sensitive) to list modified files under. If none is specified, the plugin WILL NOT WORK! You also must create this heading yourself."
 			)
 			.addText((text) =>
 				text
-					.setPlaceholder(
-						"e.g. Modified Today"
-					)
+					.setPlaceholder("e.g. Modified Today")
 					.setValue(this.plugin.settings.heading)
 					.onChange(async (value) => {
 						this.plugin.settings.heading = value;
@@ -69,8 +67,6 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 						await this.plugin.updateTrackedFiles();
 					})
 			);
-
-			
 
 		containerEl.createEl("h2", { text: "Formatting" });
 
