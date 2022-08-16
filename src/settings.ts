@@ -10,6 +10,7 @@ export interface ListModifiedSettings {
 	// cannot use a set because there is no good way to persist it.
 	trackedFiles: string[];
 	heading: string;
+	hasBeenBackedUp: boolean;
 }
 
 export const DEFAULT_SETTINGS: ListModifiedSettings = {
@@ -20,6 +21,7 @@ export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	lastTrackedDate: "",
 	trackedFiles: [],
 	heading: "",
+	hasBeenBackedUp: false
 };
 
 export class ListModifiedSettingTab extends PluginSettingTab {

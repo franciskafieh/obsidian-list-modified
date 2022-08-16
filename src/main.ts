@@ -18,6 +18,7 @@ import {
 	createDailyNote,
 	getAllDailyNotes,
 	getDailyNote,
+	getDailyNoteSettings,
 } from "obsidian-daily-notes-interface";
 
 export default class ListModified extends Plugin {
@@ -130,6 +131,23 @@ export default class ListModified extends Plugin {
 			new Notice("Unable to load daily note. See console for details.");
 			console.log(e.message);
 		}
+
+
+		// TEMP FOR MIGRATION FROM 1.0 TO 2.0!
+		const backupPath = getDailyNoteSettings().folder + 
+				moment().format(getDailyNoteSettings().format) + '-BACKUP.md';
+
+		if (dailyNote && !this.settings.hasBeenBackedUp) {
+			new Notice("Your daily note for today has been backed up to " + backupPath + ". " +
+			"This is for users who have migrated to OLM 2.0 so that their daily " + 
+			"note content is not lost. Feel free to delete the backup file or port its content " +
+			"to the new one. This message will not be shown to you again. " +
+			"This is a one-time process. If you were not a 1.0 user, disregard this.")
+			this.app.vault.copy(dailyNote, backupPath);
+			this.settings.hasBeenBackedUp = true;
+			this.saveSettings();
+		}
+
 
 		if (!dailyNote && this.settings.automaticallyCreateDailyNote) {
 			new Notice("Creating daily note since it did not exist...");
