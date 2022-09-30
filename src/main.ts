@@ -81,7 +81,7 @@ export default class ListModified extends Plugin {
 
 			// make shift set
 			if (
-				!trackedFiles.contains(path) &&
+				!trackedFiles.includes(path) &&
 				!this.cacheContainsIgnoredTag(cache) &&
 				!this.pathIsExcluded(path) &&
 				!this.noteTitleContainsIgnoredText(file.basename)
@@ -90,7 +90,7 @@ export default class ListModified extends Plugin {
 			}
 
 			if (
-				(trackedFiles.contains(path) &&
+				(trackedFiles.includes(path) &&
 					this.cacheContainsIgnoredTag(cache)) ||
 				this.pathIsExcluded(path) ||
 				this.noteTitleContainsIgnoredText(file.basename)
@@ -108,7 +108,7 @@ export default class ListModified extends Plugin {
 			.split(",");
 
 		return ignoredText.some((ignoredText: string) =>
-			noteTitle.contains(ignoredText)
+			noteTitle.toLowerCase().includes(ignoredText.toLowerCase())
 		);
 	}
 
@@ -116,7 +116,7 @@ export default class ListModified extends Plugin {
 		const currentFileTags: string[] = getAllTags(cache);
 		const ignoredTags = this.settings.tags.replace(/\s/g, "").split(",");
 		return ignoredTags.some((ignoredTag: string) =>
-			currentFileTags.contains(ignoredTag)
+			currentFileTags.includes(ignoredTag)
 		);
 	}
 
@@ -138,7 +138,7 @@ export default class ListModified extends Plugin {
 
 	private onVaultDelete = serialize(async (file: TAbstractFile) => {
 		if (file instanceof TFile) {
-			if (this.settings.trackedFiles.contains(file.path)) {
+			if (this.settings.trackedFiles.includes(file.path)) {
 				this.settings.trackedFiles.remove(file.path);
 				await this.updateTrackedFiles();
 			}
@@ -148,13 +148,13 @@ export default class ListModified extends Plugin {
 	private onVaultRename = serialize(
 		async (file: TAbstractFile, oldPath: string) => {
 			if (file instanceof TFile) {
-				if (this.settings.trackedFiles.contains(oldPath)) {
+				if (this.settings.trackedFiles.includes(oldPath)) {
 					this.settings.trackedFiles.remove(oldPath);
 					this.settings.trackedFiles.push(file.path);
 
 					await this.saveSettings();
 					// obsidian already handles link renames
-					if (!this.settings.outputFormat.contains("[[link]]")) {
+					if (!this.settings.outputFormat.includes("[[link]]")) {
 						await this.updateTrackedFiles();
 					}
 				}
