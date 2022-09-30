@@ -11,6 +11,8 @@ export interface ListModifiedSettings {
 	trackedFiles: string[];
 	heading: string;
 	hasBeenBackedUp: boolean;
+	writeInterval: string;
+	ignoredNameContains: string;
 }
 
 export const DEFAULT_SETTINGS: ListModifiedSettings = {
@@ -21,7 +23,9 @@ export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	lastTrackedDate: "",
 	trackedFiles: [],
 	heading: "",
-	hasBeenBackedUp: false
+	hasBeenBackedUp: false,
+	writeInterval: "30",
+	ignoredNameContains: "",
 };
 
 export class ListModifiedSettingTab extends PluginSettingTab {
@@ -124,6 +128,40 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.excludedFolders)
 					.onChange(async (value) => {
 						this.plugin.settings.excludedFolders = value;
+						await this.plugin.saveSettings();
+						await this.plugin.updateTrackedFiles();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName("Write Interval")
+			.setDesc(
+				"The interval at which to write your modified files to your daily note. These will also be written when you close Obsidian (a best effort attempt.) Otherwise, they will be written before the next daily note is created."
+			)
+			.addText((text) =>
+				text
+					.setPlaceholder("e.g. 30")
+					.setValue(this.plugin.settings.writeInterval)
+					.onChange(async (value) => {
+						this.plugin.settings.writeInterval = value;
+						await this.plugin.saveSettings();
+						await this.plugin.updateTrackedFiles();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName("Ignored Name Text")
+			.setDesc(
+				"List of text that (case insensitive) should cause a file to be ignored if it contains said text. E.g. ignoring 'ab' will prevent file 'xyz-ab-xyz' from being listed because it contains 'ab.' Leave this blank to disable this feature."
+			)
+			.addText((text) =>
+				text
+					.setPlaceholder(
+						"e.g. sync-conflict (recommended if you use syncthing), some more text"
+					)
+					.setValue(this.plugin.settings.ignoredNameContains)
+					.onChange(async (value) => {
+						this.plugin.settings.ignoredNameContains = value;
 						await this.plugin.saveSettings();
 						await this.plugin.updateTrackedFiles();
 					})

@@ -20,12 +20,38 @@ import {
 	getDailyNote,
 	getDailyNoteSettings,
 } from "obsidian-daily-notes-interface";
+import { z } from "zod";
 
 export default class ListModified extends Plugin {
 	settings: ListModifiedSettings;
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
+
+		const schema = z.preprocess(
+			(a) => parseInt(a as string, 10),
+			z.number().positive()
+		);
+
+		// if interval is 0, don't run the registerInterval and instead just run on modify.
+		const defaultWriteInterval = DEFAULT_SETTINGS.writeInterval;
+		let writeIntervalSec = parseInt(defaultWriteInterval);
+		try {
+			writeIntervalSec = schema.parse(this.settings.writeInterval);
+		} catch (error) {
+			this.displayNotice(
+				"Invalid write interval. Defaulting to " +
+					defaultWriteInterval +
+					" seconds."
+			);
+		}
+
+		this.registerInterval(
+			window.setInterval(
+				() => console.log("test"),
+				writeIntervalSec * 1000
+			)
+		);
 
 		this.registerEvent(
 			this.app.metadataCache.on("changed", this.onCacheChange)
@@ -57,7 +83,8 @@ export default class ListModified extends Plugin {
 			if (
 				!trackedFiles.contains(path) &&
 				!this.cacheContainsIgnoredTag(cache) &&
-				!this.pathIsExcluded(path)
+				!this.pathIsExcluded(path) &&
+				!this.noteTitleContainsIgnoredText(file.basename)
 			) {
 				trackedFiles.push(path);
 			}
@@ -65,7 +92,8 @@ export default class ListModified extends Plugin {
 			if (
 				(trackedFiles.contains(path) &&
 					this.cacheContainsIgnoredTag(cache)) ||
-				this.pathIsExcluded(path)
+				this.pathIsExcluded(path) ||
+				this.noteTitleContainsIgnoredText(file.basename)
 			) {
 				trackedFiles.remove(path);
 			}
@@ -73,6 +101,16 @@ export default class ListModified extends Plugin {
 			await this.updateTrackedFiles();
 		}
 	);
+
+	private noteTitleContainsIgnoredText(noteTitle: string): boolean {
+		const ignoredText = this.settings.ignoredNameContains
+			.replace(/\s/g, "")
+			.split(",");
+
+		return ignoredText.some((ignoredText: string) =>
+			noteTitle.contains(ignoredText)
+		);
+	}
 
 	private cacheContainsIgnoredTag(cache: CachedMetadata): boolean {
 		const currentFileTags: string[] = getAllTags(cache);
@@ -113,8 +151,12 @@ export default class ListModified extends Plugin {
 				if (this.settings.trackedFiles.contains(oldPath)) {
 					this.settings.trackedFiles.remove(oldPath);
 					this.settings.trackedFiles.push(file.path);
-					// do not update file, just save settings. this is because obsidian already handles link renames
+
 					await this.saveSettings();
+					// obsidian already handles link renames
+					if (!this.settings.outputFormat.contains("[[link]]")) {
+						await this.updateTrackedFiles();
+					}
 				}
 			}
 		}
@@ -128,29 +170,35 @@ export default class ListModified extends Plugin {
 		try {
 			dailyNote = getDailyNote(moment(), getAllDailyNotes());
 		} catch (e) {
-			new Notice("Unable to load daily note. See console for details.");
+			this.displayNotice(
+				"Unable to load daily note. See console for details."
+			);
 			console.log(e.message);
 		}
 
-
 		// TEMP FOR MIGRATION FROM 1.0 TO 2.0!
-		const backupPath = getDailyNoteSettings().folder + 
-				moment().format(getDailyNoteSettings().format) + '-BACKUP.md';
+		const backupPath =
+			getDailyNoteSettings().folder +
+			moment().format(getDailyNoteSettings().format) +
+			"-BACKUP.md";
 
 		if (dailyNote && !this.settings.hasBeenBackedUp) {
-			new Notice("Your daily note for today has been backed up to " + backupPath + ". " +
-			"This is for users who have migrated to OLM 2.0 so that their daily " + 
-			"note content is not lost. Feel free to delete the backup file or port its content " +
-			"to the new one. This message will not be shown to you again. " +
-			"This is a one-time process. If you were not a 1.0 user, disregard this.")
+			this.displayNotice(
+				"Your daily note for today has been backed up to " +
+					backupPath +
+					". " +
+					"This is for users who have migrated to OLM 2.0 so that their daily " +
+					"note content is not lost. Feel free to delete the backup file or port its content " +
+					"to the new one. This message will not be shown to you again. " +
+					"This is a one-time process. If you were not a 1.0 user, disregard this."
+			);
 			this.app.vault.copy(dailyNote, backupPath);
 			this.settings.hasBeenBackedUp = true;
 			this.saveSettings();
 		}
 
-
 		if (!dailyNote && this.settings.automaticallyCreateDailyNote) {
-			new Notice("Creating daily note since it did not exist...");
+			this.displayNotice("Creating daily note since it did not exist...");
 			dailyNote = await createDailyNote(moment());
 		}
 
@@ -164,7 +212,7 @@ export default class ListModified extends Plugin {
 			).split("\n");
 
 			if (!headings || !this.settings.heading) {
-				new Notice(
+				this.displayNotice(
 					"Cannot create list. Please read the Obsidian List Modified 'Headings' settings."
 				);
 				return;
@@ -199,7 +247,7 @@ export default class ListModified extends Plugin {
 				}
 			}
 
-			new Notice(
+			this.displayNotice(
 				"Cannot create list. Please read the Obsidian List Modified settings."
 			);
 		}
@@ -235,5 +283,9 @@ export default class ListModified extends Plugin {
 			DEFAULT_SETTINGS,
 			await this.loadData()
 		);
+	}
+
+	public displayNotice(message: string) {
+		new Notice("[Obsidian List Modified] " + message);
 	}
 }
