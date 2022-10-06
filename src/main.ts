@@ -8,11 +8,7 @@ import {
 	Notice,
 	HeadingCache,
 } from "obsidian";
-import {
-	ListModifiedSettings,
-	DEFAULT_SETTINGS,
-	ListModifiedSettingTab,
-} from "./settings";
+import { ListModifiedSettingTab } from "./settings";
 import { serialize } from "monkey-around";
 import {
 	createDailyNote,
@@ -20,38 +16,25 @@ import {
 	getDailyNote,
 	getDailyNoteSettings,
 } from "obsidian-daily-notes-interface";
-import { z } from "zod";
+import { ListModifiedSettings } from "./types";
+import { DEFAULT_HEADING, DEFAULT_SETTINGS } from "./constants";
 
 export default class ListModified extends Plugin {
 	settings: ListModifiedSettings;
+	writeIntervalInMs: number;
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
-		const schema = z.preprocess(
-			(a) => parseInt(a as string, 10),
-			z.number().positive()
-		);
-
-		// if interval is 0, don't run the registerInterval and instead just run on modify.
-		const defaultWriteInterval = DEFAULT_SETTINGS.writeInterval;
-		let writeIntervalSec = parseInt(defaultWriteInterval);
-		try {
-			writeIntervalSec = schema.parse(this.settings.writeInterval);
-		} catch (error) {
-			this.displayNotice(
-				"Invalid write interval. Defaulting to " +
-					defaultWriteInterval +
-					" seconds."
+		this.writeIntervalInMs = this.settings.writeInterval * 1000;
+		if (this.writeIntervalInMs) {
+			this.registerInterval(
+				window.setInterval(async () => {
+					await this.updateTrackedFiles(true);
+				}, this.writeIntervalInMs)
 			);
 		}
-
-		this.registerInterval(
-			window.setInterval(
-				() => console.log("test"),
-				writeIntervalSec * 1000
-			)
-		);
+		// if interval is 0, don't run the registerInterval and instead just run on modify for performance.
 
 		this.registerEvent(
 			this.app.metadataCache.on("changed", this.onCacheChange)
@@ -69,6 +52,8 @@ export default class ListModified extends Plugin {
 			const currentDate = moment().format("YYYY-MM-DD");
 
 			if (this.settings.lastTrackedDate !== currentDate) {
+				// last effort to write to file
+				await this.updateTrackedFiles();
 				this.settings.trackedFiles = [];
 				this.settings.lastTrackedDate = currentDate;
 			}
@@ -107,9 +92,14 @@ export default class ListModified extends Plugin {
 			.replace(/\s/g, "")
 			.split(",");
 
-		return ignoredText.some((ignoredText: string) =>
-			noteTitle.toLowerCase().includes(ignoredText.toLowerCase())
-		);
+		return ignoredText.some((ignoredText: string) => {
+			const title = noteTitle.toLowerCase();
+			const text = ignoredText.toLowerCase();
+			if (!text) {
+				return false;
+			}
+			return title.includes(text);
+		});
 	}
 
 	private cacheContainsIgnoredTag(cache: CachedMetadata): boolean {
@@ -162,7 +152,7 @@ export default class ListModified extends Plugin {
 		}
 	);
 
-	updateTrackedFiles = serialize(async () => {
+	updateTrackedFiles = serialize(async (doWrite?: boolean) => {
 		await this.saveSettings();
 
 		let dailyNote: TFile;
@@ -170,91 +160,96 @@ export default class ListModified extends Plugin {
 		try {
 			dailyNote = getDailyNote(moment(), getAllDailyNotes());
 		} catch (e) {
-			this.displayNotice(
-				"Unable to load daily note. See console for details."
-			);
-			console.log(e.message);
+			new Notice("Unable to load daily note. See console for details.");
+			console.error(e.message);
 		}
 
-		// TEMP FOR MIGRATION FROM 1.0 TO 2.0!
-		const backupPath =
-			getDailyNoteSettings().folder +
-			moment().format(getDailyNoteSettings().format) +
-			"-BACKUP.md";
-
-		if (dailyNote && !this.settings.hasBeenBackedUp) {
-			this.displayNotice(
-				"Your daily note for today has been backed up to " +
-					backupPath +
-					". " +
-					"This is for users who have migrated to OLM 2.0 so that their daily " +
-					"note content is not lost. Feel free to delete the backup file or port its content " +
-					"to the new one. This message will not be shown to you again. " +
-					"This is a one-time process. If you were not a 1.0 user, disregard this."
-			);
-			this.app.vault.copy(dailyNote, backupPath);
-			this.settings.hasBeenBackedUp = true;
-			this.saveSettings();
-		}
-
-		if (!dailyNote && this.settings.automaticallyCreateDailyNote) {
-			this.displayNotice("Creating daily note since it did not exist...");
-			dailyNote = await createDailyNote(moment());
-		}
-
-		if (dailyNote) {
-			const cache: CachedMetadata =
-				this.app.metadataCache.getFileCache(dailyNote);
-			const headings: HeadingCache[] = cache.headings;
-			// this.app.vault.modify(dailyNote, .join('\n'));
-			let content: string[] = (
-				await this.app.vault.read(dailyNote)
-			).split("\n");
-
-			if (!headings || !this.settings.heading) {
+		if (!dailyNote) {
+			if (this.settings.automaticallyCreateDailyNote) {
 				this.displayNotice(
-					"Cannot create list. Please read the Obsidian List Modified 'Headings' settings."
+					"Creating daily note since it did not exist..."
 				);
-				return;
+				dailyNote = await createDailyNote(moment());
 			}
 
-			for (let i = 0; i < headings.length; i++) {
-				if (headings[i].heading === this.settings.heading) {
-					const startPos: number = headings[i].position.end.line + 1;
-					if (headings[i + 1]) {
-						const endPos: number =
-							headings[i + 1].position.start.line - 1;
-						content.splice(
-							startPos,
-							endPos - startPos,
-							...this.settings.trackedFiles.map((path) =>
-								this.getFormattedOutput(path)
-							)
-						);
-					} else {
-						const endPos: number = content.length;
-						content.splice(
-							startPos,
-							endPos - startPos,
-							...this.settings.trackedFiles.map((path) =>
-								this.getFormattedOutput(path)
-							)
-						);
-					}
+			this.updateTrackedFiles();
+		}
 
-					this.app.vault.modify(dailyNote, content.join("\n"));
-					return;
-				}
-			}
+		let cache: CachedMetadata =
+			this.app.metadataCache.getFileCache(dailyNote);
 
+		let currentHeadings: HeadingCache[] = cache?.headings;
+
+		let content: string[] = (await this.app.vault.read(dailyNote)).split(
+			"\n"
+		);
+
+		// auto-create heading
+		if (!currentHeadings || !this.settings.heading) {
 			this.displayNotice(
-				"Cannot create list. Please read the Obsidian List Modified settings."
+				"Cannot find the designated heading in your file. Creating a default one for now..."
 			);
+
+			// mock heading for first run to avoid error
+			currentHeadings = [
+				{ heading: DEFAULT_HEADING, level: 1 } as HeadingCache,
+			];
+
+			this.settings.heading = DEFAULT_HEADING;
+
+			await this.app.vault.append(
+				dailyNote,
+				"\n" +
+					"# " +
+					DEFAULT_HEADING +
+					"\n" +
+					this.settings.trackedFiles
+						.map((path) => this.getFormattedOutput(path))
+						.join("\n")
+			);
+
+			await this.saveSettings();
+			return;
+		}
+
+		// if user set delay, do not write to file after initial run
+		if (this.writeIntervalInMs && !doWrite) {
+			return;
+		}
+
+		for (let i = 0; i < currentHeadings.length; i++) {
+			if (currentHeadings[i].heading === this.settings.heading) {
+				const startPos: number =
+					currentHeadings[i].position.end.line + 1;
+				if (currentHeadings[i + 1]) {
+					const endPos: number =
+						currentHeadings[i + 1].position.start.line - 1;
+					content.splice(
+						startPos,
+						endPos - startPos,
+						...this.settings.trackedFiles.map((path) =>
+							this.getFormattedOutput(path)
+						)
+					);
+				} else {
+					const endPos: number = content.length;
+					content.splice(
+						startPos,
+						endPos - startPos,
+						...this.settings.trackedFiles.map((path) =>
+							this.getFormattedOutput(path)
+						)
+					);
+				}
+
+				this.app.vault.modify(dailyNote, content.join("\n"));
+			}
 		}
 	});
 
 	private getFormattedOutput(path: string): string {
 		const file: TFile = this.app.vault.getAbstractFileByPath(path) as TFile;
+
 		return this.settings.outputFormat
 			.replace(
 				"[[link]]",

@@ -1,32 +1,6 @@
-import { App, PluginSettingTab, Setting, TFile } from "obsidian";
+import { App, PluginSettingTab, Setting } from "obsidian";
+import { DEFAULT_HEADING, DEFAULT_SETTINGS } from "./constants";
 import ListModified from "./main";
-
-export interface ListModifiedSettings {
-	outputFormat: string;
-	tags: string;
-	excludedFolders: string;
-	automaticallyCreateDailyNote: boolean;
-	lastTrackedDate: string;
-	// cannot use a set because there is no good way to persist it.
-	trackedFiles: string[];
-	heading: string;
-	hasBeenBackedUp: boolean;
-	writeInterval: string;
-	ignoredNameContains: string;
-}
-
-export const DEFAULT_SETTINGS: ListModifiedSettings = {
-	outputFormat: "- [[link]]",
-	tags: "",
-	excludedFolders: "",
-	automaticallyCreateDailyNote: false,
-	lastTrackedDate: "",
-	trackedFiles: [],
-	heading: "",
-	hasBeenBackedUp: false,
-	writeInterval: "30",
-	ignoredNameContains: "",
-};
 
 export class ListModifiedSettingTab extends PluginSettingTab {
 	plugin: ListModified;
@@ -54,14 +28,14 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.onChange((value) => {
 						this.plugin.settings.automaticallyCreateDailyNote =
 							value;
-						this.plugin.saveSettings();
+						this.plugin.updateTrackedFiles();
 					});
 			});
 
 		new Setting(containerEl)
 			.setName("Heading")
 			.setDesc(
-				"Name of the heading (case sensitive) to list modified files under. If none is specified, the plugin WILL NOT WORK! You also must create this heading yourself."
+				`Name of the heading (h1, h2, h3... etc) (case sensitive) to list modified files under. You must create this heading yourself. If none is specified, the plugin will create a default heading called "${DEFAULT_HEADING}" at the end of your daily note.`
 			)
 			.addText((text) =>
 				text
@@ -69,7 +43,6 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.heading)
 					.onChange(async (value) => {
 						this.plugin.settings.heading = value;
-						await this.plugin.saveSettings();
 						await this.plugin.updateTrackedFiles();
 					})
 			);
@@ -87,7 +60,6 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.outputFormat)
 					.onChange(async (value) => {
 						this.plugin.settings.outputFormat = value;
-						await this.plugin.saveSettings();
 						await this.plugin.updateTrackedFiles();
 					})
 			);
@@ -107,7 +79,6 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.tags)
 					.onChange(async (value) => {
 						this.plugin.settings.tags = value;
-						await this.plugin.saveSettings();
 						await this.plugin.updateTrackedFiles();
 					})
 			);
@@ -128,7 +99,6 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.excludedFolders)
 					.onChange(async (value) => {
 						this.plugin.settings.excludedFolders = value;
-						await this.plugin.saveSettings();
 						await this.plugin.updateTrackedFiles();
 					})
 			);
@@ -136,16 +106,15 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Write Interval")
 			.setDesc(
-				"The interval at which to write your modified files to your daily note. These will also be written when you close Obsidian (a best effort attempt.) Otherwise, they will be written before the next daily note is created."
+				"The interval at which to write your modified files to your daily note. These will also be written when you close Obsidian (a best effort attempt.) Otherwise, they will be written before the next daily note is created. Set to 0 to disable and write to your file ASAP. This is recommended especially if you do not use a sync solution. Please restart Obsidian after changing this value."
 			)
 			.addText((text) =>
 				text
 					.setPlaceholder("e.g. 30")
-					.setValue(this.plugin.settings.writeInterval)
+					.setValue(String(this.plugin.settings.writeInterval))
 					.onChange(async (value) => {
-						this.plugin.settings.writeInterval = value;
+						this.plugin.settings.writeInterval = parseInt(value);
 						await this.plugin.saveSettings();
-						await this.plugin.updateTrackedFiles();
 					})
 			);
 
@@ -162,7 +131,6 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.ignoredNameContains)
 					.onChange(async (value) => {
 						this.plugin.settings.ignoredNameContains = value;
-						await this.plugin.saveSettings();
 						await this.plugin.updateTrackedFiles();
 					})
 			);
