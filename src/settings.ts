@@ -106,7 +106,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Write Interval")
 			.setDesc(
-				"The interval at which to write your modified files to your daily note. These will also be written when you close Obsidian (a best effort attempt.) Otherwise, they will be written before the next daily note is created. Set to 0 to disable and write to your file ASAP. This is recommended especially if you do not use a sync solution. Please restart Obsidian after changing this value."
+				"The interval (in seconds) at which to write your modified files to your daily note. These will also be written when you close Obsidian (a best effort attempt.) Otherwise, they will be written before the next daily note is created. Set to 0 to disable and write to your file ASAP. This is recommended especially if you do not use a sync solution. Please restart Obsidian after changing this value."
 			)
 			.addText((text) =>
 				text

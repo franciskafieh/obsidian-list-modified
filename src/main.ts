@@ -14,7 +14,6 @@ import {
 	createDailyNote,
 	getAllDailyNotes,
 	getDailyNote,
-	getDailyNoteSettings,
 } from "obsidian-daily-notes-interface";
 import { ListModifiedSettings } from "./types";
 import { DEFAULT_HEADING, DEFAULT_SETTINGS } from "./constants";
@@ -27,6 +26,8 @@ export default class ListModified extends Plugin {
 		await this.loadSettings();
 
 		this.writeIntervalInMs = this.settings.writeInterval * 1000;
+
+		// if interval is 0, don't run the registerInterval and instead just run on modify for performance.
 		if (this.writeIntervalInMs) {
 			this.registerInterval(
 				window.setInterval(async () => {
@@ -34,7 +35,6 @@ export default class ListModified extends Plugin {
 				}, this.writeIntervalInMs)
 			);
 		}
-		// if interval is 0, don't run the registerInterval and instead just run on modify for performance.
 
 		this.registerEvent(
 			this.app.metadataCache.on("changed", this.onCacheChange)

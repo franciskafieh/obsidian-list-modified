@@ -12,6 +12,8 @@ This is the result... (must see on GitHub, this won't display on Obsidian x2)
 
 ![plugin demo gif](preview/obsidian-list-modified.gif)
 
+**PLEASE READ [THE (SHORT) WIKI](https://github.com/franciskafieh/obsidian-list-modified/wiki) BEFORE USING!**
+
 # Why?
 
 As of now, dataview queries cannot be "frozen" in time. There are hacky solutions using templater, but I wanted something really simple.
