@@ -1,155 +1,286 @@
-import { serialize } from "monkey-around";
 import {
+	moment,
 	CachedMetadata,
-	Notice,
 	Plugin,
 	TFile,
-	moment,
+	TAbstractFile,
 	getAllTags,
+	Notice,
+	HeadingCache,
 } from "obsidian";
+import { ListModifiedSettingTab } from "./settings";
+import { serialize } from "monkey-around";
 import {
+	createDailyNote,
 	getAllDailyNotes,
 	getDailyNote,
-	createDailyNote,
 } from "obsidian-daily-notes-interface";
-import {
-	ListModifiedSettings,
-	DEFAULT_SETTINGS,
-	ListModifiedSettingTab,
-} from "./settings";
-
-// const templates: readonly [string[], string[]] = [
-// 	['[[link]]', 'f'],
-// 	['fsdf', 'dsfdsf'],
-// ]
+import { ListModifiedSettings } from "./types";
+import { DEFAULT_HEADING, DEFAULT_SETTINGS } from "./constants";
 
 export default class ListModified extends Plugin {
 	settings: ListModifiedSettings;
+	writeIntervalInMs: number;
 
-	async onload() {
+	async onload(): Promise<void> {
 		await this.loadSettings();
+
+		this.writeIntervalInMs = this.settings.writeInterval * 1000;
+
+		// if interval is 0, don't run the registerInterval and instead just run on modify for performance.
+		if (this.writeIntervalInMs) {
+			this.registerInterval(
+				window.setInterval(async () => {
+					await this.updateTrackedFiles(true);
+				}, this.writeIntervalInMs)
+			);
+		}
 
 		this.registerEvent(
 			this.app.metadataCache.on("changed", this.onCacheChange)
 		);
 
+		this.registerEvent(this.app.vault.on("delete", this.onVaultDelete));
+		this.registerEvent(this.app.vault.on("rename", this.onVaultRename));
+
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
 	}
 
-	async saveSettings() {
-		await this.saveData(this.settings);
-	}
-
-	onunload() {}
-
 	private onCacheChange = serialize(
 		async (file: TFile, _data: string, cache: CachedMetadata) => {
-			const modifiedFile = file as TFile;
+			const trackedFiles = this.settings.trackedFiles;
+			const currentDate = moment().format("YYYY-MM-DD");
 
-			let dailyNote: TFile;
-
-			try {
-				dailyNote = getDailyNote(moment(), getAllDailyNotes());
-			} catch (e) {
-				new Notice(
-					"Unable to create daily note. See console for details."
-				);
-				console.log(e.message);
+			if (this.settings.lastTrackedDate !== currentDate) {
+				// last effort to write to file
+				await this.updateTrackedFiles();
+				this.settings.trackedFiles = [];
+				this.settings.lastTrackedDate = currentDate;
 			}
 
-			if (!dailyNote) {
-				if (!this.settings.automaticallyCreateDailyNote) return;
+			const path: string = file.path;
 
-				new Notice("Creating daily note since it did not exist...");
-				dailyNote = await createDailyNote(moment());
+			if (file === getDailyNote(moment(), getAllDailyNotes())) {
+				return;
 			}
 
-			console.log(`=============== FILE "${modifiedFile.name}" MODIFIED, DAILY NOTE "${dailyNote.name}" EXISTS (TIME: ${moment().format('HH:mm:ss:SS')}) ===================`)
+			// make shift set
+			if (
+				!trackedFiles.includes(path) &&
+				!this.cacheContainsIgnoredTag(cache) &&
+				!this.pathIsExcluded(path) &&
+				!this.noteTitleContainsIgnoredText(file.basename)
+			) {
+				trackedFiles.push(path);
+			}
 
-			if (modifiedFile === dailyNote) return;
+			if (
+				(trackedFiles.includes(path) &&
+					this.cacheContainsIgnoredTag(cache)) ||
+				this.pathIsExcluded(path) ||
+				this.noteTitleContainsIgnoredText(file.basename)
+			) {
+				trackedFiles.remove(path);
+			}
 
-			console.log("FILE IS NOT DAILY NOTE");
-			if (this.fileIsLinked(modifiedFile.path, dailyNote.path)) return;
-
-			console.log("FILE IS NOT ALREADY LINKED");
-			if (this.fileContainsIgnoredTag(cache)) return;
-
-			console.log("FILE DOES NOT CONTAIN IGNORED TAGS");
-			if (this.fileIsInExcludedFolder(modifiedFile)) return;
-
-			console.log("FILE IS NOT IN EXCLUDED FOLDER");
-			this.appendLink(dailyNote, modifiedFile);
-
-			console.log("LINK APPENDED")
+			await this.updateTrackedFiles();
 		}
 	);
 
-	private async appendLink(dailyNote: TFile, currentFile: TFile) {
-		const content: string = await this.app.vault.read(dailyNote);
+	private noteTitleContainsIgnoredText(noteTitle: string): boolean {
+		const ignoredText = this.settings.ignoredNameContains
+			.replace(/\s/g, "")
+			.split(",");
 
-		const outputFormat: string = this.settings.outputFormat;
-
-		const resolvedOutput: string = outputFormat.replace(
-			"[[link]]",
-			this.app.fileManager.generateMarkdownLink(
-				currentFile,
-				dailyNote.path
-			)
-		);
-
-		const newContent: string =
-			content.slice(-1) === "\n"
-				? content + resolvedOutput + "\n"
-				: content + "\n" + resolvedOutput;
-		await this.app.vault.modify(dailyNote, newContent);
+		return ignoredText.some((ignoredText: string) => {
+			const title = noteTitle.toLowerCase();
+			const text = ignoredText.toLowerCase();
+			if (!text) {
+				return false;
+			}
+			return title.includes(text);
+		});
 	}
 
-	private fileIsLinked(
-		currentFilePath: string,
-		dailyNotePath: string
-	): boolean {
-		const resolvedLinks =
-			this.app.metadataCache.resolvedLinks[dailyNotePath];
-		console.log("resolved links: " + resolvedLinks);
-		if (!resolvedLinks) return false;
-		const links: string[] = Object.keys(resolvedLinks);
-
-		console.log("links: " + links);
-		if (!links) return false;
-		console.log("current file path is " + currentFilePath);
-		return links.some((l) => l === currentFilePath);
-	}
-
-	private fileContainsIgnoredTag(fileCache: CachedMetadata): boolean {
-		const currentFileTags: string[] = getAllTags(fileCache);
+	private cacheContainsIgnoredTag(cache: CachedMetadata): boolean {
+		const currentFileTags: string[] = getAllTags(cache);
 		const ignoredTags = this.settings.tags.replace(/\s/g, "").split(",");
 		return ignoredTags.some((ignoredTag: string) =>
-			currentFileTags.contains(ignoredTag)
+			currentFileTags.includes(ignoredTag)
 		);
 	}
 
-	private fileIsInExcludedFolder(file: TFile): boolean {
+	private pathIsExcluded(path: string): boolean {
 		const excludedFolders = this.settings.excludedFolders;
-
 		if (!excludedFolders) return false;
-
 		const excludedFolderPaths: string[] = excludedFolders
 			.replace(/\s*, | \s*,/, ",")
 			.split(",")
-			.map(item => item.replace(/^\/|\/$/g, ""));
+			.map((item) => item.replace(/^\/|\/$/g, ""));
 
-		const currentFilePath: string = file.parent.path;
-		console.log(excludedFolderPaths)
+		const currentFilePath: string =
+			this.app.vault.getAbstractFileByPath(path).parent.path;
+
 		return excludedFolderPaths.some((excludedFolder: string) =>
 			currentFilePath.startsWith(excludedFolder)
 		);
 	}
 
-	private async loadSettings() {
+	private onVaultDelete = serialize(async (file: TAbstractFile) => {
+		if (file instanceof TFile) {
+			if (this.settings.trackedFiles.includes(file.path)) {
+				this.settings.trackedFiles.remove(file.path);
+				await this.updateTrackedFiles();
+			}
+		}
+	});
+
+	private onVaultRename = serialize(
+		async (file: TAbstractFile, oldPath: string) => {
+			if (file instanceof TFile) {
+				if (this.settings.trackedFiles.includes(oldPath)) {
+					this.settings.trackedFiles.remove(oldPath);
+					this.settings.trackedFiles.push(file.path);
+
+					await this.saveSettings();
+					// obsidian already handles link renames
+					if (!this.settings.outputFormat.includes("[[link]]")) {
+						await this.updateTrackedFiles();
+					}
+				}
+			}
+		}
+	);
+
+	updateTrackedFiles = serialize(async (doWrite?: boolean) => {
+		await this.saveSettings();
+
+		let dailyNote: TFile;
+
+		try {
+			dailyNote = getDailyNote(moment(), getAllDailyNotes());
+		} catch (e) {
+			new Notice("Unable to load daily note. See console for details.");
+			console.error(e.message);
+		}
+
+		if (!dailyNote) {
+			if (this.settings.automaticallyCreateDailyNote) {
+				this.displayNotice(
+					"Creating daily note since it did not exist..."
+				);
+				dailyNote = await createDailyNote(moment());
+			}
+
+			this.updateTrackedFiles();
+		}
+
+		let cache: CachedMetadata =
+			this.app.metadataCache.getFileCache(dailyNote);
+
+		let currentHeadings: HeadingCache[] = cache?.headings;
+
+		let content: string[] = (await this.app.vault.read(dailyNote)).split(
+			"\n"
+		);
+
+		// auto-create heading
+		if (!currentHeadings || !this.settings.heading) {
+			this.displayNotice(
+				"Cannot find the designated heading in your file. Creating a default one for now..."
+			);
+
+			// mock heading for first run to avoid error
+			currentHeadings = [
+				{ heading: DEFAULT_HEADING, level: 1 } as HeadingCache,
+			];
+
+			this.settings.heading = DEFAULT_HEADING;
+
+			await this.app.vault.append(
+				dailyNote,
+				"\n" +
+					"# " +
+					DEFAULT_HEADING +
+					"\n" +
+					this.settings.trackedFiles
+						.map((path) => this.getFormattedOutput(path))
+						.join("\n")
+			);
+
+			await this.saveSettings();
+			return;
+		}
+
+		// if user set delay, do not write to file after initial run
+		if (this.writeIntervalInMs && !doWrite) {
+			return;
+		}
+
+		for (let i = 0; i < currentHeadings.length; i++) {
+			if (currentHeadings[i].heading === this.settings.heading) {
+				const startPos: number =
+					currentHeadings[i].position.end.line + 1;
+				if (currentHeadings[i + 1]) {
+					const endPos: number =
+						currentHeadings[i + 1].position.start.line - 1;
+					content.splice(
+						startPos,
+						endPos - startPos,
+						...this.settings.trackedFiles.map((path) =>
+							this.getFormattedOutput(path)
+						)
+					);
+				} else {
+					const endPos: number = content.length;
+					content.splice(
+						startPos,
+						endPos - startPos,
+						...this.settings.trackedFiles.map((path) =>
+							this.getFormattedOutput(path)
+						)
+					);
+				}
+
+				this.app.vault.modify(dailyNote, content.join("\n"));
+			}
+		}
+	});
+
+	private getFormattedOutput(path: string): string {
+		const file: TFile = this.app.vault.getAbstractFileByPath(path) as TFile;
+
+		return this.settings.outputFormat
+			.replace(
+				"[[link]]",
+				this.app.fileManager.generateMarkdownLink(
+					file,
+					getDailyNote(moment(), getAllDailyNotes()).path
+				)
+			)
+			.replace("[[name]]", file.basename)
+			.replace(
+				"[[tags]]",
+				getAllTags(this.app.metadataCache.getFileCache(file))
+					.map((tag) => "\\" + tag)
+					.join(", ")
+			)
+			.replace("[[ctime]]", moment(file.stat.ctime).format("YYYY-MM-DD"));
+	}
+
+	async saveSettings(): Promise<void> {
+		await this.saveData(this.settings);
+	}
+
+	private async loadSettings(): Promise<void> {
 		this.settings = Object.assign(
 			{},
 			DEFAULT_SETTINGS,
 			await this.loadData()
 		);
+	}
+
+	public displayNotice(message: string) {
+		new Notice("[Obsidian List Modified] " + message);
 	}
 }
