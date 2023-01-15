@@ -1,3 +1,5 @@
+> Notice: development of this plugin is on hold until February as I am very busy with academics. This plugin is not abandoned.
+
 # Obsidian List Modified
 
 This plugin links all modified files meeting certain criteria to a daily note. This provides an accurate log/archive of files modified on certain days.
