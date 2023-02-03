@@ -1,17 +1,25 @@
 import { serialize } from "monkey-around";
+import { TAbstractFile, TFile } from "obsidian";
+import {
+	getSettings,
+	saveSettings,
+	saveSettingsAndWriteTrackedFiles,
+} from "src/io/settings";
 
 const onVaultRename = serialize(
 	async (file: TAbstractFile, oldPath: string) => {
 		if (file instanceof TFile) {
-			if (this.settings.trackedFiles.includes(oldPath)) {
-				this.settings.trackedFiles.remove(oldPath);
-				this.settings.trackedFiles.push(file.path);
+			const settings = getSettings();
 
-				await this.saveSettings();
-				// obsidian already handles link renames
-				if (!this.settings.outputFormat.includes("[[link]]")) {
-					await this.updateTrackedFiles();
-				}
+			// rename file in tracked files array
+			settings.trackedFiles.find(({ path }) => path === oldPath).path =
+				file.path;
+
+			// obsidian already handles link renames
+			if (settings.outputFormat.includes("[[link]]")) {
+				await saveSettings();
+			} else {
+				await saveSettingsAndWriteTrackedFiles();
 			}
 		}
 	}

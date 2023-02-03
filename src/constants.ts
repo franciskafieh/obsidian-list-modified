@@ -9,7 +9,5 @@ export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	writeInterval: 30,
 	ignoredNameContains: "",
 	lastTrackedDate: "",
-	createdFiles: [],
-	modifiedFiles: [],
-	deletedFiles: [],
+	trackedFiles: [],
 };

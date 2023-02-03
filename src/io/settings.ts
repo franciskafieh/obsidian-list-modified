@@ -15,7 +15,7 @@ export async function saveSettings() {
 
 export async function saveSettingsAndWriteTrackedFiles() {
 	saveSettings();
-	// plugin.updateTrackedFiles(); TODO
+	// writer.updateTrackedFiles();
 }
 
 export async function initSettings(initPlugin: ListModified) {

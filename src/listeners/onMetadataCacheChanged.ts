@@ -13,30 +13,26 @@ const onMetadataCacheChanged = serialize(
 			return;
 		}
 
-		const path: string = file.path;
+		const matchesCriteria = fileMatchesCriteria(file, cache);
 
-		// find which list file is in
+		const currFile = settings.trackedFiles.find(
+			({ path }) => path === file.path
+		);
 
-		// make shift set
-		if (
-			!trackedFiles.includes(path) &&
-			!this.cacheContainsIgnoredTag(cache) &&
-			!this.pathIsExcluded(path) &&
-			!this.noteTitleContainsIgnoredText(file.basename)
-		) {
-			trackedFiles.push(path);
+		if (currFile) {
+			currFile.matchesCriteria = matchesCriteria;
+		} else {
+			settings.trackedFiles.push({
+				path: file.path,
+				matchesCriteria: matchesCriteria,
+				supposedList: "modified",
+			});
 		}
 
-		if (
-			(trackedFiles.includes(path) &&
-				this.cacheContainsIgnoredTag(cache)) ||
-			this.pathIsExcluded(path) ||
-			this.noteTitleContainsIgnoredText(file.basename)
-		) {
-			trackedFiles.remove(path);
+		// if no interval, write to file on every change
+		if (!settings.writeInterval) {
+			await saveSettingsAndWriteTrackedFiles();
 		}
-
-		await saveSettingsAndWriteTrackedFiles();
 	}
 );
 
@@ -46,11 +42,13 @@ async function writeAndResetIfNewDay() {
 
 	if (settings.lastTrackedDate !== currentDate) {
 		await saveSettingsAndWriteTrackedFiles();
-		settings.createdFiles = [];
-		settings.modifiedFiles = [];
-		settings.deletedFiles = [];
+		settings.trackedFiles = [];
 		settings.lastTrackedDate = currentDate;
 	}
+}
+
+function fileMatchesCriteria(file: TFile, cache: CachedMetadata) {
+	return false;
 }
 
 export default onMetadataCacheChanged;
