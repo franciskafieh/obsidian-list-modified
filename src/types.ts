@@ -7,5 +7,7 @@ export interface ListModifiedSettings {
 	writeInterval: number;
 	ignoredNameContains: string;
 	lastTrackedDate: string;
-	trackedFiles: string[];
+	createdFiles: string[];
+	modifiedFiles: string[];
+	deletedFiles: string[];
 }
