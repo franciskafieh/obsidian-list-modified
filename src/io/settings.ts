@@ -10,11 +10,11 @@ export function getSettings(): ListModifiedSettings {
 }
 
 export async function saveSettings() {
-	plugin.saveData(settings);
+	await plugin.saveData(settings);
 }
 
 export async function saveSettingsAndWriteTrackedFiles() {
-	saveSettings();
+	await saveSettings();
 	// writer.updateTrackedFiles();
 }
 
