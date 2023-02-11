@@ -1,7 +1,11 @@
 import { serialize } from "monkey-around";
 import { CachedMetadata, TFile, moment, getAllTags } from "obsidian";
 import { getAllDailyNotes, getDailyNote } from "obsidian-daily-notes-interface";
-import { getSettings, saveSettingsAndWriteTrackedFiles } from "src/io/settings";
+import {
+	getSettings,
+	saveSettings,
+	saveSettingsAndWriteTrackedFiles,
+} from "src/io/settings";
 
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {
@@ -29,8 +33,9 @@ const onMetadataCacheChanged = serialize(
 			});
 		}
 
-		// if no interval, write to file on every change
-		if (!settings.writeInterval) {
+		if (settings.writeInterval) {
+			await saveSettings();
+		} else {
 			await saveSettingsAndWriteTrackedFiles();
 		}
 	}
@@ -56,9 +61,9 @@ function fileMatchesCriteria(file: TFile, cache: CachedMetadata) {
 }
 
 function noteTitleContainsIgnoredText(noteTitle: string): boolean {
-	const ignoredText = this.settings.ignoredNameContains
-		.replace(/\s/g, "")
-		.split(",");
+	const ignoredNameContains = this.settings?.ignoredNameContains;
+	if (!ignoredNameContains) return false;
+	const ignoredText = ignoredNameContains.replace(/\s/g, "").split(",");
 
 	return ignoredText.some((ignoredText: string) => {
 		const title = noteTitle.toLowerCase();
@@ -72,14 +77,16 @@ function noteTitleContainsIgnoredText(noteTitle: string): boolean {
 
 function cacheContainsIgnoredTag(cache: CachedMetadata): boolean {
 	const currentFileTags: string[] = getAllTags(cache);
-	const ignoredTags = this.settings.tags.replace(/\s/g, "").split(",");
+	const tags = this.settings?.tags;
+	if (!tags) return false;
+	const ignoredTags = tags.replace(/\s/g, "").split(",");
 	return ignoredTags.some((ignoredTag: string) =>
 		currentFileTags.includes(ignoredTag)
 	);
 }
 
 function pathIsExcluded(path: string): boolean {
-	const excludedFolders = this.settings.excludedFolders;
+	const excludedFolders = this.settings?.excludedFolders;
 	if (!excludedFolders) return false;
 	const excludedFolderPaths: string[] = excludedFolders
 		.replace(/\s*, | \s*,/, ",")

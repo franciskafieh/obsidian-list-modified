@@ -20,9 +20,9 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 			)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(settings.automaticallyCreateDailyNote)
+					.setValue(settings.autoCreateLogNote)
 					.onChange(async (value) => {
-						settings.automaticallyCreateDailyNote = value;
+						settings.autoCreateLogNote = value;
 						await saveSettings();
 					});
 			});
@@ -35,9 +35,9 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 			.addText((text) =>
 				text
 					.setPlaceholder("e.g. Modified Today")
-					.setValue(settings.heading)
+					.setValue(settings.primaryHeading)
 					.onChange(async (value) => {
-						settings.heading = value;
+						settings.primaryHeading = value;
 						await saveSettingsAndWriteTrackedFiles();
 					})
 			);
