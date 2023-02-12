@@ -10,7 +10,7 @@ export interface ListModifiedSettings {
 
 	// LOG NOTE
 	autoCreateLogNote: boolean;
-	logNoteType: "daily" | "weekly" | "monthly";
+	logNoteType: PeriodicNoteType;
 	writeInterval: number;
 
 	// HEADINGS
@@ -30,3 +30,5 @@ export interface ListModifiedSettings {
 		matchesCriteria: boolean;
 	}[];
 }
+
+export type PeriodicNoteType = "daily" | "weekly" | "monthly";

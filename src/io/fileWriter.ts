@@ -5,19 +5,21 @@ import {
 	getFormattedHeading,
 	getFormattedOutput,
 } from "../utils/formatter";
-import { TFile, moment } from "obsidian";
-import {
-	getDailyNote,
-	getMonthlyNote,
-	getWeeklyNote,
-} from "obsidian-daily-notes-interface";
+import { TFile } from "obsidian";
 import useWarnedState from "./useWarnedState";
-import { getNoteCache } from "./noteCache";
+import { getLogNote } from "./noteCache";
 
 export async function writeListsToLogFile() {
 	const settings = getSettings();
 
-	const logNote: TFile = await createAndGetLogNote();
+	const logNote: TFile = await getLogNote();
+
+	// TODO if not exists, refresh cache and try again
+	// if (!app.vault.exists(logNote.path) && settings.autoCreateLogNote) {
+	// 	await app.vault.create(logNote.path);
+	//
+	// }
+	// }
 
 	const userHasBeenWarnedFor = useWarnedState();
 
@@ -66,19 +68,6 @@ export async function writeListsToLogFile() {
 	}
 
 	await this.app.vault.modify(logNote, content.join("\n"));
-}
-
-async function createAndGetLogNote() {
-	switch (getSettings().logNoteType) {
-		case "daily":
-			return getDailyNote(moment(), getNoteCache("daily"));
-		case "weekly":
-			return getWeeklyNote(moment(), getNoteCache("weekly"));
-		case "monthly":
-			return getMonthlyNote(moment(), getNoteCache("monthly"));
-		default:
-			return null;
-	}
 }
 
 async function createHeadingAndAppendContentIfApplicable(logNote: TFile) {

@@ -4,7 +4,8 @@ import {
 	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "./settings";
-import { invalidateCaches } from "./noteCache";
+import { PeriodicNoteType } from "../types";
+import { refreshNoteCache } from "./noteCache";
 
 export class ListModifiedSettingTab extends PluginSettingTab {
 	display(): void {
@@ -128,9 +129,9 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.addOption("weekly", "Weekly (Periodic Notes)")
 					.addOption("monthly", "Monthly (Periodic Notes)")
 					.setValue(settings.logNoteType)
-					.onChange(async (value: "daily" | "weekly" | "monthly") => {
+					.onChange(async (value: PeriodicNoteType) => {
 						settings.logNoteType = value;
-						invalidateCaches();
+						refreshNoteCache(value);
 						await saveSettings();
 					});
 			});

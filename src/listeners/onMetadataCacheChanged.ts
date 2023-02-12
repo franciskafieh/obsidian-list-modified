@@ -6,8 +6,8 @@ import {
 	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "src/io/settings";
+import { displayNotice } from "../utils/formatter";
 import { refreshNoteCache } from "../io/noteCache";
-import { consoleWarn, displayNotice } from "../utils/formatter";
 
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {

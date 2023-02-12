@@ -1,6 +1,6 @@
 import { Notice, TFile, moment, getAllTags } from "obsidian";
-import { getAllDailyNotes, getDailyNote } from "obsidian-daily-notes-interface";
 import { getSettings } from "../io/settings";
+import { getLogNote } from "../io/noteCache";
 
 export function displayNotice(message: string) {
 	new Notice("[Obsidian List Modified] " + message);
@@ -13,6 +13,7 @@ export function consoleWarn(message: string) {
 export function getFormattedOutput(path: string): string {
 	const file: TFile = app.vault.getAbstractFileByPath(path) as TFile;
 
+	// for deleted section, etc where no metadata is stored
 	if (!file) {
 		return "- " + path;
 	}
@@ -22,13 +23,13 @@ export function getFormattedOutput(path: string): string {
 			"[[link]]",
 			this.app.fileManager.generateMarkdownLink(
 				file,
-				getDailyNote(moment(), getAllDailyNotes()).path
+				getLogNote()?.path || ""
 			)
 		)
 		.replace(/\[\[name]]/g, file.basename)
 		.replace(
 			/\[\[tags]]/g,
-			getAllTags(this.app.metadataCache.getFileCache(file))
+			(getAllTags(this.app.metadataCache.getFileCache(file)) || [""])
 				.map((tag) => "\\" + tag)
 				.join(", ")
 		)
