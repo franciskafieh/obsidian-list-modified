@@ -135,19 +135,19 @@ function getFinalContentBlock() {
 		}
 	}
 
-	let finalContentBlock = "";
+	let finalContentBlock = settings.appendSpaceAfterHeadings ? "\n" : "";
 
 	if (settings.separateCreated) {
 		finalContentBlock +=
 			getFormattedHeading("## " + settings.createdHeading) +
 			createdList.join("\n") +
-			"\n";
+			"\n\n";
 	}
 
 	finalContentBlock +=
 		getFormattedHeading("## " + settings.modifiedHeading) +
 		modifiedList.join("\n") +
-		"\n";
+		"\n\n";
 
 	if (settings.separateDeleted) {
 		finalContentBlock +=

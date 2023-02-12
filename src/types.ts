@@ -23,7 +23,7 @@ export interface ListModifiedSettings {
 	deletedHeading: string;
 
 	// INTERNAL
-	lastTrackedDate: string;
+	latestTrackedDate: string;
 	trackedFiles: {
 		path: string;
 		supposedList: "created" | "modified" | "deleted";

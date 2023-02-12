@@ -21,5 +21,5 @@ export async function saveSettingsAndWriteTrackedFiles() {
 
 export async function initSettings(initPlugin: ListModified) {
 	plugin = initPlugin;
-	settings = await Object.assign({}, DEFAULT_SETTINGS, initPlugin.loadData());
+	settings = Object.assign({}, DEFAULT_SETTINGS, await plugin.loadData());
 }

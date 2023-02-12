@@ -7,12 +7,13 @@ import {
 	saveSettingsAndWriteTrackedFiles,
 } from "src/io/settings";
 import { refreshNoteCache } from "../io/noteCache";
+import { consoleWarn } from "../utils/formatter";
 
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {
-		const settings = getSettings();
-
 		await writeAndResetIfNewDay();
+
+		const settings = getSettings();
 
 		if (file === getDailyNote(moment(), getAllDailyNotes())) {
 			return;
@@ -46,12 +47,17 @@ async function writeAndResetIfNewDay() {
 	const settings = getSettings();
 	const currentDate = moment().format("YYYY-MM-DD");
 
-	if (settings.lastTrackedDate !== currentDate) {
+	if (settings.latestTrackedDate !== currentDate) {
+		consoleWarn("New day detected, writing tracked files and resetting");
+		console.log(settings.latestTrackedDate);
+		console.log(currentDate);
 		refreshNoteCache(settings.logNoteType);
-
 		await saveSettingsAndWriteTrackedFiles();
+
 		settings.trackedFiles = [];
-		settings.lastTrackedDate = currentDate;
+		settings.latestTrackedDate = currentDate;
+		await saveSettings();
+		console.log(settings.latestTrackedDate);
 	}
 }
 

@@ -13,6 +13,10 @@ export function consoleWarn(message: string) {
 export function getFormattedOutput(path: string): string {
 	const file: TFile = app.vault.getAbstractFileByPath(path) as TFile;
 
+	if (!file) {
+		return "- " + path;
+	}
+
 	return getSettings()
 		.outputFormat.replace(
 			"[[link]]",

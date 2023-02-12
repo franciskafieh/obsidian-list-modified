@@ -20,11 +20,11 @@ export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	primaryHeading: "Changed Notes",
 	modifiedHeading: "Modified",
 	separateCreated: false,
-	createdHeading: "",
+	createdHeading: "Created",
 	separateDeleted: false,
-	deletedHeading: "",
+	deletedHeading: "Deleted",
 
 	// INTERNAL
-	lastTrackedDate: "",
+	latestTrackedDate: "",
 	trackedFiles: [],
 };
