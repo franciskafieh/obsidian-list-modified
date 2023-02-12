@@ -4,6 +4,7 @@ import {
 	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "./settings";
+import { invalidateCaches } from "./noteCache";
 
 export class ListModifiedSettingTab extends PluginSettingTab {
 	display(): void {
@@ -129,6 +130,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.setValue(settings.logNoteType)
 					.onChange(async (value: "daily" | "weekly" | "monthly") => {
 						settings.logNoteType = value;
+						invalidateCaches();
 						await saveSettings();
 					});
 			});
