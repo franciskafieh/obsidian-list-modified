@@ -5,7 +5,6 @@ import {
 	saveSettingsAndWriteTrackedFiles,
 } from "./settings";
 import { PeriodicNoteType } from "../types";
-import { refreshNoteCache } from "./noteCache";
 
 export class ListModifiedSettingTab extends PluginSettingTab {
 	display(): void {
@@ -114,7 +113,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.setValue(settings.autoCreateLogNote)
 					.onChange(async (value) => {
 						settings.autoCreateLogNote = value;
-						await saveSettings();
+						await saveSettingsAndWriteTrackedFiles();
 					});
 			});
 
@@ -131,8 +130,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.setValue(settings.logNoteType)
 					.onChange(async (value: PeriodicNoteType) => {
 						settings.logNoteType = value;
-						refreshNoteCache(value);
-						await saveSettings();
+						await saveSettingsAndWriteTrackedFiles();
 					});
 			});
 
@@ -166,7 +164,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.setValue(settings.autoCreatePrimaryHeading)
 					.onChange(async (value) => {
 						settings.autoCreatePrimaryHeading = value;
-						await saveSettings();
+						await saveSettingsAndWriteTrackedFiles();
 					});
 			});
 

@@ -7,35 +7,23 @@ import {
 } from "../utils/formatter";
 import { TFile } from "obsidian";
 import useWarnedState from "./useWarnedState";
-import { getLogNote } from "./noteCache";
+import { serialize } from "monkey-around";
+import { createLogNote, getLogNote } from "./noteCache";
 
-export async function writeListsToLogFile() {
+export const writeListsToLogFile = serialize(async () => {
 	const settings = getSettings();
 
-	const logNote: TFile = await getLogNote();
+	const logNote = await setupLogNote();
+	if (!logNote) return;
 
-	// TODO if not exists, refresh cache and try again
-	// if (!app.vault.exists(logNote.path) && settings.autoCreateLogNote) {
-	// 	await app.vault.create(logNote.path);
-	//
-	// }
-	// }
+	const fileCache = app.metadataCache.getFileCache(logNote);
 
-	const userHasBeenWarnedFor = useWarnedState();
-
-	if (!logNote) {
-		consoleWarn("Log note not found");
-
-		if (!userHasBeenWarnedFor.fileNotExisting) {
-			displayNotice(
-				"Your log file does not exist. Please check your settings."
-			);
-			userHasBeenWarnedFor.fileNotExisting = true;
-		}
+	// file has probably just been created
+	if (fileCache === null) {
 		return;
 	}
 
-	const headings = app.metadataCache?.getCache(logNote.path)?.headings;
+	const headings = fileCache.headings;
 
 	if (!headings) {
 		await createHeadingAndAppendContentIfApplicable(logNote);
@@ -55,7 +43,7 @@ export async function writeListsToLogFile() {
 		(heading, index) => index > primaryHeadingIndex && heading.level === 1
 	);
 
-	const content: string[] = (await this.app.vault.read(logNote)).split("\n");
+	const content: string[] = (await app.vault.read(logNote)).split("\n");
 
 	const startPos = headings[primaryHeadingIndex].position.end.line + 1;
 
@@ -67,7 +55,30 @@ export async function writeListsToLogFile() {
 		content.splice(startPos, endPos - startPos, getFinalContentBlock());
 	}
 
-	await this.app.vault.modify(logNote, content.join("\n"));
+	await app.vault.modify(logNote, content.join("\n"));
+});
+
+async function setupLogNote() {
+	const settings = getSettings();
+
+	if (getLogNote()) {
+		return getLogNote();
+	}
+
+	if (settings.autoCreateLogNote) {
+		return await createLogNote();
+	}
+
+	consoleWarn("Log note not found");
+	const userHasBeenWarnedFor = useWarnedState();
+
+	if (!userHasBeenWarnedFor.fileNotExisting) {
+		displayNotice(
+			"Your log file does not exist. Please check your settings."
+		);
+		userHasBeenWarnedFor.fileNotExisting = true;
+	}
+	return null;
 }
 
 async function createHeadingAndAppendContentIfApplicable(logNote: TFile) {
@@ -147,64 +158,3 @@ function getFinalContentBlock() {
 
 	return finalContentBlock;
 }
-
-// 	updateTrackedFiles = serialize(async (doWrite?: boolean) => {
-// 		await this.saveSettings();
-
-// 		let dailyNote: TFile;
-
-// 		try {
-// 			dailyNote = getDailyNote(moment(), getAllDailyNotes());
-// 		} catch (e) {
-// 			new Notice("Unable to load daily note. See console for details.");
-// 			console.error(e.message);
-// 		}
-
-// 		if (!dailyNote) {
-// 			if (this.settings.automaticallyCreateDailyNote) {
-// 				this.displayNotice(
-// 					"Creating daily note since it did not exist..."
-// 				);
-// 				dailyNote = await createDailyNote(moment());
-// 			}
-
-// 			await saveSettingsAndWriteTrackedFiles();
-// 		}
-
-// 		const cache: CachedMetadata =
-// 			this.app.metadataCache.getFileCache(dailyNote);
-
-// 		let currentHeadings: HeadingCache[] = cache?.headings;
-
-// 		// auto-create heading
-// 		if (!currentHeadings || !this.settings.heading) {
-// 			this.displayNotice(
-// 				"Cannot find the designated heading in your file. Creating a default one for now..."
-// 			);
-
-// 			// mock heading for first run to avoid error
-// 			currentHeadings = [
-// 				{ heading: this.settings.heading, level: 1 } as HeadingCache,
-// 			];
-
-// 			await this.app.vault.append(
-// 				dailyNote,
-// 				"\n" +
-// 					"# " +
-// 					this.settings.heading +
-// 					"\n" +
-// 					this.settings.trackedFiles
-// 						.map((path) => this.getFormattedOutput(path))
-// 						.join("\n")
-// 			);
-
-// 			await this.saveSettings();
-// 			return;
-// 		}
-
-// 		// if user set delay, do not write to file after initial run
-// 		if (this.writeIntervalInMs && !doWrite) {
-// 			return;
-// 		}
-
-// 	});

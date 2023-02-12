@@ -1,5 +1,8 @@
-import { TFile, moment } from "obsidian";
+import { getSettings } from "./settings";
 import {
+	createDailyNote,
+	createMonthlyNote,
+	createWeeklyNote,
 	getAllDailyNotes,
 	getAllMonthlyNotes,
 	getAllWeeklyNotes,
@@ -7,56 +10,30 @@ import {
 	getMonthlyNote,
 	getWeeklyNote,
 } from "obsidian-daily-notes-interface";
-import { getSettings } from "./settings";
-import { PeriodicNoteType } from "../types";
+import { moment, TFile } from "obsidian";
 
-let dailyNoteCache: Record<string, TFile>;
-let weeklyNoteCache: Record<string, TFile>;
-let monthlyNoteCache: Record<string, TFile>;
-
-export function getLogNote(): TFile | null {
+export function getLogNote(): TFile {
 	const settings = getSettings();
 
 	switch (settings.logNoteType) {
 		case "daily":
-			return getDailyNote(moment(), getNoteCache("daily"));
+			return getDailyNote(moment(), getAllDailyNotes());
 		case "weekly":
-			return getWeeklyNote(moment(), getNoteCache("weekly"));
+			return getWeeklyNote(moment(), getAllWeeklyNotes());
 		case "monthly":
-			return getMonthlyNote(moment(), getNoteCache("monthly"));
+			return getMonthlyNote(moment(), getAllMonthlyNotes());
 	}
 }
 
-export function getNoteCache(type: PeriodicNoteType) {
-	switch (type) {
-		case "daily":
-			if (!dailyNoteCache) {
-				dailyNoteCache = getAllDailyNotes();
-			}
-			return dailyNoteCache;
-		case "weekly":
-			if (!weeklyNoteCache) {
-				weeklyNoteCache = getAllWeeklyNotes();
-			}
-			return weeklyNoteCache;
-		case "monthly":
-			if (!monthlyNoteCache) {
-				monthlyNoteCache = getAllMonthlyNotes();
-			}
-			return monthlyNoteCache;
-	}
-}
+export async function createLogNote() {
+	const settings = getSettings();
 
-export function refreshNoteCache(type: PeriodicNoteType) {
-	switch (type) {
+	switch (settings.logNoteType) {
 		case "daily":
-			dailyNoteCache = getAllDailyNotes();
-			break;
+			return await createDailyNote(moment());
 		case "weekly":
-			weeklyNoteCache = getAllWeeklyNotes();
-			break;
+			return await createWeeklyNote(moment());
 		case "monthly":
-			monthlyNoteCache = getAllMonthlyNotes();
-			break;
+			return await createMonthlyNote(moment());
 	}
 }

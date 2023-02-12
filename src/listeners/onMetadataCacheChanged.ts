@@ -1,21 +1,19 @@
 import { serialize } from "monkey-around";
 import { CachedMetadata, TFile, moment, getAllTags } from "obsidian";
-import { getAllDailyNotes, getDailyNote } from "obsidian-daily-notes-interface";
 import {
 	getSettings,
 	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "src/io/settings";
 import { displayNotice } from "../utils/formatter";
-import { refreshNoteCache } from "../io/noteCache";
+import { getLogNote } from "../io/noteCache";
 
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {
 		await writeAndResetIfNewDay();
 
 		const settings = getSettings();
-
-		if (file === getDailyNote(moment(), getAllDailyNotes())) {
+		if (file === getLogNote()) {
 			return;
 		}
 
@@ -51,7 +49,6 @@ async function writeAndResetIfNewDay() {
 		displayNotice(
 			"New day detected, writing tracked files and resetting..."
 		);
-		refreshNoteCache(settings.logNoteType);
 		await saveSettingsAndWriteTrackedFiles();
 
 		settings.trackedFiles = [];

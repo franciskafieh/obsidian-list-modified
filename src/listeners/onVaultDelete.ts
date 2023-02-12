@@ -1,6 +1,10 @@
 import { serialize } from "monkey-around";
 import { TAbstractFile, TFile } from "obsidian";
-import { getSettings, saveSettings } from "src/io/settings";
+import {
+	getSettings,
+	saveSettings,
+	saveSettingsAndWriteTrackedFiles,
+} from "src/io/settings";
 
 const onVaultDelete = serialize(async (file: TAbstractFile) => {
 	if (file instanceof TFile) {
@@ -21,7 +25,11 @@ const onVaultDelete = serialize(async (file: TAbstractFile) => {
 			});
 		}
 
-		await saveSettings();
+		if (settings.writeInterval) {
+			await saveSettings();
+		} else {
+			await saveSettingsAndWriteTrackedFiles();
+		}
 	}
 });
 

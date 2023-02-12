@@ -1,6 +1,10 @@
 import { serialize } from "monkey-around";
 import { TAbstractFile } from "obsidian";
-import { getSettings, saveSettings } from "src/io/settings";
+import {
+	getSettings,
+	saveSettings,
+	saveSettingsAndWriteTrackedFiles,
+} from "src/io/settings";
 
 const onVaultCreate = serialize(async (file: TAbstractFile) => {
 	const settings = getSettings();
@@ -20,7 +24,11 @@ const onVaultCreate = serialize(async (file: TAbstractFile) => {
 		});
 	}
 
-	await saveSettings();
+	if (settings.writeInterval) {
+		await saveSettings();
+	} else {
+		await saveSettingsAndWriteTrackedFiles();
+	}
 });
 
 export default onVaultCreate;

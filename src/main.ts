@@ -9,15 +9,11 @@ import {
 	initSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "./io/settings";
-import { invalidateCaches } from "./io/noteCache";
-
 export default class ListModified extends Plugin {
 	async onload(): Promise<void> {
 		await initSettings(this);
 
 		const settings = getSettings();
-
-		await invalidateCaches();
 
 		const writeIntervalInMs = settings.writeInterval * 1000;
 
