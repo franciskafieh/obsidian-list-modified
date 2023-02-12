@@ -157,7 +157,8 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Automatically create primary heading")
 			.setDesc(
-				"If this is disabled, the plugin will not work until you create the heading yourself."
+				"If this is disabled, the plugin will not work until you create the heading yourself. " +
+					"Please KEEP THIS DISABLED if using the Templater plugin with folder templates."
 			)
 			.addToggle((toggle) => {
 				toggle
