@@ -2,7 +2,6 @@ import { DEFAULT_SETTINGS } from "src/constants";
 import ListModified from "src/main";
 import { ListModifiedSettings } from "src/types";
 import { writeListsToLogFile } from "./fileWriter";
-import { App } from "obsidian";
 
 let plugin: ListModified;
 let settings: ListModifiedSettings;

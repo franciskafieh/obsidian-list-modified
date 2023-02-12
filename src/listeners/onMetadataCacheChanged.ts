@@ -6,6 +6,7 @@ import {
 	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "src/io/settings";
+import { refreshNoteCache } from "../io/noteCache";
 
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {
@@ -46,6 +47,8 @@ async function writeAndResetIfNewDay() {
 	const currentDate = moment().format("YYYY-MM-DD");
 
 	if (settings.lastTrackedDate !== currentDate) {
+		refreshNoteCache(settings.logNoteType);
+
 		await saveSettingsAndWriteTrackedFiles();
 		settings.trackedFiles = [];
 		settings.lastTrackedDate = currentDate;

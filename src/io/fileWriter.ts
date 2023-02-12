@@ -33,7 +33,7 @@ export async function writeListsToLogFile() {
 		return;
 	}
 
-	const headings = app.metadataCache.getCache(logNote.path).headings;
+	const headings = app.metadataCache?.getCache(logNote.path)?.headings;
 
 	if (!headings) {
 		await createHeadingAndAppendContentIfApplicable(logNote);
@@ -53,14 +53,12 @@ export async function writeListsToLogFile() {
 		(heading, index) => index > primaryHeadingIndex && heading.level === 1
 	);
 
-	// we've established that the primary heading exists
-
 	const content: string[] = (await this.app.vault.read(logNote)).split("\n");
 
 	const startPos = headings[primaryHeadingIndex].position.end.line + 1;
 
 	if (headings[followingHeadingIndex]) {
-		const endPos = headings[followingHeadingIndex].position.start.line - 1;
+		const endPos = headings[followingHeadingIndex].position.start.line;
 		content.splice(startPos, endPos - startPos, getFinalContentBlock());
 	} else {
 		const endPos: number = content.length;
