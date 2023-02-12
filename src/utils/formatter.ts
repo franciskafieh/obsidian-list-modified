@@ -3,7 +3,9 @@ import { getSettings } from "../io/settings";
 import { getLogNote } from "../io/noteCache";
 
 export function displayNotice(message: string) {
-	new Notice("[Obsidian List Modified] " + message);
+	const notice = new Notice("", 10000);
+	// @ts-ignore
+	notice.noticeEl.innerHTML = `<b>[Obsidian List Modified]</b><br/>${message}`;
 }
 
 export function consoleWarn(message: string) {
