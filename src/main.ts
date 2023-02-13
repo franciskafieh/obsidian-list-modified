@@ -15,6 +15,8 @@ export default class ListModified extends Plugin {
 
 		const settings = getSettings();
 
+		this.migrateToTwoPointOne();
+
 		const writeIntervalInMs = settings.writeInterval * 1000;
 
 		// if interval is 0, don't run the registerInterval and instead just run on modify for performance.
@@ -38,5 +40,32 @@ export default class ListModified extends Plugin {
 		});
 
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
+	}
+
+	migrateToTwoPointOne() {
+		const settings = getSettings();
+		// if the settings are already migrated, don't do anything.
+		if (settings.autoCreatePrimaryHeading !== undefined || null) {
+			return;
+		}
+
+		settings.autoCreatePrimaryHeading =
+			// @ts-ignore
+			settings.automaticallyCreateDailyNote;
+
+		// @ts-ignore
+		settings.primaryHeading = settings.heading;
+
+		if (typeof settings.trackedFiles[0] === "string") {
+			settings.trackedFiles =
+				// @ts-ignore
+				settings.trackedFiles.map((file: string) => {
+					return {
+						path: file,
+						supposedList: "modified",
+						matchesCriteria: true,
+					};
+				});
+		}
 	}
 }
