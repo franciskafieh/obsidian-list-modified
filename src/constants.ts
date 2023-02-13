@@ -25,6 +25,6 @@ export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	deletedHeading: "Deleted",
 
 	// INTERNAL
-	latestTrackedDate: "",
+	lastTrackedDate: "",
 	trackedFiles: [],
 };

@@ -7,15 +7,17 @@ import onVaultCreate from "./listeners/onVaultCreate";
 import {
 	getSettings,
 	initSettings,
+	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "./io/settings";
+import { displayNotice } from "./utils/formatter";
 export default class ListModified extends Plugin {
 	async onload(): Promise<void> {
 		await initSettings(this);
 
 		const settings = getSettings();
 
-		this.migrateToTwoPointOne();
+		await this.migrateToTwoPointOne();
 
 		const writeIntervalInMs = settings.writeInterval * 1000;
 
@@ -42,19 +44,29 @@ export default class ListModified extends Plugin {
 		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
 	}
 
-	migrateToTwoPointOne() {
+	async migrateToTwoPointOne() {
 		const settings = getSettings();
 		// if the settings are already migrated, don't do anything.
-		if (settings.autoCreatePrimaryHeading !== undefined || null) {
+		// @ts-ignore
+		if (!settings.heading) {
 			return;
 		}
 
+		displayNotice(
+			"Migrating to 2.1... you will notice duplicate headings in your file, which you can safely delete."
+		);
 		settings.autoCreatePrimaryHeading =
 			// @ts-ignore
 			settings.automaticallyCreateDailyNote;
 
 		// @ts-ignore
+		settings.automaticallyCreateDailyNote = null;
+
+		// @ts-ignore
 		settings.primaryHeading = settings.heading;
+
+		// @ts-ignore
+		settings.heading = null;
 
 		if (typeof settings.trackedFiles[0] === "string") {
 			settings.trackedFiles =
@@ -67,5 +79,7 @@ export default class ListModified extends Plugin {
 					};
 				});
 		}
+
+		await saveSettings();
 	}
 }

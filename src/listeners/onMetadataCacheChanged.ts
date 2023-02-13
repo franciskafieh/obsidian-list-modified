@@ -43,7 +43,7 @@ const onMetadataCacheChanged = serialize(
 
 async function writeAndResetIfNewDay() {
 	const settings = getSettings();
-	const lastTrackedDate = moment(settings.latestTrackedDate);
+	const lastTrackedDate = moment(settings.lastTrackedDate);
 
 	const granularity = new Map([
 		["daily", "day"],
@@ -59,7 +59,7 @@ async function writeAndResetIfNewDay() {
 		await saveSettingsAndWriteTrackedFiles();
 
 		settings.trackedFiles = [];
-		settings.latestTrackedDate = moment().format("YYYY-MM-DD");
+		settings.lastTrackedDate = moment().format("YYYY-MM-DD");
 		await saveSettings();
 	}
 }
