@@ -53,7 +53,7 @@ export default class ListModified extends Plugin {
 		}
 
 		displayNotice(
-			"Migrating to 2.1... you will notice duplicate headings in your file, which you can safely delete."
+			"Migrating to 2.1... you will notice duplicate headings in your file, which you can safely delete. This is a temporary bug"
 		);
 		settings.autoCreatePrimaryHeading =
 			// @ts-ignore

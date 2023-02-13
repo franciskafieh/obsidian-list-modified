@@ -5,9 +5,12 @@ import {
 	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "src/io/settings";
+import { getLogNote } from "../io/noteCache";
 
 const onVaultCreate = serialize(async (file: TAbstractFile) => {
 	const settings = getSettings();
+
+	if (file === getLogNote()) return;
 
 	const existingFile = settings.trackedFiles.find(
 		({ path }) => path === file.path
