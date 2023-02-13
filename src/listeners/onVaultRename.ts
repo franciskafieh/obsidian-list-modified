@@ -11,16 +11,14 @@ const onVaultRename = serialize(
 		if (file instanceof TFile) {
 			const settings = getSettings();
 
-			// rename file in tracked files array
-			const oldFile = settings.trackedFiles.find(
-				({ path }) => path === oldPath
+			// if entry with current new path, remove it (assume it was previously deleted)
+			settings.trackedFiles.remove(
+				settings.trackedFiles.find(({ path }) => path === file.path)
 			);
 
-			oldFile.path = file.path;
-
-			if (oldFile.supposedList === "deleted") {
-				oldFile.supposedList = "created";
-			}
+			// rename file in tracked files array
+			settings.trackedFiles.find(({ path }) => path === oldPath).path =
+				file.path;
 
 			// obsidian already handles link renames
 			if (settings.outputFormat.includes("[[link]]")) {
