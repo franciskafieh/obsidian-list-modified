@@ -43,16 +43,23 @@ const onMetadataCacheChanged = serialize(
 
 async function writeAndResetIfNewDay() {
 	const settings = getSettings();
-	const currentDate = moment().format("YYYY-MM-DD");
+	const lastTrackedDate = moment(settings.latestTrackedDate);
 
-	if (settings.latestTrackedDate !== currentDate) {
+	const granularity = new Map([
+		["daily", "day"],
+		["weekly", "week"],
+		["monthly", "month"],
+	]).get(settings.logNoteType);
+
+	// @ts-ignore
+	if (!lastTrackedDate.isSame(moment(), granularity)) {
 		displayNotice(
-			"New day detected, writing tracked files and resetting..."
+			"New day/week/month detected, writing tracked files and resetting..."
 		);
 		await saveSettingsAndWriteTrackedFiles();
 
 		settings.trackedFiles = [];
-		settings.latestTrackedDate = currentDate;
+		settings.latestTrackedDate = moment().format("YYYY-MM-DD");
 		await saveSettings();
 	}
 }

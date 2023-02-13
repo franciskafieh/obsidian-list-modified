@@ -12,8 +12,15 @@ const onVaultRename = serialize(
 			const settings = getSettings();
 
 			// rename file in tracked files array
-			settings.trackedFiles.find(({ path }) => path === oldPath).path =
-				file.path;
+			const oldFile = settings.trackedFiles.find(
+				({ path }) => path === oldPath
+			);
+
+			oldFile.path = file.path;
+
+			if (oldFile.supposedList === "deleted") {
+				oldFile.supposedList = "created";
+			}
 
 			// obsidian already handles link renames
 			if (settings.outputFormat.includes("[[link]]")) {
