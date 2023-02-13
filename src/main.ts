@@ -52,9 +52,7 @@ export default class ListModified extends Plugin {
 			return;
 		}
 
-		displayNotice(
-			"Migrating to 2.1... you will notice duplicate headings in your file, which you can safely delete. This is a temporary bug"
-		);
+		displayNotice("Migrating to 2.1...");
 		settings.autoCreatePrimaryHeading =
 			// @ts-ignore
 			settings.automaticallyCreateDailyNote;
