@@ -43,22 +43,38 @@ export const writeListsToLogFile = serialize(async () => {
 	const followingHeadingIndex = headings.findIndex(
 		(heading, index) => index > primaryHeadingIndex && heading.level === 2
 	);
+	try {
+		await app.vault.process(logNote, (data) => {
+			const content = data.split("\n");
 
-	await app.vault.process(logNote, (data) => {
-		const content = data.split("\n");
+			const startPos =
+				headings[primaryHeadingIndex].position.end.line + 1;
 
-		const startPos = headings[primaryHeadingIndex].position.end.line + 1;
+			if (headings[followingHeadingIndex]) {
+				const endPos =
+					headings[followingHeadingIndex].position.start.line;
+				content.splice(
+					startPos,
+					endPos - startPos,
+					getFinalContentBlock()
+				);
+			} else {
+				const endPos: number = content.length;
+				content.splice(
+					startPos,
+					endPos - startPos,
+					getFinalContentBlock()
+				);
+			}
 
-		if (headings[followingHeadingIndex]) {
-			const endPos = headings[followingHeadingIndex].position.start.line;
-			content.splice(startPos, endPos - startPos, getFinalContentBlock());
-		} else {
-			const endPos: number = content.length;
-			content.splice(startPos, endPos - startPos, getFinalContentBlock());
-		}
-
-		return content.join("\n");
-	});
+			return content.join("\n");
+		});
+	} catch (error) {
+		displayNotice(
+			"Please update Obsidian to its latest version. If this does not work, see console for details."
+		);
+		console.log(error);
+	}
 });
 
 async function setupLogNote() {
