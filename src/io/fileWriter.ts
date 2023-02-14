@@ -39,8 +39,9 @@ export const writeListsToLogFile = serialize(async () => {
 		return;
 	}
 
+	// TODO - MAKE THIS CUSTOMIZABLE (level === 2)
 	const followingHeadingIndex = headings.findIndex(
-		(heading, index) => index > primaryHeadingIndex && heading.level === 1
+		(heading, index) => index > primaryHeadingIndex && heading.level === 2
 	);
 
 	await app.vault.process(logNote, (data) => {
@@ -93,7 +94,7 @@ async function createHeadingAndAppendContentIfApplicable(logNote: TFile) {
 			(data) =>
 				data +
 				"\n" +
-				getFormattedHeading("# " + settings.primaryHeading) +
+				getFormattedHeading("## " + settings.primaryHeading) +
 				getFinalContentBlock()
 		);
 	} else {
@@ -143,19 +144,19 @@ function getFinalContentBlock() {
 
 	if (settings.separateCreated) {
 		finalContentBlock +=
-			getFormattedHeading("## " + settings.createdHeading) +
+			getFormattedHeading("### " + settings.createdHeading) +
 			createdList.join("\n") +
 			"\n\n";
 	}
 
 	finalContentBlock +=
-		getFormattedHeading("## " + settings.modifiedHeading) +
+		getFormattedHeading("### " + settings.modifiedHeading) +
 		modifiedList.join("\n") +
 		"\n\n";
 
 	if (settings.separateDeleted) {
 		finalContentBlock +=
-			getFormattedHeading("## " + settings.deletedHeading) +
+			getFormattedHeading("### " + settings.deletedHeading) +
 			deletedList.join("\n") +
 			"\n";
 	}
