@@ -89,14 +89,21 @@ async function createHeadingAndAppendContentIfApplicable(logNote: TFile) {
 	const userHasBeenWarnedFor = useWarnedState();
 
 	if (settings.autoCreatePrimaryHeading) {
-		await app.vault.process(
-			logNote,
-			(data) =>
-				data +
-				"\n" +
-				getFormattedHeading("## " + settings.primaryHeading) +
-				getFinalContentBlock()
-		);
+		try {
+			await app.vault.process(
+				logNote,
+				(data) =>
+					data +
+					"\n" +
+					getFormattedHeading("## " + settings.primaryHeading) +
+					getFinalContentBlock()
+			);
+		} catch (error) {
+			displayNotice(
+				"Please update Obsidian to its latest version. If this does not work, see console for details."
+			);
+			console.log(error);
+		}
 	} else {
 		consoleWarn("Primary heading not found");
 		if (!userHasBeenWarnedFor.headingsNotExisting) {
