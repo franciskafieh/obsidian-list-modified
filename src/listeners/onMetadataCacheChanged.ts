@@ -73,7 +73,8 @@ function fileMatchesCriteria(file: TFile, cache: CachedMetadata) {
 }
 
 function noteTitleContainsIgnoredText(noteTitle: string): boolean {
-	const ignoredNameContains = this.settings?.ignoredNameContains;
+	const settings = getSettings();
+	const ignoredNameContains = settings.ignoredNameContains;
 	if (!ignoredNameContains) return false;
 	const ignoredText = ignoredNameContains.replace(/\s/g, "").split(",");
 
@@ -100,7 +101,8 @@ function cacheContainsIgnoredTag(cache: CachedMetadata): boolean {
 }
 
 function pathIsExcluded(path: string): boolean {
-	const excludedFolders = this.settings?.excludedFolders;
+	const settings = getSettings();
+	const excludedFolders = settings.excludedFolders;
 	if (!excludedFolders) return false;
 	const excludedFolderPaths: string[] = excludedFolders
 		.replace(/\s*, | \s*,/, ",")
