@@ -73,7 +73,7 @@ export const writeListsToLogFile = serialize(async () => {
 		displayNotice(
 			"Please update Obsidian to its latest version. If this does not work, see console for details."
 		);
-		console.log(error);
+		console.error(error);
 	}
 });
 
@@ -118,7 +118,7 @@ async function createHeadingAndAppendContentIfApplicable(logNote: TFile) {
 			displayNotice(
 				"Please update Obsidian to its latest version. If this does not work, see console for details."
 			);
-			console.log(error);
+			console.error(error);
 		}
 	} else {
 		consoleWarn("Primary heading not found");
@@ -165,19 +165,24 @@ function getFinalContentBlock() {
 
 	let finalContentBlock = settings.appendSpaceAfterHeadings ? "\n" : "";
 
-	if (settings.separateCreated) {
+	if (settings.separateCreated && createdList.length != 0) {
 		finalContentBlock +=
 			getFormattedHeading("### " + settings.createdHeading) +
 			createdList.join("\n") +
 			"\n\n";
 	}
 
-	finalContentBlock +=
-		getFormattedHeading("### " + settings.modifiedHeading) +
-		modifiedList.join("\n") +
-		"\n\n";
+	if (modifiedList.length != 0) {
+		if (settings.separateDeleted || settings.separateCreated) {
+			finalContentBlock += getFormattedHeading(
+				"### " + settings.modifiedHeading
+			);
+		}
 
-	if (settings.separateDeleted) {
+		finalContentBlock += modifiedList.join("\n") + "\n\n";
+	}
+
+	if (settings.separateDeleted && deletedList.length != 0) {
 		finalContentBlock +=
 			getFormattedHeading("### " + settings.deletedHeading) +
 			deletedList.join("\n") +

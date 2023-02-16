@@ -88,8 +88,10 @@ function noteTitleContainsIgnoredText(noteTitle: string): boolean {
 }
 
 function cacheContainsIgnoredTag(cache: CachedMetadata): boolean {
+	const settings = getSettings();
+
 	const currentFileTags: string[] = getAllTags(cache);
-	const tags = this.settings?.tags;
+	const tags = settings?.tags;
 	if (!tags) return false;
 	const ignoredTags = tags.replace(/\s/g, "").split(",");
 	return ignoredTags.some((ignoredTag: string) =>
