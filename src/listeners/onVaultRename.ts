@@ -5,6 +5,7 @@ import {
 	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "src/io/settings";
+import { noteTitleContainsIgnoredText } from "./onMetadataCacheChanged";
 
 const onVaultRename = serialize(
 	async (file: TAbstractFile, oldPath: string) => {
@@ -17,8 +18,19 @@ const onVaultRename = serialize(
 			);
 
 			// rename file in tracked files array
-			settings.trackedFiles.find(({ path }) => path === oldPath).path =
-				file.path;
+			const currentFile = settings.trackedFiles.find(
+				({ path }) => path === oldPath
+			);
+
+			currentFile.path = file.path;
+
+			// if new name is ignored, delete from list
+			const f = app.vault.getAbstractFileByPath(currentFile.path);
+			if (f instanceof TFile) {
+				if (noteTitleContainsIgnoredText(f.basename)) {
+					settings.trackedFiles.remove(currentFile);
+				}
+			}
 
 			// obsidian already handles link renames
 			if (settings.outputFormat.includes("[[link]]")) {
