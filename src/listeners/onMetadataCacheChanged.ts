@@ -72,7 +72,7 @@ function fileMatchesCriteria(file: TFile, cache: CachedMetadata) {
 	);
 }
 
-export function noteTitleContainsIgnoredText(noteTitle: string): boolean {
+function noteTitleContainsIgnoredText(noteTitle: string): boolean {
 	const settings = getSettings();
 	const ignoredNameContains = settings.ignoredNameContains;
 	if (!ignoredNameContains) return false;
