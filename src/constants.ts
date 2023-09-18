@@ -9,6 +9,7 @@ export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	// FORMATTING
 	outputFormat: "- [[link]]",
 	appendSpaceAfterHeadings: false,
+	timeFormat: "YYYY-MM-DD",
 
 	// LOG NOTE
 	autoCreateLogNote: true,
