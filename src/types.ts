@@ -7,6 +7,7 @@ export interface ListModifiedSettings {
 	// FORMATTING
 	outputFormat: string;
 	appendSpaceAfterHeadings: boolean;
+	timeFormat: string;
 
 	// LOG NOTE
 	autoCreateLogNote: boolean;

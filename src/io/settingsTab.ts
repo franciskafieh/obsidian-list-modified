@@ -74,7 +74,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Output Format")
 			.setDesc(
-				"The format to output added links. Use [[link]] as a placeholder to represent a link, [[name]] for file name, [[tags]], [[ctime]] for created time."
+				"The format to output added links. Use [[link]] as a placeholder to represent a link, [[name]] for file name, [[tags]], [[ctime]] for created time, [[mtime]] for modified time."
 			)
 			.addText((text) =>
 				text
@@ -85,6 +85,21 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 						await saveSettingsAndWriteTrackedFiles();
 					})
 			);
+
+		new Setting(containerEl)
+			.setName("Time Format")
+			.setDesc(
+				"Format for the [[ctime]] or [[mtime]] placeholders"
+			)
+			.addText((text) =>
+				text
+					.setPlaceholder("e.g. YYYY-MM-DD or HH:mm")
+					.setValue(settings.timeFormat)
+					.onChange(async (value) => {
+						settings.timeFormat = value;
+						await saveSettingsAndWriteTrackedFiles();
+					})
+			)
 
 		new Setting(containerEl)
 			.setName("Append Space After Headings")

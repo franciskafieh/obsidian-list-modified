@@ -20,7 +20,8 @@ export function getFormattedOutput(path: string): string {
 		return "- " + path;
 	}
 
-	return getSettings()
+	const settings = getSettings()
+	return settings
 		.outputFormat.replace(
 			"[[link]]",
 			this.app.fileManager.generateMarkdownLink(
@@ -35,7 +36,8 @@ export function getFormattedOutput(path: string): string {
 				.map((tag) => "\\" + tag)
 				.join(", ")
 		)
-		.replace(/\[\[ctime]]/g, moment(file.stat.ctime).format("YYYY-MM-DD"));
+		.replace(/\[\[ctime]]/g, moment(file.stat.ctime).format(settings.timeFormat))
+		.replace(/\[\[mtime]]/g, moment(file.stat.mtime).format(settings.timeFormat));
 }
 
 export function getFormattedHeading(heading: string) {
