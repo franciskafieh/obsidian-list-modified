@@ -5,6 +5,7 @@ import {
 	saveSettingsAndWriteTrackedFiles,
 } from "./settings";
 import { PeriodicNoteType } from "../types";
+import { displayNotice } from "src/utils/formatter";
 
 export class ListModifiedSettingTab extends PluginSettingTab {
 	display(): void {
@@ -88,9 +89,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Time Format")
-			.setDesc(
-				"Format for the [[ctime]] or [[mtime]] placeholders"
-			)
+			.setDesc("Format for the [[ctime]] or [[mtime]] placeholders")
 			.addText((text) =>
 				text
 					.setPlaceholder("e.g. YYYY-MM-DD or HH:mm")
@@ -99,7 +98,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 						settings.timeFormat = value;
 						await saveSettingsAndWriteTrackedFiles();
 					})
-			)
+			);
 
 		new Setting(containerEl)
 			.setName("Append Space After Headings")
@@ -118,7 +117,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 		// LOG NOTE
 		containerEl.createEl("h2", { text: "Log note" });
 		new Setting(containerEl)
-			.setName("Create log note automatically if it does not exist")
+			.setName("Create Log Note Automatically If It Does Not Exist")
 			.setDesc(
 				"If this setting is not turned on, your modified files will not " +
 					"be linked unless you create your log note yourself."
@@ -133,7 +132,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Log note type")
+			.setName("Log Note Type")
 			.setDesc(
 				"Requires the Periodic Notes plugin for anything other than daily"
 			)
@@ -170,7 +169,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 		// HEADINGS
 		containerEl.createEl("h2", { text: "Headings" });
 		new Setting(containerEl)
-			.setName("Automatically create primary heading")
+			.setName("Automatically Create Primary Heading")
 			.setDesc(
 				"If this is disabled, the plugin will not work until you create the heading yourself. " +
 					"Please KEEP THIS DISABLED if using the Templater plugin with folder templates."
@@ -185,7 +184,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Primary Heading name")
+			.setName("Primary Heading Name")
 			.setDesc(
 				`Name of the heading (without "#", case sensitive) to list modified files under.`
 			)
@@ -200,7 +199,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Modified heading name")
+			.setName("Modified Heading Name")
 			.setDesc(
 				"Name of the heading (without '#', case sensitive) to list modified files under."
 			)
@@ -215,7 +214,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Separate created files")
+			.setName("Separate Created Files")
 			.setDesc(
 				"Move created files out of the modified list, into a separate heading."
 			)
@@ -230,7 +229,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 			);
 
 		const createdHeadingNameSetting = new Setting(containerEl)
-			.setName("Created Heading name")
+			.setName("Created Heading Name")
 			.setDesc(
 				`Name of the heading (without "#", case sensitive) to list created files under.`
 			)
@@ -246,7 +245,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Separate deleted files")
+			.setName("Separate Deleted Files")
 			.setDesc("Track deleted files in your log note.")
 			.addToggle((toggle) =>
 				toggle
@@ -259,7 +258,7 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 			);
 
 		const deletedHeadingNameSetting = new Setting(containerEl)
-			.setName("Deleted Heading name")
+			.setName("Deleted Heading Name")
 			.setDesc(
 				`Name of the heading (without "#", case sensitive) to list deleted files under.`
 			)
@@ -273,5 +272,24 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 						await saveSettingsAndWriteTrackedFiles();
 					})
 			);
+
+		// HEADINGS
+		containerEl.createEl("h2", { text: "Debug" });
+		new Setting(containerEl)
+			.setName("Enable Verbose Mode")
+			.setDesc("This is only really needed for plugin support.")
+			.addToggle((toggle) => {
+				toggle
+					.setValue(settings.verboseModeEnabled)
+					.onChange(async (value) => {
+						settings.verboseModeEnabled = value;
+						await saveSettings();
+						if (value) {
+							displayNotice(
+								"Verbose mode enabled. Please open your console to see logs."
+							);
+						}
+					});
+			});
 	}
 }

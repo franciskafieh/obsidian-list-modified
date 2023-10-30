@@ -30,6 +30,9 @@ export interface ListModifiedSettings {
 		supposedList: "created" | "modified" | "deleted";
 		matchesCriteria: boolean;
 	}[];
+
+	// DEBUG
+	verboseModeEnabled: boolean;
 }
 
 export type PeriodicNoteType = "daily" | "weekly" | "monthly";

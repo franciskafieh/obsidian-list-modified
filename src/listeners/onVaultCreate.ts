@@ -6,9 +6,14 @@ import {
 	saveSettingsAndWriteTrackedFiles,
 } from "src/io/settings";
 import { getLogNote } from "../io/noteCache";
+import { consoleWarn } from "src/utils/formatter";
 
 const onVaultCreate = serialize(async (file: TAbstractFile) => {
 	const settings = getSettings();
+
+	if (settings.verboseModeEnabled) {
+		consoleWarn("File created");
+	}
 
 	if (file === getLogNote()) return;
 

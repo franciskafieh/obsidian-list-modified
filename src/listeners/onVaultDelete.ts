@@ -5,10 +5,15 @@ import {
 	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "src/io/settings";
+import { consoleWarn } from "src/utils/formatter";
 
 const onVaultDelete = serialize(async (file: TAbstractFile) => {
 	if (file instanceof TFile) {
 		const settings = getSettings();
+
+		if (settings.verboseModeEnabled) {
+			consoleWarn("File deleted");
+		}
 
 		const existingFile = settings.trackedFiles.find(
 			({ path }) => path === file.path

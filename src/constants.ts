@@ -28,4 +28,7 @@ export const DEFAULT_SETTINGS: ListModifiedSettings = {
 	// INTERNAL
 	lastTrackedDate: "",
 	trackedFiles: [],
+
+	// DEBUG
+	verboseModeEnabled: false,
 };

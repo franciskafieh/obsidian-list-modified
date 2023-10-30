@@ -13,6 +13,10 @@ import { createLogNote, getLogNote } from "./noteCache";
 export const writeListsToLogFile = serialize(async () => {
 	const settings = getSettings();
 
+	if (settings.verboseModeEnabled) {
+		console.log("--- Writing tracked files ---");
+	}
+
 	const logNote = await setupLogNote();
 	if (!logNote) return;
 
@@ -20,12 +24,18 @@ export const writeListsToLogFile = serialize(async () => {
 
 	// file has probably just been created
 	if (fileCache === null) {
+		if (settings.verboseModeEnabled) {
+			consoleWarn("File cache is null... ending write process");
+		}
 		return;
 	}
 
 	const headings = fileCache.headings;
 
 	if (!headings) {
+		if (settings.verboseModeEnabled) {
+			consoleWarn("Headings not found. Creating and appending notes...");
+		}
 		await createHeadingAndAppendContentIfApplicable(logNote);
 		return;
 	}
@@ -36,6 +46,10 @@ export const writeListsToLogFile = serialize(async () => {
 
 	if (primaryHeadingIndex === -1) {
 		await createHeadingAndAppendContentIfApplicable(logNote);
+
+		if (settings.verboseModeEnabled) {
+			consoleWarn("Headings not found. Creating and appending notes...");
+		}
 		return;
 	}
 
@@ -81,10 +95,18 @@ async function setupLogNote() {
 	const settings = getSettings();
 
 	if (getLogNote()) {
+		if (settings.verboseModeEnabled) {
+			consoleWarn("Log note found at: " + getLogNote().path);
+		}
 		return getLogNote();
 	}
 
 	if (settings.autoCreateLogNote) {
+		if (settings.verboseModeEnabled) {
+			consoleWarn(
+				"Log note not found, but should be created automatically. Creating now..."
+			);
+		}
 		return await createLogNote();
 	}
 
@@ -103,6 +125,10 @@ async function setupLogNote() {
 async function createHeadingAndAppendContentIfApplicable(logNote: TFile) {
 	const settings = getSettings();
 	const userHasBeenWarnedFor = useWarnedState();
+
+	if (settings.verboseModeEnabled) {
+		consoleWarn("Trying to creatr heading and append...");
+	}
 
 	if (settings.autoCreatePrimaryHeading) {
 		try {
