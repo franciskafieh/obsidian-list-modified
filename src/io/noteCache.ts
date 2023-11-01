@@ -1,15 +1,15 @@
-import { getSettings } from "./settings";
 import {
+	getAllDailyNotes,
+	getDailyNote,
+	getWeeklyNote,
+	getAllWeeklyNotes,
+	getMonthlyNote,
+	getAllMonthlyNotes,
 	createDailyNote,
 	createMonthlyNote,
 	createWeeklyNote,
-	getAllDailyNotes,
-	getAllMonthlyNotes,
-	getAllWeeklyNotes,
-	getDailyNote,
-	getMonthlyNote,
-	getWeeklyNote,
-} from "obsidian-daily-notes-interface";
+} from "obsidian-daily-notes-interface-fork";
+import { getSettings } from "./settings";
 import { moment, TFile } from "obsidian";
 
 export function getLogNote(): TFile {
