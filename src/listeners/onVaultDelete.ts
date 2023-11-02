@@ -12,7 +12,7 @@ const onVaultDelete = serialize(async (file: TAbstractFile) => {
 		const settings = getSettings();
 
 		if (settings.verboseModeEnabled) {
-			consoleWarn("File deleted");
+			consoleWarn("File deleted: " + file.path);
 		}
 
 		const existingFile = settings.trackedFiles.find(

@@ -9,7 +9,7 @@ const onVaultRename = serialize(
 			const settings = getSettings();
 
 			if (settings.verboseModeEnabled) {
-				consoleWarn("File renamed");
+				consoleWarn("File renamed: " + file.path);
 			}
 
 			// if entry with current new path, remove it (assume it was previously deleted)

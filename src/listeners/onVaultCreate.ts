@@ -12,7 +12,7 @@ const onVaultCreate = serialize(async (file: TAbstractFile) => {
 	const settings = getSettings();
 
 	if (settings.verboseModeEnabled) {
-		consoleWarn("File created");
+		consoleWarn("File created: " + file.path);
 	}
 
 	if (file === getLogNote()) return;

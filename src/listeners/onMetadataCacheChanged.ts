@@ -5,7 +5,7 @@ import {
 	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "src/io/settings";
-import { displayNotice } from "../utils/formatter";
+import { consoleWarn, displayNotice } from "../utils/formatter";
 import { getLogNote } from "../io/noteCache";
 
 const onMetadataCacheChanged = serialize(
@@ -56,10 +56,22 @@ async function writeAndResetIfNewDay() {
 		displayNotice(
 			"New day/week/month detected, writing tracked files and resetting..."
 		);
+
 		await saveSettingsAndWriteTrackedFiles();
 
 		settings.trackedFiles = [];
-		settings.lastTrackedDate = moment().format("YYYY-MM-DD");
+		const today = moment().format("YYYY-MM-DD");
+
+		if (settings.verboseModeEnabled) {
+			consoleWarn(
+				"New time period detected. Old date: " +
+					lastTrackedDate +
+					". New date: " +
+					today
+			);
+		}
+
+		settings.lastTrackedDate = today;
 		await saveSettings();
 	}
 }
