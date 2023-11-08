@@ -53,9 +53,8 @@ export const writeListsToLogFile = serialize(async () => {
 		return;
 	}
 
-	// TODO - MAKE THIS CUSTOMIZABLE (level === 2)
 	const followingHeadingIndex = headings.findIndex(
-		(heading, index) => index > primaryHeadingIndex && heading.level === 2
+		(_heading, index) => index > primaryHeadingIndex
 	);
 	try {
 		await app.vault.process(logNote, (data) => {
