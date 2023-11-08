@@ -9,6 +9,7 @@ import { TFile } from "obsidian";
 import useWarnedState from "./useWarnedState";
 import { serialize } from "monkey-around";
 import { createLogNote, getLogNote } from "./noteCache";
+import { HeadingCache } from "obsidian";
 
 export const writeListsToLogFile = serialize(async () => {
 	const settings = getSettings();
@@ -53,8 +54,14 @@ export const writeListsToLogFile = serialize(async () => {
 		return;
 	}
 
+	for (const heading of headings) {
+		console.log(heading.heading + " : " + heading.level);
+	}
+
 	const followingHeadingIndex = headings.findIndex(
-		(_heading, index) => index > primaryHeadingIndex
+		(heading, index) =>
+			index > primaryHeadingIndex &&
+			(heading.level === 2 || heading.level === 1)
 	);
 	try {
 		await app.vault.process(logNote, (data) => {
