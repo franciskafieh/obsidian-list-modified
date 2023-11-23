@@ -4,7 +4,6 @@ import {
 	saveSettings,
 	saveSettingsAndWriteTrackedFiles,
 } from "./settings";
-import { PeriodicNoteType } from "../types";
 import { displayNotice } from "src/utils/formatter";
 
 export class ListModifiedSettingTab extends PluginSettingTab {
@@ -142,8 +141,11 @@ export class ListModifiedSettingTab extends PluginSettingTab {
 					.addOption("weekly", "Weekly (Periodic Notes)")
 					.addOption("monthly", "Monthly (Periodic Notes)")
 					.setValue(settings.logNoteType)
-					.onChange(async (value: PeriodicNoteType) => {
-						settings.logNoteType = value;
+					.onChange(async (value) => {
+						settings.logNoteType = value as
+							| "daily"
+							| "weekly"
+							| "monthly";
 						await saveSettingsAndWriteTrackedFiles();
 					});
 			});
