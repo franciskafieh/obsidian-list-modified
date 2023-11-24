@@ -4,7 +4,7 @@ export class ObsidianSettings implements ISettings {
 	// CRITERIA
 	tags = "";
 	excludedFolders = "";
-	ignoredNameContains: "";
+	ignoredNameContains = "";
 
 	// FORMATTING
 	outputFormat = "- [[link]]";
@@ -27,7 +27,11 @@ export class ObsidianSettings implements ISettings {
 
 	// INTERNAL
 	lastTrackedDate = "";
-	trackedFiles: [];
+	trackedFiles = [] as {
+		path: string;
+		supposedList: "created" | "modified" | "deleted";
+		matchesCriteria: boolean;
+	}[];
 
 	// DEBUG
 	verboseModeEnabled = false;

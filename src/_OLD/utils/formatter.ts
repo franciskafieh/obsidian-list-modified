@@ -2,16 +2,6 @@ import { Notice, TFile, moment, getAllTags } from "obsidian";
 import { getSettings } from "../io/settings";
 import { getLogNote } from "../io/noteCache";
 
-export function displayNotice(message: string) {
-	const notice = new Notice("", 10000);
-	// @ts-ignore
-	notice.noticeEl.innerHTML = `<b>[Obsidian List Modified]</b><br/>${message}`;
-}
-
-export function consoleWarn(message: string) {
-	console.warn("[Obsidian List Modified] " + message);
-}
-
 export function getFormattedOutput(path: string): string {
 	const file: TFile = app.vault.getAbstractFileByPath(path) as TFile;
 
