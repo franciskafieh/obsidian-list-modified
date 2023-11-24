@@ -1,4 +1,4 @@
-export interface ListModifiedSettings {
+export interface ISettings {
 	// CRITERIA
 	tags: string;
 	excludedFolders: string;
