@@ -41,10 +41,6 @@ export class TestSettingsBuilder {
 		this.testSettings.outputFormat = format;
 	}
 
-	public setAppendSpaceAfterHeadings(appendSpace: boolean) {
-		this.testSettings.appendSpaceAfterHeadings = appendSpace;
-	}
-
 	public setTimeFormat(format: string) {
 		this.testSettings.timeFormat = format;
 	}
@@ -61,32 +57,20 @@ export class TestSettingsBuilder {
 		this.testSettings.writeInterval = interval;
 	}
 
-	public setAutoCreatePrimaryHeading(autoCreate: boolean) {
-		this.testSettings.autoCreatePrimaryHeading = autoCreate;
+	public setCombineCreatedAndModified(combined: boolean) {
+		this.testSettings.combineCreatedAndModified = combined;
 	}
 
-	public setPrimaryHeading(heading: string) {
-		this.testSettings.primaryHeading = heading;
+	public setAutoCreateCreatedDivider(autoCreate: boolean) {
+		this.testSettings.autoCreateCreatedDivider = autoCreate;
 	}
 
-	public setModifiedHeading(heading: string) {
-		this.testSettings.modifiedHeading = heading;
+	public setAutoCreateModifiedDivider(autoCreate: boolean) {
+		this.testSettings.autoCreateModifiedDivider = autoCreate;
 	}
 
-	public setSeparateCreated(separate: boolean) {
-		this.testSettings.separateCreated = separate;
-	}
-
-	public setCreatedHeading(heading: string) {
-		this.testSettings.createdHeading = heading;
-	}
-
-	public setSeparateDeleted(separate: boolean) {
-		this.testSettings.separateDeleted = separate;
-	}
-
-	public setDeletedHeading(heading: string) {
-		this.testSettings.deletedHeading = heading;
+	public setAutoCreateDeletedDivider(autoCreate: boolean) {
+		this.testSettings.autoCreateDeletedDivider = autoCreate;
 	}
 
 	public setLastTrackedDate(date: string) {
