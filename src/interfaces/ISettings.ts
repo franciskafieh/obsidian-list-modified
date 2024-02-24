@@ -6,7 +6,6 @@ export interface ISettings {
 
 	// FORMATTING
 	outputFormat: string;
-	appendSpaceAfterHeadings: boolean;
 	timeFormat: string;
 
 	// LOG NOTE
@@ -14,14 +13,15 @@ export interface ISettings {
 	logNoteType: "daily" | "weekly" | "monthly";
 	writeInterval: number;
 
-	// HEADINGS
-	autoCreatePrimaryHeading: boolean;
-	primaryHeading: string;
-	modifiedHeading: string;
-	separateCreated: boolean;
-	createdHeading: string;
-	separateDeleted: boolean;
-	deletedHeading: string;
+	// DIVIDERS
+	combineCreatedAndModified: boolean;
+
+	autoCreateCreatedDivider: boolean;
+	autoCreateModifiedDivider: boolean;
+	autoCreateDeletedDivider: boolean;
+
+	// DEBUG
+	verboseModeEnabled: boolean;
 
 	// INTERNAL
 	lastTrackedDate: string;
@@ -30,7 +30,4 @@ export interface ISettings {
 		supposedList: "created" | "modified" | "deleted";
 		matchesCriteria: boolean;
 	}[];
-
-	// DEBUG
-	verboseModeEnabled: boolean;
 }

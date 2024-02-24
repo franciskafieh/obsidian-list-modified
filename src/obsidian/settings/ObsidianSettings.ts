@@ -1,4 +1,4 @@
-import { ISettings } from "src/interfaces/ISettings";
+import { ISettings } from "../../interfaces/ISettings";
 
 export class ObsidianSettings implements ISettings {
 	// CRITERIA
@@ -8,7 +8,6 @@ export class ObsidianSettings implements ISettings {
 
 	// FORMATTING
 	outputFormat = "- [[link]]";
-	appendSpaceAfterHeadings = false;
 	timeFormat = "YYYY-MM-DD";
 
 	// LOG NOTE
@@ -16,14 +15,15 @@ export class ObsidianSettings implements ISettings {
 	logNoteType = "daily" as "daily" | "weekly" | "monthly";
 	writeInterval = 0;
 
-	// HEADINGS
-	autoCreatePrimaryHeading = true;
-	primaryHeading = "Changed Notes";
-	modifiedHeading = "Modified";
-	separateCreated = false;
-	createdHeading = "Created";
-	separateDeleted = false;
-	deletedHeading = "Deleted";
+	// DIVIDERS
+	combineCreatedAndModified = false;
+
+	autoCreateCreatedDivider = false;
+	autoCreateModifiedDivider = false;
+	autoCreateDeletedDivider = false;
+
+	// DEBUG
+	verboseModeEnabled = false;
 
 	// INTERNAL
 	lastTrackedDate = "";
@@ -32,7 +32,4 @@ export class ObsidianSettings implements ISettings {
 		supposedList: "created" | "modified" | "deleted";
 		matchesCriteria: boolean;
 	}[];
-
-	// DEBUG
-	verboseModeEnabled = false;
 }
