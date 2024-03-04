@@ -65,9 +65,9 @@ async function writeAndResetIfNewDay() {
 		if (settings.verboseModeEnabled) {
 			consoleWarn(
 				"New time period detected. Old date: " +
-					lastTrackedDate +
-					". New date: " +
-					today
+				lastTrackedDate +
+				". New date: " +
+				today
 			);
 		}
 
@@ -88,7 +88,7 @@ function noteTitleContainsIgnoredText(noteTitle: string): boolean {
 	const settings = getSettings();
 	const ignoredNameContains = settings.ignoredNameContains;
 	if (!ignoredNameContains) return false;
-	const ignoredText = ignoredNameContains.replace(/\s/g, "").split(",");
+	const ignoredText = ignoredNameContains.replace(/\s|,\s*$/g, "").split(",");
 
 	return ignoredText.some((ignoredText: string) => {
 		const title = noteTitle.toLowerCase();
@@ -106,7 +106,7 @@ function cacheContainsIgnoredTag(cache: CachedMetadata): boolean {
 	const currentFileTags: string[] = getAllTags(cache);
 	const tags = settings?.tags;
 	if (!tags) return false;
-	const ignoredTags = tags.replace(/\s/g, "").split(",");
+	const ignoredTags = tags.replace(/\s|,\s*$/g, "").split(",");
 	return ignoredTags.some((ignoredTag: string) =>
 		currentFileTags.includes(ignoredTag)
 	);
@@ -117,7 +117,7 @@ function pathIsExcluded(path: string): boolean {
 	const excludedFolders = settings.excludedFolders;
 	if (!excludedFolders) return false;
 	const excludedFolderPaths: string[] = excludedFolders
-		.replace(/\s*, | \s*,/, ",")
+		.replace(/\s*, | \s*,/, ",").replace(/,\s*$/, "")
 		.split(",")
 		.map((path: string) => path.replace(/^\/|\/$/g, ""));
 
