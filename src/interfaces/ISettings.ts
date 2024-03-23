@@ -1,3 +1,5 @@
+import { LogNoteType, TrackedFile } from "../types";
+
 export interface ISettings {
 	// CRITERIA
 	tags: string;
@@ -10,7 +12,7 @@ export interface ISettings {
 
 	// LOG NOTE
 	autoCreateLogNote: boolean;
-	logNoteType: "daily" | "weekly" | "monthly";
+	logNoteType: LogNoteType;
 	writeInterval: number;
 
 	// DIVIDERS
@@ -25,9 +27,5 @@ export interface ISettings {
 
 	// INTERNAL
 	lastTrackedDate: string;
-	trackedFiles: {
-		path: string;
-		supposedList: "created" | "modified" | "deleted";
-		matchesCriteria: boolean;
-	}[];
+	trackedFiles: TrackedFile[];
 }
