@@ -1,4 +1,5 @@
 import { ISettings } from "../../interfaces/ISettings";
+import { LogNoteType, TrackedFile } from "../../types";
 
 export class ObsidianSettings implements ISettings {
 	// CRITERIA
@@ -12,7 +13,7 @@ export class ObsidianSettings implements ISettings {
 
 	// LOG NOTE
 	autoCreateLogNote = true;
-	logNoteType = "daily" as "daily" | "weekly" | "monthly";
+	logNoteType = "daily" as LogNoteType;
 	writeInterval = 0;
 
 	// DIVIDERS
@@ -27,9 +28,5 @@ export class ObsidianSettings implements ISettings {
 
 	// INTERNAL
 	lastTrackedDate = "";
-	trackedFiles = [] as {
-		path: string;
-		supposedList: "created" | "modified" | "deleted";
-		matchesCriteria: boolean;
-	}[];
+	trackedFiles = [] as TrackedFile[];
 }

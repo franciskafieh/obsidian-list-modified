@@ -1,3 +1,4 @@
+import { LogNoteType, TrackedFile } from "../../src/types";
 import { TestSettings } from "./TestSettings";
 
 export class TestSettingsBuilder {
@@ -49,7 +50,7 @@ export class TestSettingsBuilder {
 		this.testSettings.autoCreateLogNote = autoCreate;
 	}
 
-	public setLogNoteType(type: "daily" | "weekly" | "monthly") {
+	public setLogNoteType(type: LogNoteType) {
 		this.testSettings.logNoteType = type;
 	}
 
@@ -77,13 +78,7 @@ export class TestSettingsBuilder {
 		this.testSettings.lastTrackedDate = date;
 	}
 
-	public setTrackedFiles(
-		trackedFiles: {
-			path: string;
-			supposedList: "created" | "modified" | "deleted";
-			matchesCriteria: boolean;
-		}[]
-	) {
+	public setTrackedFiles(trackedFiles: TrackedFile[]) {
 		this.testSettings.trackedFiles = trackedFiles;
 	}
 

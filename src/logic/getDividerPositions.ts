@@ -1,8 +1,4 @@
-export function getDividerPositions(text: string[]): {
-	created: { start: number; end: number };
-	modified: { start: number; end: number };
-	deleted: { start: number; end: number };
-} {
+export function getDividerPositions(text: string[]) {
 	const index = {
 		created: {
 			start: -1,
