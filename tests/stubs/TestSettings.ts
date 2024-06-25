@@ -1,6 +1,6 @@
-import { ObsidianSettings } from "../../src/obsidian/settings/ObsidianDefaultSettings";
+import { ObsidianDefaultSettings } from "../../src/obsidian/settings/ObsidianDefaultSettings";
 
-export class TestSettings extends ObsidianSettings {
+export class TestSettings extends ObsidianDefaultSettings {
 	constructor() {
 		// empty, retrieve default settings
 		super();

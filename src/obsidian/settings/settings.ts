@@ -29,5 +29,5 @@ export async function saveSettings() {
 	if (settings.writeInterval === 0) {
 		writeChangesToLogNote();
 	}
-	// writeChangesToNote if no interval
+	// writeChangesToNote if no interval TODO
 }
