@@ -6,7 +6,7 @@ import { ObsidianDefaultSettings } from "./ObsidianDefaultSettings";
 let plugin: ListModified;
 let settings: ISettings;
 
-export function Settings() {
+export function getSettings() {
 	return settings;
 }
 
@@ -29,5 +29,11 @@ export async function saveSettings() {
 	if (settings.writeInterval === 0) {
 		writeChangesToLogNote();
 	}
-	// writeChangesToNote if no interval TODO
+}
+
+export async function saveSettingsAndWriteToLogNote(force?: boolean) {
+	await saveSettings();
+
+	// if interval == 0 OR if force = true...
+	writeChangesToLogNote();
 }
