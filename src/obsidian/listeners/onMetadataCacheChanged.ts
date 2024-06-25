@@ -1,9 +1,14 @@
-// const onMetadataCacheChanged = serialize(
-// 	async (file: TFile, _data: string, cache: CachedMetadata) => {}
+import { serialize } from "monkey-around";
+import { CachedMetadata, TFile } from "obsidian";
 
-// );
+const onMetadataCacheChanged = serialize(
+	async (file: TFile, _data: string, cache: CachedMetadata) => {
+		console.log("working");
+	}
+);
+
+export default onMetadataCacheChanged;
 
 // e.g....
-// vault.process(file, (data) => {
-//     return getDividerPositions(data.split("\n"));
-//   })
+// write and reset if new day
+// if file is log note return

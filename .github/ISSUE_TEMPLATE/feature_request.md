@@ -8,7 +8,7 @@ assignees: ""
 
 ## First Steps
 
--   [ ] I've ensured that this feature request **does not already exist** by [using the search issues feature](https://github.com/franciskafieh/obsidian-list-modified/issues?q=search+issues+here)
+-   [ ] I've ensured that this feature request **does not already exist** by [using the search feature](https://github.com/franciskafieh/obsidian-list-modified/issues?q=search+issues+here)
 -   [ ] I've read the documentation (see [the README](https://github.com/franciskafieh/obsidian-list-modified#readme))
 -   [ ] I'm on the latest release of obsidian-list-modified
 

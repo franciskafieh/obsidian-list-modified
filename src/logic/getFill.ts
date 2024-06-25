@@ -1,6 +1,23 @@
+import { MomentFormatComponent } from "obsidian";
 import { TrackedFile } from "../types";
 
 export function getFill(
+	paths: {
+		created: string[];
+		modified: string[];
+		deleted: string[];
+	},
+	time: MomentFormatComponent
+) {
+	const created = [];
+	const modified = [];
+	const deleted = [];
+}
+
+// have time, etc, replacements as args??
+
+// keep separate bc easier to test?
+export function getPaths(
 	trackedFiles: TrackedFile[],
 	combineCreatedAndModified: boolean
 ) {
