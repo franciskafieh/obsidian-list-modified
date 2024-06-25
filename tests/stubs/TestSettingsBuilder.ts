@@ -12,9 +12,9 @@ export class TestSettingsBuilder {
 	public setTags(tags: string[]): void;
 	public setTags(tags: string | string[]) {
 		if (Array.isArray(tags)) {
-			this.testSettings.tags = tags.join(",");
+			this.testSettings.excludedTags = tags.join(",");
 		} else {
-			this.testSettings.tags = tags as string;
+			this.testSettings.excludedTags = tags as string;
 		}
 	}
 
@@ -32,9 +32,9 @@ export class TestSettingsBuilder {
 	public setIgnoredNameContains(names: string[]): void;
 	public setIgnoredNameContains(names: string | string[]) {
 		if (Array.isArray(names)) {
-			this.testSettings.ignoredNameContains = names.join(",");
+			this.testSettings.excludedNameContains = names.join(",");
 		} else {
-			this.testSettings.ignoredNameContains = names as string;
+			this.testSettings.excludedNameContains = names as string;
 		}
 	}
 

@@ -7,11 +7,15 @@ export default class ListModified extends Plugin {
 		// await initSettings(this);
 		// etc
 		this.registerEvent(
-			this.app.metadataCache.on("changed", onMetadataCacheChanged)
+			this.app.metadataCache.on("changed", onMetadataCacheChanged),
 		);
 	}
 
 	migrateToThreePointZeroIfNeeded(settings: ISettings) {
+		// 	excludedTags = "";
+		// excludedFolders = "";
+		// excludedNameContains = ""; <== these all changed, todo in migration
+
 		// @ts-ignore - property should not exist but may
 		// if still have old setting
 		if (!settings.autoCreatePrimaryHeading) {

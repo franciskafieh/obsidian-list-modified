@@ -13,7 +13,7 @@ describe("settings object stub should work like actual settings", () => {
 
 		const testSettings = builder.build();
 
-		expect(testSettings.tags).toBe("a,f");
+		expect(testSettings.excludedTags).toBe("a,f");
 	});
 
 	it("should have default settings", () => {

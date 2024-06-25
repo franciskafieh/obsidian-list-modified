@@ -1,24 +1,33 @@
-// let plugin: ListModified;
-// let settings: ListModifiedSettings;
+import { ISettings } from "../../interfaces/ISettings";
+import ListModified from "../../main";
+import { writeChangesToLogNote } from "../logNote/writeChangesToLogNote";
+import { ObsidianDefaultSettings } from "./ObsidianDefaultSettings";
 
-// export function getSettings(): ListModifiedSettings {
-// 	return settings;
-// }
+let plugin: ListModified;
+let settings: ISettings;
 
-// export async function saveSettings() {
-// 	await plugin.saveData(settings);
+export function Settings() {
+	return settings;
+}
 
-// 	if (settings.verboseModeEnabled) {
-// 		console.log("OLM settings saved.");
-// 	}
-// }
+export async function initSettings(initPlugin: ListModified) {
+	plugin = initPlugin;
+	settings = Object.assign(
+		{},
+		ObsidianDefaultSettings,
+		await plugin.loadData(),
+	);
 
-// export async function saveSettingsAndWriteTrackedFiles() {
-// 	await saveSettings();
-// 	await writeListsToLogFile();
-// }
+	if (settings.writeInterval !== 0) {
+		// writeChangesToLogNote(); INTERVAL TODO
+	}
+}
 
-// export async function initSettings(initPlugin: ListModified) {
-// 	plugin = initPlugin;
-// 	settings = Object.assign({}, DEFAULT_SETTINGS, await plugin.loadData());
-// }
+export async function saveSettings() {
+	await plugin.saveData(settings);
+
+	if (settings.writeInterval === 0) {
+		writeChangesToLogNote();
+	}
+	// writeChangesToNote if no interval
+}
