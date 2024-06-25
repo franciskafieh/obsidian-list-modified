@@ -9,7 +9,7 @@ export function displayNoticeAndWarn(message: string) {
 
 export function consoleWarnIfVerboseMode(
 	message: string,
-	verboseMode: boolean
+	verboseMode: boolean,
 ) {
 	if (verboseMode) {
 		consoleWarn(message);
