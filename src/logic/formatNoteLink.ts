@@ -1,5 +1,6 @@
 // export function getFormattedOutput(path: string): string {
 // 	const file: TFile = app.vault.getAbstractFileByPath(path) as TFile;
+// ^^^^ can instead use Vault.getFileByPath() and Vault.getFolderByPath(). if you getFile a folder, null will be returned for example.
 
 // 	// for deleted section, etc where no metadata is stored
 // 	if (!file) {

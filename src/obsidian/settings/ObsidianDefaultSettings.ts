@@ -1,11 +1,11 @@
 import { ISettings } from "../../interfaces/ISettings";
 import { LogNoteType, TrackedFile } from "../../types";
 
-export class ObsidianSettings implements ISettings {
+export class ObsidianDefaultSettings implements ISettings {
 	// CRITERIA
-	tags = "";
+	excludedTags = "";
 	excludedFolders = "";
-	ignoredNameContains = "";
+	excludedNameContains = "";
 
 	// FORMATTING
 	outputFormat = "- [[link]]";

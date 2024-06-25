@@ -2,9 +2,7 @@ import { serialize } from "monkey-around";
 import { CachedMetadata, TFile } from "obsidian";
 
 const onMetadataCacheChanged = serialize(
-	async (file: TFile, _data: string, cache: CachedMetadata) => {
-		console.log("working");
-	}
+	async (file: TFile, _data: string, cache: CachedMetadata) => {},
 );
 
 export default onMetadataCacheChanged;
