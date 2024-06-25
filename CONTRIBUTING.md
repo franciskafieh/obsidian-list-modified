@@ -4,7 +4,18 @@ Thank you so much for your interest in contributing! If you are not a developer,
 
 ## Project Structure
 
-The main source code of the project resides in the `src/` directory. Within this directory, there are
+The main source code of the project resides in the `src/` directory. Within, there are the following sub-directories:
+
+-   `interfaces/` - interfaces for abstracting out Obsidian types so that the plugin can be tested independent of Obsidian. This should never really need to be edited.
+-   `logic/` - code logic which runs exclusive of Obsidian. Nothing in this directory should import from Obsidian. This would cause the tests to fail.
+-   `obsidian/` - Obsidian-specific code like event listeners and settings panes. Code in this directory should be kept relatively simple as it is not tested. When possible, logic should be placed in other directories.
+-   `utils/` - Miscelaneous utility functions, mostly for formatting and code reusability. Utilities should be tested if they are complex enough to allow error.
+
+### Testing
+
+Tests are all done with `bun` and reside in the `tests/` directory. The subdirectories mimic the `src/` structure. Read above for more info on what should be tested.
+
+**Please run all tests and ensure they pass before opening a PR.**
 
 ## Code Formatting
 
