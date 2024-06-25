@@ -9,6 +9,7 @@ import {
 import { displayNoticeAndWarn } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/findTrackedFileWithPath";
 import fileMatchesCriteria from "../../logic/fileMatchesCriteria";
+import { isLogNote } from "../logNote/logNote";
 
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {
@@ -36,7 +37,7 @@ const onMetadataCacheChanged = serialize(
 			await saveSettings();
 		}
 
-		// if file is log note return TODO
+		if (isLogNote(file)) return;
 
 		const matchesCriteria = fileMatchesCriteria(
 			file,

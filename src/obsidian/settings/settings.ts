@@ -10,6 +10,10 @@ export function getSettings() {
 	return settings;
 }
 
+export function getPlugin() {
+	return plugin;
+}
+
 export async function initSettings(initPlugin: ListModified) {
 	plugin = initPlugin;
 	settings = Object.assign(
