@@ -23,21 +23,22 @@ export async function initSettings(initPlugin: ListModified) {
 	);
 
 	if (settings.writeInterval !== 0) {
-		// writeChangesToLogNote(); INTERVAL TODO
-	}
-}
-
-export async function saveSettings() {
-	await plugin.saveData(settings);
-
-	if (settings.writeInterval === 0) {
-		writeChangesToLogNote();
+		initPlugin.registerInterval(
+			window.setInterval(async () => {
+				await saveSettingsAndWriteToLogNote(true);
+			}, settings.writeInterval * 1000),
+		);
 	}
 }
 
 export async function saveSettingsAndWriteToLogNote(force?: boolean) {
 	await saveSettings();
 
-	// if interval == 0 OR if force = true...
-	writeChangesToLogNote();
+	if (force || settings.writeInterval === 0) {
+		writeChangesToLogNote();
+	}
+}
+
+export async function saveSettings() {
+	await plugin.saveData(settings);
 }

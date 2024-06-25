@@ -34,7 +34,7 @@ const onMetadataCacheChanged = serialize(
 
 			settings.lastTrackedDate = today;
 
-			await saveSettings();
+			await saveSettings(); // todo - should log file be updated here here?
 		}
 
 		if (isLogNote(file)) return;
