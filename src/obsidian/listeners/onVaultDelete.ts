@@ -5,8 +5,9 @@ import {
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
 import { consoleWarn } from "../../utils/alerter";
-import { findTrackedFileWithPath } from "../../logic/findTrackedFileWithPath";
+import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 import { isLogNote } from "../logNote/logNote";
+import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturnIfNewPeriod";
 
 const onVaultDelete = serialize(async (file: TAbstractFile) => {
 	if (!(file instanceof TFile)) return;
@@ -18,6 +19,8 @@ const onVaultDelete = serialize(async (file: TAbstractFile) => {
 	if (settings.verboseModeEnabled) {
 		consoleWarn("File deleted: " + file.path);
 	}
+
+	const isNewNotePeriod = runLogicAndReturnIfNewPeriod(settings);
 
 	const currFile = findTrackedFileWithPath(file.path, settings);
 

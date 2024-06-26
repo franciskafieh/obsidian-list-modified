@@ -1,7 +1,10 @@
 import { Plugin } from "obsidian";
 import { ISettings } from "./interfaces/ISettings";
-import onMetadataCacheChanged from "./obsidian/listeners/onMetadataCacheChanged";
 import { initSettings } from "./obsidian/settings/settings";
+import onMetadataCacheChanged from "./obsidian/listeners/onMetadataCacheChanged";
+import onVaultDelete from "./obsidian/listeners/onVaultDelete";
+import onVaultRename from "./obsidian/listeners/onVaultRename";
+import onVaultCreate from "./obsidian/listeners/onVaultCreate";
 
 export default class ListModified extends Plugin {
 	async onload(): Promise<void> {
@@ -10,6 +13,15 @@ export default class ListModified extends Plugin {
 		this.registerEvent(
 			this.app.metadataCache.on("changed", onMetadataCacheChanged),
 		);
+		this.registerEvent(this.app.vault.on("delete", onVaultDelete));
+		this.registerEvent(this.app.vault.on("rename", onVaultRename));
+
+		this.app.workspace.onLayoutReady(async () => {
+			// onLayoutReady prevents this from firing for every single file in the vault on startup.
+			this.registerEvent(this.app.vault.on("create", onVaultCreate));
+		});
+
+		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
 	}
 
 	migrateToThreePointZeroIfNeeded(settings: ISettings) {

@@ -22,8 +22,6 @@ export async function initSettings(initPlugin: ListModified) {
 		await plugin.loadData(),
 	);
 
-	console.log(ObsidianDefaultSettings);
-
 	// if (settings.writeInterval !== 0) {
 	// 	initPlugin.registerInterval(
 	// 		window.setInterval(async () => {

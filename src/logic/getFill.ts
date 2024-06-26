@@ -1,13 +1,15 @@
 import { MomentFormatComponent } from "obsidian";
 import { TrackedFile } from "../types";
 
+// * REMEMBER TO USE JUST-CREATED AS WELL
+
 export function getFill(
 	paths: {
 		created: string[];
 		modified: string[];
 		deleted: string[];
 	},
-	time: MomentFormatComponent
+	time: MomentFormatComponent,
 ) {
 	const created = [];
 	const modified = [];
@@ -19,7 +21,7 @@ export function getFill(
 // keep separate bc easier to test?
 export function getPaths(
 	trackedFiles: TrackedFile[],
-	combineCreatedAndModified: boolean
+	combineCreatedAndModified: boolean,
 ) {
 	const created = [];
 	const modified = [];
