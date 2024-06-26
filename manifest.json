@@ -1,9 +1,9 @@
 {
 	"id": "obsidian-list-modified",
 	"name": "List Modified",
-	"version": "2.2.3",
+	"version": "3.0",
 	"minAppVersion": "1.5.7",
-	"description": "A simple obsidian plugin that links all modified files meeting certain criteria to a daily note",
+	"description": "The advanced and adaptive changelog. Links all modified files meeting certain criteria to a timed (daily, weekly, monthly) note.",
 	"author": "Francis Kafieh",
 	"authorUrl": "https://github.com/franciskafieh",
 	"isDesktopOnly": false
