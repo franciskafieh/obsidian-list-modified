@@ -5,6 +5,7 @@ import onMetadataCacheChanged from "./obsidian/listeners/onMetadataCacheChanged"
 import onVaultDelete from "./obsidian/listeners/onVaultDelete";
 import onVaultRename from "./obsidian/listeners/onVaultRename";
 import onVaultCreate from "./obsidian/listeners/onVaultCreate";
+import { SettingsTab } from "./obsidian/settings/SettingsTab";
 
 export default class ListModified extends Plugin {
 	async onload(): Promise<void> {
@@ -21,7 +22,7 @@ export default class ListModified extends Plugin {
 			this.registerEvent(this.app.vault.on("create", onVaultCreate));
 		});
 
-		this.addSettingTab(new ListModifiedSettingTab(this.app, this));
+		this.addSettingTab(new SettingsTab(this.app, this));
 	}
 
 	migrateToThreePointZeroIfNeeded(settings: ISettings) {
