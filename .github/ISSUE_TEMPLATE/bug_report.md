@@ -26,7 +26,7 @@ What should happen instead?
 ### My setup
 
 -   **What device are you on?**
--   \*\*What sync service are you using? (if relevant to bug)
+-   **What sync service are you using? (if relevant to bug)**
 
 ### Steps to reproduce bug
 

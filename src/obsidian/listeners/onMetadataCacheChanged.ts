@@ -14,9 +14,13 @@ import { isLogNote } from "../logNote/logNote";
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {
 		const settings = getSettings();
-		if (isNewDay(settings)) {
-			displayNoticeAndWarn("New note time period detected, resetting...");
+		let newDay = false;
 
+		if (true) {
+			// if (isNewDay(settings)) {
+			newDay = true;
+
+			displayNoticeAndWarn("New note time period detected, resetting...");
 			// force write to log note
 			await saveSettingsAndWriteToLogNote(true);
 
@@ -51,7 +55,10 @@ const onMetadataCacheChanged = serialize(
 
 		if (currFile) {
 			currFile.matchesCriteria = matchesCriteria;
+			console.log(newDay + "1"); // TEMP
+			// if new day and currFile is created, make it modified ???
 		} else {
+			console.log(newDay + "2"); // TEMP
 			settings.trackedFiles.push({
 				path: file.path,
 				matchesCriteria: matchesCriteria,

@@ -6,7 +6,6 @@ import {
 } from "../settings/settings";
 import { consoleWarn } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/findTrackedFileWithPath";
-import { TrackedFile } from "../../types";
 
 const onVaultRename = serialize(
 	async (file: TAbstractFile, oldPath: string) => {

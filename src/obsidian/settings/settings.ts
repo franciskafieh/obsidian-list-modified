@@ -22,13 +22,15 @@ export async function initSettings(initPlugin: ListModified) {
 		await plugin.loadData(),
 	);
 
-	if (settings.writeInterval !== 0) {
-		initPlugin.registerInterval(
-			window.setInterval(async () => {
-				await saveSettingsAndWriteToLogNote(true);
-			}, settings.writeInterval * 1000),
-		);
-	}
+	console.log(ObsidianDefaultSettings);
+
+	// if (settings.writeInterval !== 0) {
+	// 	initPlugin.registerInterval(
+	// 		window.setInterval(async () => {
+	// 			await saveSettingsAndWriteToLogNote(true);
+	// 		}, settings.writeInterval * 1000),
+	// 	);
+	// }
 }
 
 export async function saveSettingsAndWriteToLogNote(force?: boolean) {
