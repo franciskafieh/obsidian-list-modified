@@ -2,6 +2,14 @@
 
 Thank you so much for your interest in contributing! If you are not a developer, please [open an issue](https://github.com/franciskafieh/obsidian-list-modified/issues/new/choose) for feature requests and bug reports. Otherwise, continue reading below for helpful information on the project.
 
+## How to Build
+
+-   Clone project
+-   `bun install`
+-   go into `node_modules/obsidian-daily-notes-interface`
+-   change `obsidian`'s version in package.json to "obsidian": "^1.5.7", - TODO - PR
+-   run `npm i` and `npm run build`
+
 ## Project Structure
 
 The main source code of the project resides in the `src/` directory. Within, there are the following sub-directories:

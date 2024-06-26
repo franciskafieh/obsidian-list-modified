@@ -22,6 +22,7 @@ const onVaultCreate = serialize(async (file: TAbstractFile) => {
 	const currFile = findTrackedFileWithPath(file.path, settings);
 
 	if (currFile) {
+		// it probably existed then got deleted
 		currFile.supposedList = "created";
 		currFile.matchesCriteria = false;
 	} else {

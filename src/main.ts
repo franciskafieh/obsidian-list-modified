@@ -1,10 +1,11 @@
 import { Plugin } from "obsidian";
 import { ISettings } from "./interfaces/ISettings";
 import onMetadataCacheChanged from "./obsidian/listeners/onMetadataCacheChanged";
+import { initSettings } from "./obsidian/settings/settings";
 
 export default class ListModified extends Plugin {
 	async onload(): Promise<void> {
-		// await initSettings(this);
+		await initSettings(this);
 		// etc
 		this.registerEvent(
 			this.app.metadataCache.on("changed", onMetadataCacheChanged),
@@ -35,7 +36,6 @@ export default class ListModified extends Plugin {
 			settings.separateCreated = null;
 		}
 
-		// todo: save settings. maybe implement an auto saving version of the settings where setting a property through a class also calls save??
 		// disable the plugin and send notice with wiki until user enabled
 	}
 }
