@@ -6,7 +6,8 @@ import {
 import { TAbstractFile, TFile } from "obsidian";
 import { consoleWarn } from "../../utils/alerter";
 import { isLogNote } from "../logNote/logNote";
-import { findTrackedFileWithPath } from "../../logic/findTrackedFileWithPath";
+import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
+import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturnIfNewPeriod";
 
 const onVaultCreate = serialize(async (file: TAbstractFile) => {
 	const settings = getSettings();
@@ -18,6 +19,8 @@ const onVaultCreate = serialize(async (file: TAbstractFile) => {
 	if (!(file instanceof TFile)) return;
 
 	if (isLogNote(file)) return;
+
+	const isNewNotePeriod = runLogicAndReturnIfNewPeriod(settings);
 
 	const currFile = findTrackedFileWithPath(file.path, settings);
 

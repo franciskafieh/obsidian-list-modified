@@ -1,4 +1,4 @@
-import { ISettings } from "../interfaces/ISettings";
+import { ISettings } from "../../interfaces/ISettings";
 
 export function findTrackedFileWithPath(
 	desiredPath: string,

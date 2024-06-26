@@ -1,45 +1,23 @@
 import { serialize } from "monkey-around";
 import { CachedMetadata, TFile, getAllTags, moment } from "obsidian";
-import { isNewDay } from "../../logic/isNewDay";
+import { isNewNotePeriod } from "../../logic/file_tracking/isNewNotePeriod";
 import {
 	getSettings,
 	saveSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
 import { displayNoticeAndWarn } from "../../utils/alerter";
-import { findTrackedFileWithPath } from "../../logic/findTrackedFileWithPath";
-import fileMatchesCriteria from "../../logic/fileMatchesCriteria";
+import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
+import fileMatchesCriteria from "../../logic/file_tracking/fileMatchesCriteria";
 import { isLogNote } from "../logNote/logNote";
+import { resetToNewNotePeriod } from "../../logic/file_tracking/resetToNewNotePeriod";
+import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturnIfNewPeriod";
 
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {
 		const settings = getSettings();
-		let newDay = false;
-
-		if (true) {
-			// if (isNewDay(settings)) {
-			newDay = true;
-
-			displayNoticeAndWarn("New note time period detected, resetting...");
-			// force write to log note
-			await saveSettingsAndWriteToLogNote(true);
-
-			const lastTrackedDate = moment(settings.lastTrackedDate);
-			const today = moment().format("YYYY-MM-DD");
-
-			if (settings.verboseModeEnabled) {
-				console.log(
-					`New day detected, last tracked date was ${lastTrackedDate.format(
-						"YYYY-MM-DD",
-					)}, now it is ${today}`,
-				);
-			}
-			settings.trackedFiles = [];
-
-			settings.lastTrackedDate = today;
-
-			await saveSettings(); // todo - should log file be updated here here?
-		}
+		console.log("yooo!");
+		const isNewNotePeriod = runLogicAndReturnIfNewPeriod(settings);
 
 		if (isLogNote(file)) return;
 
@@ -49,16 +27,11 @@ const onMetadataCacheChanged = serialize(
 			settings,
 		);
 
-		if (!matchesCriteria) return;
-
 		const currFile = findTrackedFileWithPath(file.path, settings);
 
 		if (currFile) {
 			currFile.matchesCriteria = matchesCriteria;
-			console.log(newDay + "1"); // TEMP
-			// if new day and currFile is created, make it modified ???
 		} else {
-			console.log(newDay + "2"); // TEMP
 			settings.trackedFiles.push({
 				path: file.path,
 				matchesCriteria: matchesCriteria,
