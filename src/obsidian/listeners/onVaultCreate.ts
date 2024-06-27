@@ -12,14 +12,14 @@ import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturn
 const onVaultCreate = serialize(async (file: TAbstractFile) => {
 	const settings = getSettings();
 
+	if (!(file instanceof TFile)) return;
+
+	if (isLogNote(file)) return;
+
 	consoleWarnIfVerboseMode(
 		"File created: " + file.path,
 		settings.verboseModeEnabled,
 	);
-
-	if (!(file instanceof TFile)) return;
-
-	if (isLogNote(file)) return;
 
 	const isNewNotePeriod = runLogicAndReturnIfNewPeriod(settings);
 

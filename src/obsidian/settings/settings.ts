@@ -24,24 +24,28 @@ export async function initSettings(initPlugin: ListModified) {
 	);
 
 	consoleWarnIfVerboseMode(
-		"Settings loaded: " + settings,
+		"Settings loaded: " + JSON.stringify(settings),
 		settings.verboseModeEnabled,
 	);
 
-	// if (settings.writeInterval !== 0) {
-	// 	initPlugin.registerInterval(
-	// 		window.setInterval(async () => {
-	// 			await saveSettingsAndWriteToLogNote(true);
-	// 		}, settings.writeInterval * 1000),
-	// 	);
-	// }
+	if (settings.writeInterval !== 0) {
+		consoleWarnIfVerboseMode(
+			"Write interval enabled. Running...",
+			settings.verboseModeEnabled,
+		);
+		initPlugin.registerInterval(
+			window.setInterval(async () => {
+				await saveSettingsAndWriteToLogNote(true);
+			}, settings.writeInterval * 1000),
+		);
+	}
 }
 
 export async function saveSettingsAndWriteToLogNote(force?: boolean) {
 	await saveSettings();
 
 	if (force || settings.writeInterval === 0) {
-		writeChangesToLogNote();
+		writeChangesToLogNote(settings);
 	}
 }
 
