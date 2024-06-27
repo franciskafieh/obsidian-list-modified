@@ -15,8 +15,10 @@ import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturn
 
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {
+		// if mtime is not within 1 second of now, ignore. Most likely an indexed file
+		if (Date.now() - file.stat.mtime >= 1000) return;
+
 		const settings = getSettings();
-		console.log("yooo!");
 		const isNewNotePeriod = runLogicAndReturnIfNewPeriod(settings);
 
 		if (isLogNote(file)) return;
