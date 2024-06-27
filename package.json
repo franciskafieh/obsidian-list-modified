@@ -24,7 +24,7 @@
 		"build": "tsc -noEmit -skipLibCheck && bun esbuild.config.mjs production",
 		"test": "bun test",
 		"bumpVersion": "echo 'TODO...'",
-		"postinstall": "cd node_modules/obsidian-daily-notes-interface && npm install && npm run build"
+		"postinstall": "cd node_modules/obsidian-daily-notes-interface && sed -i 's\\obsidianmd/obsidian-api#master\\^1.5.7\\' package.json && npm install && npm run build"
 	},
 	"type": "module"
 }
