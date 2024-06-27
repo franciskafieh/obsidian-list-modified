@@ -8,5 +8,6 @@ export default function fileMatchesCriteria(
 	settings: ISettings,
 ) {
 	// check if allTags is null
-	return false;
+	// todo - implement
+	return true;
 }

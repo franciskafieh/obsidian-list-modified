@@ -10,11 +10,15 @@ import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 import fileMatchesCriteria from "../../logic/file_tracking/fileMatchesCriteria";
 import { isLogNote } from "../logNote/logNote";
-import { resetToNewNotePeriod } from "../../logic/file_tracking/resetToNewNotePeriod";
 import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturnIfNewPeriod";
+import {
+	getLastPerformedAction,
+	setLastPerformedAction,
+} from "./lastPerformedAction";
 
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {
+		console.log("mod start");
 		const settings = getSettings();
 		consoleWarnIfVerboseMode(
 			"File modified: " + file.path,
@@ -30,7 +34,12 @@ const onMetadataCacheChanged = serialize(
 			return;
 		}
 
-		const isNewNotePeriod = runLogicAndReturnIfNewPeriod(settings);
+		console.log("mod run logic");
+		const isNewNotePeriod = await runLogicAndReturnIfNewPeriod(
+			settings,
+			getLastPerformedAction(),
+		);
+		console.log("mod finish logic");
 
 		if (isLogNote(file)) {
 			consoleWarnIfVerboseMode(
@@ -60,18 +69,27 @@ const onMetadataCacheChanged = serialize(
 			);
 			currFile.matchesCriteria = matchesCriteria;
 		} else {
+			if (!matchesCriteria) {
+				return;
+			}
 			consoleWarnIfVerboseMode(
 				"file not tracked. pushing...",
 				settings.verboseModeEnabled,
 			);
+
 			settings.trackedFiles.push({
 				path: file.path,
 				matchesCriteria: matchesCriteria,
-				supposedList: "modified",
+				supposedList: isNewNotePeriod
+					? getLastPerformedAction()
+					: "modified",
 			});
 		}
 
+		console.log("mod save");
 		saveSettingsAndWriteToLogNote();
+		setLastPerformedAction("modified");
+		console.log("mod done save");
 	},
 );
 
