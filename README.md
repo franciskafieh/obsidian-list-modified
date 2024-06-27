@@ -1,26 +1,32 @@
 # Obsidian List Modified
 
-> plugin description here TODO - a litle demo
+This plugin links all modified files meeting certain criteria to a daily/weekly/monthly note. This provides an accurate log/archive of files modified during specific time periods.
 
-# Usage
+List Modified outputs logs as standard text rather than dynamic queries, ensuring their persistence. Similarly, OLM does not rely on the system's file modification times, as they can be inaccurate when files are moved or synced.
 
-SEE THE WIKI FOR INFO
+TODO - demo in light mode
 
-# Contributing
+## Usage & Config
 
-[See the CONTRIBUTING.md file](CONTRIBUTING.md)
+Please read [the wiki](https://github.com/franciskafieh/obsidian-list-modified/wiki).
 
-# Donations
+## Contributing
 
-TODO
+Read [the CONTRIBUTING.md file](CONTRIBUTING.md) for build and dev instructions.
 
-# Similar Plugins
+## Donations
+
+If OLM has helped you in any way, and you would like to fund future development, feel free to support me on Ko-fi! All donations are appreciated :)
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R7GBZLX)
+
+## Similar Plugins
 
 There are some purposes which are out of scope for OLM. Here are some great plugins which may fill your needs.
 
 -   If you are looking for a separate changelog note: [Obsidian Vault Changelog](https://github.com/badrbouslikhin/obsidian-vault-changelog/tree/main)
 -   If you are looking for detailed change history and analysis: [Obsidian Git](https://github.com/denolehov/obsidian-git)
 
-# Disclaimer
+## Disclaimer
 
-This plugin should not do any harm, but you should always back up your notes just in case! I am not responsible for any damage done as a result of this plugin.
+This plugin should not do any harm, but **you should always back up your notes just in case!** I am not responsible for any damage done as a result of this plugin.
