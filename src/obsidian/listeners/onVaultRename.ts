@@ -7,7 +7,7 @@ import {
 import { consoleWarn } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 
-// test if rename but nothing tracked
+// todo - test if rename but nothing tracked
 const onVaultRename = serialize(
 	async (file: TAbstractFile, oldPath: string) => {
 		if (file instanceof TFile) {

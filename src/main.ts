@@ -1,4 +1,4 @@
-import { Plugin } from "obsidian";
+import { Plugin, getAllTags } from "obsidian";
 import { ISettings } from "./interfaces/ISettings";
 import { initSettings } from "./obsidian/settings/settings";
 import onMetadataCacheChanged from "./obsidian/listeners/onMetadataCacheChanged";
@@ -10,7 +10,7 @@ import { SettingsTab } from "./obsidian/settings/SettingsTab";
 export default class ListModified extends Plugin {
 	async onload(): Promise<void> {
 		await initSettings(this);
-		// etc
+
 		this.registerEvent(
 			this.app.metadataCache.on("changed", onMetadataCacheChanged),
 		);
