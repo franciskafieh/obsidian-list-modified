@@ -1,4 +1,5 @@
 import { LogNoteType, TrackedFile } from "../../src/types";
+import { convertCommaListToArray } from "../../src/utils/converCommaListToArray";
 import { TestSettings } from "./TestSettings";
 
 export class TestSettingsBuilder {
@@ -12,9 +13,9 @@ export class TestSettingsBuilder {
 	public setTags(tags: string[]): void;
 	public setTags(tags: string | string[]) {
 		if (Array.isArray(tags)) {
-			this.testSettings.excludedTags = tags.join(",");
+			this.testSettings.excludedTags = tags;
 		} else {
-			this.testSettings.excludedTags = tags as string;
+			this.testSettings.excludedTags = convertCommaListToArray(tags);
 		}
 	}
 
@@ -22,9 +23,10 @@ export class TestSettingsBuilder {
 	public setExcludedFolders(folders: string[]): void;
 	public setExcludedFolders(folders: string | string[]) {
 		if (Array.isArray(folders)) {
-			this.testSettings.excludedFolders = folders.join(",");
+			this.testSettings.excludedFolders = folders;
 		} else {
-			this.testSettings.excludedFolders = folders as string;
+			this.testSettings.excludedFolders =
+				convertCommaListToArray(folders);
 		}
 	}
 
@@ -32,9 +34,10 @@ export class TestSettingsBuilder {
 	public setIgnoredNameContains(names: string[]): void;
 	public setIgnoredNameContains(names: string | string[]) {
 		if (Array.isArray(names)) {
-			this.testSettings.excludedNameContains = names.join(",");
+			this.testSettings.excludedNameContains = names;
 		} else {
-			this.testSettings.excludedNameContains = names as string;
+			this.testSettings.excludedNameContains =
+				convertCommaListToArray(names);
 		}
 	}
 

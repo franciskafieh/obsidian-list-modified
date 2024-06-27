@@ -4,7 +4,7 @@ import {
 	getSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
-import { consoleWarn } from "../../utils/alerter";
+import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 import { isLogNote } from "../logNote/logNote";
 import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturnIfNewPeriod";
@@ -16,9 +16,10 @@ const onVaultDelete = serialize(async (file: TAbstractFile) => {
 
 	const settings = getSettings();
 
-	if (settings.verboseModeEnabled) {
-		consoleWarn("File deleted: " + file.path);
-	}
+	consoleWarnIfVerboseMode(
+		"File deleted: " + file.path,
+		settings.verboseModeEnabled,
+	);
 
 	const isNewNotePeriod = runLogicAndReturnIfNewPeriod(settings);
 

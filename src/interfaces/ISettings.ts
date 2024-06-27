@@ -2,9 +2,9 @@ import { LogNoteType, TrackedFile } from "../types";
 
 export interface ISettings {
 	// CRITERIA
-	excludedTags: string;
-	excludedFolders: string;
-	excludedNameContains: string;
+	excludedTags: string[];
+	excludedFolders: string[];
+	excludedNameContains: string[];
 
 	// FORMATTING
 	outputFormat: string;
