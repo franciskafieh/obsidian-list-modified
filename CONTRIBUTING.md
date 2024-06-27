@@ -19,7 +19,7 @@ The main source code of the project resides in the `src/` directory. Within, the
 -   `obsidian/` - Obsidian-specific code like event listeners and settings panes. Code in this directory should be kept relatively simple as it is not tested. When possible, logic should be placed in other directories.
 -   `utils/` - Miscelaneous utility functions, mostly for formatting and code reusability. Utilities should be tested if they are complex enough to allow error.
 
-### Testing
+## Testing
 
 Tests are all done with `bun` and reside in the `tests/` directory. The subdirectories mimic the `src/` structure. Read above for more info on what should be tested.
 
