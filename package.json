@@ -12,8 +12,7 @@
 		"obsidian": "^1.5.7",
 		"tslib": "^2.6.3",
 		"typescript": "^5.5.2",
-		"monkey-around": "^3.0.0",
-		"obsidian-daily-notes-interface": "git@github.com:hotoo/obsidian-daily-notes-interface.git#patch-1"
+		"monkey-around": "^3.0.0"
 	},
 	"peerDependencies": {
 		"typescript": "^5.0.0"
@@ -23,8 +22,7 @@
 		"dev": "bun esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && bun esbuild.config.mjs production",
 		"test": "bun test",
-		"bumpVersion": "echo 'TODO...'",
-		"postinstall": "cd node_modules/obsidian-daily-notes-interface && sed -i 's\\obsidianmd/obsidian-api#master\\^1.5.7\\' package.json && npm install && npm run build"
+		"bumpVersion": "echo 'TODO...'"
 	},
 	"type": "module"
 }
