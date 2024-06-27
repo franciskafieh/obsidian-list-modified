@@ -28,7 +28,7 @@ export default class ListModified extends Plugin {
 	migrateToThreePointZeroIfNeeded(settings: ISettings) {
 		// 	excludedTags = "";
 		// excludedFolders = "";
-		// excludedNameContains = ""; <== these all changed, todo in migration
+		// excludedNameContains = ""; <== these all changed names and became arrays, todo in migration
 
 		// @ts-ignore - property should not exist but may
 		// if still have old setting

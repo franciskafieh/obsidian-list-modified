@@ -4,7 +4,7 @@ import {
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
 import { TAbstractFile, TFile } from "obsidian";
-import { consoleWarn } from "../../utils/alerter";
+import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { isLogNote } from "../logNote/logNote";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturnIfNewPeriod";
@@ -12,9 +12,10 @@ import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturn
 const onVaultCreate = serialize(async (file: TAbstractFile) => {
 	const settings = getSettings();
 
-	if (settings.verboseModeEnabled) {
-		consoleWarn("File created: " + file.path);
-	}
+	consoleWarnIfVerboseMode(
+		"File created: " + file.path,
+		settings.verboseModeEnabled,
+	);
 
 	if (!(file instanceof TFile)) return;
 

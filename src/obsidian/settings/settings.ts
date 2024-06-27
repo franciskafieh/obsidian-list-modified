@@ -1,7 +1,8 @@
 import { ISettings } from "../../interfaces/ISettings";
 import ListModified from "../../main";
+import { consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { writeChangesToLogNote } from "../logNote/writeChangesToLogNote";
-import { ObsidianDefaultSettings } from "./ObsidianDefaultSettings";
+import { OBSIDIAN_DEFAULT_SETTINGS } from "./ObsidianDefaultSettings";
 
 let plugin: ListModified;
 let settings: ISettings;
@@ -18,8 +19,13 @@ export async function initSettings(initPlugin: ListModified) {
 	plugin = initPlugin;
 	settings = Object.assign(
 		{},
-		ObsidianDefaultSettings,
+		OBSIDIAN_DEFAULT_SETTINGS,
 		await plugin.loadData(),
+	);
+
+	consoleWarnIfVerboseMode(
+		"Settings loaded: " + settings,
+		settings.verboseModeEnabled,
 	);
 
 	// if (settings.writeInterval !== 0) {

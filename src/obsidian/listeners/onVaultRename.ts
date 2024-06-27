@@ -4,7 +4,7 @@ import {
 	getSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
-import { consoleWarn } from "../../utils/alerter";
+import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 
 // todo - test if rename but nothing tracked
@@ -13,9 +13,10 @@ const onVaultRename = serialize(
 		if (file instanceof TFile) {
 			const settings = getSettings();
 
-			if (settings.verboseModeEnabled) {
-				consoleWarn("File renamed: " + file.path);
-			}
+			consoleWarnIfVerboseMode(
+				"File renamed: " + file.path,
+				settings.verboseModeEnabled,
+			);
 
 			// if entry with current new path, remove it (assume it was previously deleted)
 			settings.trackedFiles.remove(
