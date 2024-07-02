@@ -6,11 +6,11 @@ import {
 } from "../settings/settings";
 import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
-import { getLogNote, isLogNote } from "../logNote/logNote";
+import { getLogNote, isLogNote } from "../log_note/logNote";
 import {
 	getLastPerformedAction,
 	setLastPerformedAction,
-} from "./lastPerformedAction";
+} from "../file_tracking/lastPerformedAction";
 import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturnIfNewPeriod";
 
 const onVaultDelete = serialize(async (file: TAbstractFile) => {
@@ -22,6 +22,12 @@ const onVaultDelete = serialize(async (file: TAbstractFile) => {
 		settings.verboseModeEnabled,
 	);
 
+	// delete does not call cache changed, can do this here
+	const isNewNotePeriod = await runLogicAndReturnIfNewPeriod(
+		settings,
+		getLastPerformedAction(),
+	);
+
 	if (isLogNote(file)) {
 		consoleWarnIfVerboseMode(
 			"Delete: File is log note. Returning...",
@@ -29,12 +35,6 @@ const onVaultDelete = serialize(async (file: TAbstractFile) => {
 		);
 		return;
 	}
-
-	// delete does not call cache changed, can do this here
-	const isNewNotePeriod = await runLogicAndReturnIfNewPeriod(
-		settings,
-		getLastPerformedAction(),
-	);
 
 	consoleWarnIfVerboseMode(
 		"File deleted: " + file.path,

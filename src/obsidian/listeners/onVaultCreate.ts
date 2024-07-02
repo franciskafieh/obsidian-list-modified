@@ -5,9 +5,9 @@ import {
 } from "../settings/settings";
 import { TAbstractFile, TFile } from "obsidian";
 import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
-import { isLogNote } from "../logNote/logNote";
+import { isLogNote } from "../log_note/logNote";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
-import { setLastPerformedAction } from "./lastPerformedAction";
+import { setLastPerformedAction } from "../file_tracking/lastPerformedAction";
 
 const onVaultCreate = serialize(async (file: TAbstractFile) => {
 	setLastPerformedAction("created");

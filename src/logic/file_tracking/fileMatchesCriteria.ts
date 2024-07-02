@@ -1,11 +1,11 @@
-import { IFile } from "../../interfaces/IFile";
-import { ISettings } from "../../interfaces/ISettings";
+import { File } from "../../interfaces/File";
+import { Settings } from "../../interfaces/Settings";
 
 // in Obsidian getAllTags() should be passed into allTags.
 export default function fileMatchesCriteria(
-	file: IFile,
+	file: File,
 	allTags: string[] | null,
-	settings: ISettings,
+	settings: Settings,
 ) {
 	// check if allTags is null
 	// todo - implement

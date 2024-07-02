@@ -1,8 +1,8 @@
 import moment from "moment";
-import { ISettings } from "../../interfaces/ISettings";
+import { Settings } from "../../interfaces/Settings";
 import { consoleWarnIfVerboseMode } from "../../utils/alerter";
 
-export function resetToNewNotePeriod(settings: ISettings) {
+export function resetToNewNotePeriod(settings: Settings) {
 	const lastTrackedDate = moment(settings.lastTrackedDate);
 	const today = moment().format("YYYY-MM-DD");
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { getDividerPositions } from "../../src/logic/getDividerPositions";
+import { getDividerPositions } from "../../src/logic/log_note/getDividerPositions";
 
 describe("dividers should be matched as expected", () => {
 	it("should not match anything", () => {
@@ -8,7 +8,7 @@ describe("dividers should be matched as expected", () => {
 			"sdfsdfsdf",
 			"%%LIST MODIFIED",
 			"%% LIST MODIFIED",
-			"%% LIST MODIFIED %% d"
+			"%% LIST MODIFIED %% d",
 		);
 
 		expect(getDividerPositions(noDividers)).toEqual({
@@ -24,7 +24,7 @@ describe("dividers should be matched as expected", () => {
 			"nsfaadf",
 			"%% LIST MODIFIED %%",
 			"dsfsdf",
-			"etc"
+			"etc",
 		);
 
 		expect(getDividerPositions(modified)).toEqual({
@@ -43,7 +43,7 @@ describe("dividers should be matched as expected", () => {
 			"%% LIST CREATED %%",
 			"%% END %% a",
 			"%% END",
-			"%% END %%"
+			"%% END %%",
 		);
 
 		expect(getDividerPositions(modified)).toEqual({

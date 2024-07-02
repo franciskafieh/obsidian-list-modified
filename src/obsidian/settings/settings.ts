@@ -1,11 +1,11 @@
-import { ISettings } from "../../interfaces/ISettings";
+import { Settings } from "../../interfaces/Settings";
 import ListModified from "../../main";
 import { consoleWarnIfVerboseMode } from "../../utils/alerter";
-import { writeChangesToLogNote } from "../logNote/writeChangesToLogNote";
+import { writeChangesToLogNote } from "../log_note/writeChangesToLogNote";
 import { OBSIDIAN_DEFAULT_SETTINGS } from "./ObsidianDefaultSettings";
 
 let plugin: ListModified;
-let settings: ISettings;
+let settings: Settings;
 
 export function getSettings() {
 	return settings;

@@ -1,5 +1,5 @@
 import { Plugin, getAllTags } from "obsidian";
-import { ISettings } from "./interfaces/ISettings";
+import { Settings } from "./interfaces/Settings";
 import { initSettings } from "./obsidian/settings/settings";
 import onMetadataCacheChanged from "./obsidian/listeners/onMetadataCacheChanged";
 import onVaultDelete from "./obsidian/listeners/onVaultDelete";
@@ -25,7 +25,7 @@ export default class ListModified extends Plugin {
 		this.addSettingTab(new SettingsTab(this.app, this));
 	}
 
-	migrateToThreePointZeroIfNeeded(settings: ISettings) {
+	migrateToThreePointZeroIfNeeded(settings: Settings) {
 		// 	excludedTags = "";
 		// excludedFolders = "";
 		// excludedNameContains = ""; <== these all changed names and became arrays, todo in migration
