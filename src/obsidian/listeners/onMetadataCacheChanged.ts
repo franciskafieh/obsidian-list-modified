@@ -1,6 +1,5 @@
 import { serialize } from "monkey-around";
 import { CachedMetadata, TFile, getAllTags, moment } from "obsidian";
-import { isNewNotePeriod } from "../../logic/file_tracking/isNewNotePeriod";
 import {
 	getSettings,
 	saveSettings,
@@ -9,16 +8,15 @@ import {
 import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 import fileMatchesCriteria from "../../logic/file_tracking/fileMatchesCriteria";
-import { isLogNote } from "../logNote/logNote";
+import { isLogNote } from "../log_note/logNote";
 import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturnIfNewPeriod";
 import {
 	getLastPerformedAction,
 	setLastPerformedAction,
-} from "./lastPerformedAction";
+} from "../file_tracking/lastPerformedAction";
 
 const onMetadataCacheChanged = serialize(
 	async (file: TFile, _data: string, cache: CachedMetadata) => {
-		console.log("mod start");
 		const settings = getSettings();
 		consoleWarnIfVerboseMode(
 			"File modified: " + file.path,
@@ -34,12 +32,10 @@ const onMetadataCacheChanged = serialize(
 			return;
 		}
 
-		console.log("mod run logic");
 		const isNewNotePeriod = await runLogicAndReturnIfNewPeriod(
 			settings,
 			getLastPerformedAction(),
 		);
-		console.log("mod finish logic");
 
 		if (isLogNote(file)) {
 			consoleWarnIfVerboseMode(
@@ -86,10 +82,8 @@ const onMetadataCacheChanged = serialize(
 			});
 		}
 
-		console.log("mod save");
 		saveSettingsAndWriteToLogNote();
 		setLastPerformedAction("modified");
-		console.log("mod done save");
 	},
 );
 

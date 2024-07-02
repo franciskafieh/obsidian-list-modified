@@ -1,6 +1,6 @@
 import { LogNoteType, TrackedFile } from "../types";
 
-export interface ISettings {
+export interface Settings {
 	// CRITERIA
 	excludedTags: string[];
 	excludedFolders: string[];

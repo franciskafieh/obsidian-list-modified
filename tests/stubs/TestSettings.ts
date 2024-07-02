@@ -1,7 +1,7 @@
-import { ISettings } from "../../src/interfaces/ISettings";
+import { Settings } from "../../src/interfaces/Settings";
 import { OBSIDIAN_DEFAULT_SETTINGS } from "../../src/obsidian/settings/ObsidianDefaultSettings";
 
-export class TestSettings implements ISettings {
+export class TestSettings implements Settings {
 	excludedTags = OBSIDIAN_DEFAULT_SETTINGS.excludedTags;
 	excludedFolders = OBSIDIAN_DEFAULT_SETTINGS.excludedFolders;
 	excludedNameContains = OBSIDIAN_DEFAULT_SETTINGS.excludedNameContains;

@@ -1,6 +1,6 @@
-import { ISettings } from "../../interfaces/ISettings";
+import { Settings } from "../../interfaces/Settings";
 
-export const OBSIDIAN_DEFAULT_SETTINGS: ISettings = {
+export const OBSIDIAN_DEFAULT_SETTINGS: Settings = {
 	// CRITERIA
 	excludedTags: [],
 	excludedFolders: [],

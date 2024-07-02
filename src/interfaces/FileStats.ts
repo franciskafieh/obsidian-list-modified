@@ -1,4 +1,4 @@
-export interface IFileStats {
+export interface FileStats {
 	ctime: number;
 	mtime: number;
 	size: number;

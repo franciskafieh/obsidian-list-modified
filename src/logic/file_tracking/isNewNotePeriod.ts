@@ -1,7 +1,7 @@
 import moment from "moment";
-import { ISettings } from "../../interfaces/ISettings";
+import { Settings } from "../../interfaces/Settings";
 
-export function isNewNotePeriod(settings: ISettings) {
+export function isNewNotePeriod(settings: Settings) {
 	const lastTrackedDate = moment(settings.lastTrackedDate);
 
 	let granularity = new Map([

@@ -1,8 +1,8 @@
-import { ISettings } from "../../interfaces/ISettings";
+import { Settings } from "../../interfaces/Settings";
 
 export function findTrackedFileWithPath(
 	desiredPath: string,
-	settings: ISettings,
+	settings: Settings,
 ) {
 	return settings.trackedFiles.find(({ path }) => path === desiredPath);
 }
