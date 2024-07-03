@@ -5,13 +5,13 @@ import { Vault } from "../../src/interfaces/Vault";
 export class TestFileConverter implements FileConverter {
 	fromPath(path: string): File | null {
 		return {
-			basename: "tmp",
-			extension: ".md",
-			path: "tmp.md",
+			basename: path,
+			extension: path, // not used
+			path: "looool.md",
 			stat: { ctime: 2, mtime: 2, size: 0 },
-			name: "",
-			parent: null,
-			vault: {} as Vault,
+			name: path, // not used
+			parent: null, // not used
+			vault: {} as Vault, // not used
 		};
 	}
 }

@@ -1,12 +1,10 @@
 import { MomentFormatComponent } from "obsidian";
 import { TrackedFile } from "../../types";
 import { Settings } from "../../interfaces/Settings";
-import { getFormattedOutputGivenFile } from "./getFormattedOutputGivenFile";
 import { ReplacementDictionary } from "../../interfaces/ReplacementDictionary";
 import { FileConverter } from "../../interfaces/FileConverter";
 
 export function getFill(
-	trackedFiles: TrackedFile[],
 	settings: Settings,
 	replacementDictionary: ReplacementDictionary,
 	fileConverter: FileConverter,
@@ -14,6 +12,8 @@ export function getFill(
 	const created = [];
 	const modified = [];
 	const deleted = [];
+
+	const trackedFiles = settings.trackedFiles;
 	for (const trackedFile of trackedFiles) {
 		if (!trackedFile.matchesCriteria || !trackedFile.path) {
 			continue;
@@ -21,14 +21,10 @@ export function getFill(
 
 		const file = fileConverter.fromPath(trackedFile.path);
 
-		if (!file) {
-			continue;
-		}
-
-		const formattedOutput = getFormattedOutputGivenFile(
+		const formattedOutput = replacementDictionary.getOutputPostReplacement(
+			settings.outputFormat,
 			file,
-			replacementDictionary,
-			settings,
+			trackedFile.path,
 		);
 
 		if (trackedFile.supposedList === "created") {

@@ -1,28 +1,28 @@
+import { moment } from "obsidian";
 import { File } from "../../src/interfaces/File";
 import { ReplacementDictionary } from "../../src/interfaces/ReplacementDictionary";
 
-export class TestReplacementDictionary implements ReplacementDictionary {
-	getOutputPostReplacement(format: string, file: File): string {
-		return "";
-	}
-
-	replacements = [];
+export class TestReplacementDictionary extends ReplacementDictionary {
+	replacements = [
+		{ template: "path", replaceWith: (file: File) => file.path },
+		{
+			template: "link",
+			replaceWith: (file: File) => `[[${file.basename}]]`,
+		},
+		{ template: "name", replaceWith: (file: File) => file.basename },
+		{
+			template: "tags",
+			replaceWith: (file: File) => "#tags not implemented for tests",
+		},
+		{
+			template: "ctime",
+			replaceWith: (file: File) =>
+				moment(file.stat.ctime).format("HH:mm:ss"),
+		},
+		{
+			template: "mtime",
+			replaceWith: (file: File) =>
+				moment(file.stat.mtime).format("HH:mm:ss"),
+		},
+	];
 }
-
-// export class ObsidianReplacementDictionary implements IReplacementDictionary {
-// 	getOutputPostReplacement(format: string, file: IFile): string {
-// 		let out: string = "";
-// 		for (const replacement of this.replacements) {
-// 			out = format.replace(
-// 				new RegExp(`[[${replacement.template}]]`, "g"),
-// 				replacement.replaceWith(file),
-// 			);
-// 		}
-
-// 		return out;
-// 	}
-
-// 	replacements = [
-// 		{ template: "path", replaceWith: (file: IFile) => file.path },
-// 	];
-// }

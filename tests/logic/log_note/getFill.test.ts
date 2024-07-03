@@ -1,17 +1,71 @@
-// import { describe, it, expect } from "bun:test";
-// import { getFill } from "../../src/logic/getFill";
-// import { ListType } from "../../src/types";
+import { beforeEach, describe, it, expect } from "bun:test";
+import { TestSettingsBuilder } from "../../stubs/TestSettingsBuilder";
+import { getFill } from "../../../src/logic/log_note/getFill";
+import { TestReplacementDictionary } from "../../stubs/TestReplacementDictionary";
+import { TestFileConverter } from "../../stubs/TestFileConverter";
 
-// describe("target fill should be correct", () => {
-// 	it("should return empty arrays if no data provided", () => {
-// 		expect(getFill([], false)).toEqual({
-// 			created: [],
-// 			modified: [],
-// 			deleted: [],
-// 		});
-// 	});
+let builder: TestSettingsBuilder;
 
-// 	// test combined bool flag
+beforeEach(() => {
+	builder = new TestSettingsBuilder();
+	builder.setOutputFormat("[[path]]");
+});
+
+// ** NOTE: Only tests whether files given in lists are correct. Therefore, output format
+// is always set to [[path]]. For format testing, see replacementDictionaryStub tests
+describe("getFill should return the correct sorted lists", () => {
+	it("should return empty arrays if no trackedfiles provided", () => {
+		const settings = builder.build();
+
+		expect(
+			getFill(
+				settings,
+				new TestReplacementDictionary(),
+				new TestFileConverter(),
+			),
+		).toEqual({ created: [], modified: [], deleted: [] });
+	});
+
+	it("should return empty arrays if no trackedfiles match criteria", () => {
+		const settings = builder
+			.addTrackedFile({
+				path: "a.md",
+				matchesCriteria: false,
+				supposedList: "created",
+			})
+			.build();
+
+		expect(
+			getFill(
+				settings,
+				new TestReplacementDictionary(),
+				new TestFileConverter(),
+			),
+		).toEqual({ created: [], modified: [], deleted: [] });
+	});
+
+	it("should return empty arrays if no trackedfiles match criteria", () => {
+		const settings = builder
+			.addTrackedFile({
+				path: "a.md",
+				matchesCriteria: true,
+				supposedList: "created",
+			})
+			.build();
+
+		expect(
+			getFill(
+				settings,
+				new TestReplacementDictionary(),
+				new TestFileConverter(),
+			),
+		).toEqual({ created: [], modified: [], deleted: [] });
+	});
+});
+
+// test repkacement dict and file coverter
+
+// 	// test combined modified and created bool flag
 
 // 	it("should check if criteria is matched", () => {
 // 		const stub = [

@@ -14,13 +14,7 @@ export function getFinalNoteContent(
 ) {
 	const contentByLine = fileContent.split("\n");
 	const dividerPositions = getDividerPositions(contentByLine);
-	// skip each section if start/end is -1
-	const fill = getFill(
-		settings.trackedFiles,
-		settings,
-		replacementDictionary,
-		fileConverter,
-	);
+	const fill = getFill(settings, replacementDictionary, fileConverter);
 
 	let finalContent = contentByLine;
 
