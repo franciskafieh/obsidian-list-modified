@@ -12,7 +12,7 @@ export class TestReplacementDictionary extends ReplacementDictionary {
 		{ template: "name", replaceWith: (file: File) => file.basename },
 		{
 			template: "tags",
-			replaceWith: (file: File) => "#tags not implemented for tests",
+			replaceWith: (_file: File) => "#tags not implemented for tests",
 		},
 		{
 			template: "ctime",

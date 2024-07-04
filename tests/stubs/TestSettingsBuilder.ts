@@ -102,11 +102,6 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
-	public addTrackedFile(trackedFile: TrackedFile) {
-		this.testSettings.trackedFiles.push(trackedFile);
-		return this;
-	}
-
 	public setVerboseModeEnabled(enabled: boolean) {
 		this.testSettings.verboseModeEnabled = enabled;
 		return this;

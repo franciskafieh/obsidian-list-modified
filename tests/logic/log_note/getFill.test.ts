@@ -1,19 +1,26 @@
-import { beforeEach, describe, it, expect } from "bun:test";
+import {
+	beforeEach,
+	describe,
+	it,
+	expect,
+	afterEach,
+	beforeAll,
+} from "bun:test";
 import { TestSettingsBuilder } from "../../stubs/TestSettingsBuilder";
 import { getFill } from "../../../src/logic/log_note/getFill";
 import { TestReplacementDictionary } from "../../stubs/TestReplacementDictionary";
 import { TestFileConverter } from "../../stubs/TestFileConverter";
 
-let builder: TestSettingsBuilder;
-
-beforeEach(() => {
-	builder = new TestSettingsBuilder();
-	builder.setOutputFormat("[[path]]");
-});
-
 // ** NOTE: Only tests whether files given in lists are correct. Therefore, output format
 // is always set to [[path]]. For format testing, see replacementDictionaryStub tests
 describe("getFill should return the correct sorted lists", () => {
+	let builder: TestSettingsBuilder;
+
+	beforeEach(() => {
+		builder = new TestSettingsBuilder();
+		builder.setOutputFormat("[[path]]");
+	});
+
 	it("should return empty arrays if no trackedfiles provided", () => {
 		const settings = builder.build();
 
@@ -28,11 +35,23 @@ describe("getFill should return the correct sorted lists", () => {
 
 	it("should return empty arrays if no trackedfiles match criteria", () => {
 		const settings = builder
-			.addTrackedFile({
-				path: "a.md",
-				matchesCriteria: false,
-				supposedList: "created",
-			})
+			.setTrackedFiles([
+				{
+					path: "a.md",
+					matchesCriteria: false,
+					supposedList: "created",
+				},
+				{
+					path: "b.md",
+					matchesCriteria: false,
+					supposedList: "deleted",
+				},
+				{
+					path: "c.md",
+					matchesCriteria: false,
+					supposedList: "modified",
+				},
+			])
 			.build();
 
 		expect(
@@ -44,13 +63,30 @@ describe("getFill should return the correct sorted lists", () => {
 		).toEqual({ created: [], modified: [], deleted: [] });
 	});
 
-	it("should return empty arrays if no trackedfiles match criteria", () => {
+	it("should sort files into correct lists", () => {
 		const settings = builder
-			.addTrackedFile({
-				path: "a.md",
-				matchesCriteria: true,
-				supposedList: "created",
-			})
+			.setTrackedFiles([
+				{
+					path: "a.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+				{
+					path: "b.md",
+					matchesCriteria: true,
+					supposedList: "deleted",
+				},
+				{
+					path: "c.md",
+					matchesCriteria: true,
+					supposedList: "modified",
+				},
+				{
+					path: "d.md",
+					matchesCriteria: true,
+					supposedList: "modified",
+				},
+			])
 			.build();
 
 		expect(
@@ -59,80 +95,40 @@ describe("getFill should return the correct sorted lists", () => {
 				new TestReplacementDictionary(),
 				new TestFileConverter(),
 			),
-		).toEqual({ created: [], modified: [], deleted: [] });
+		).toEqual({
+			created: ["a.md"],
+			modified: ["c.md", "d.md"],
+			deleted: ["b.md"],
+		});
+	});
+
+	it("should honour combine created/modified boolean flag", () => {
+		const settings = builder
+			.setCombineCreatedAndModified(true)
+			.setTrackedFiles([
+				{
+					path: "a.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+				{
+					path: "c.md",
+					matchesCriteria: true,
+					supposedList: "modified",
+				},
+			])
+			.build();
+
+		expect(
+			getFill(
+				settings,
+				new TestReplacementDictionary(),
+				new TestFileConverter(),
+			),
+		).toEqual({
+			created: [],
+			modified: ["a.md", "c.md"],
+			deleted: [],
+		});
 	});
 });
-
-// test repkacement dict and file coverter
-
-// 	// test combined modified and created bool flag
-
-// 	it("should check if criteria is matched", () => {
-// 		const stub = [
-// 			{
-// 				path: "a",
-// 				supposedList: "created" as ListType, // TODO - why does this need explicit type cast
-// 				matchesCriteria: false,
-// 			},
-// 			{
-// 				path: "b",
-// 				supposedList: "created" as ListType,
-// 				matchesCriteria: true,
-// 			},
-// 		];
-
-// 		expect(getFill(stub, false).created).toEqual(["b"]);
-// 	});
-
-// 	it("should sort into correct lists", () => {
-// 		const stub = [
-// 			{
-// 				path: "a",
-// 				supposedList: "created" as ListType,
-// 				matchesCriteria: true,
-// 			},
-// 			{
-// 				path: "b",
-// 				supposedList: "modified" as ListType,
-// 				matchesCriteria: true,
-// 			},
-// 			{
-// 				path: "c",
-// 				supposedList: "deleted" as ListType,
-// 				matchesCriteria: true,
-// 			},
-// 			{
-// 				path: "d",
-// 				supposedList: "deleted" as ListType,
-// 				matchesCriteria: true,
-// 			},
-// 		];
-
-// 		expect(getFill(stub, false)).toEqual({
-// 			created: ["a"],
-// 			modified: ["b"],
-// 			deleted: ["c", "d"],
-// 		});
-// 	});
-
-// 	it("should combine created and modified if boolean flag is true", () => {
-// 		const stub = [
-// 			{
-// 				path: "a",
-// 				supposedList: "created" as ListType,
-// 				matchesCriteria: true,
-// 			},
-// 			{
-// 				path: "b",
-// 				supposedList: "modified" as ListType,
-// 				matchesCriteria: true,
-// 			},
-// 		];
-
-// 		expect(getFill(stub, true)).toEqual({
-// 			created: [],
-// 			modified: ["a", "b"],
-// 			deleted: [],
-// 		});
-// 	});
-// });
