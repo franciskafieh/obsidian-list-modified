@@ -1,6 +1,5 @@
 import { Settings } from "../../interfaces/Settings";
 import { isNewNotePeriod } from "../../logic/file_tracking/isNewNotePeriod";
-import { resetToNewNotePeriod } from "../../logic/file_tracking/resetToNewNotePeriod";
 import { removeDividers } from "../../logic/log_note/removeDividers";
 import { ListType } from "../../types";
 import {
@@ -13,6 +12,7 @@ import {
 	saveSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
+import { moment } from "obsidian";
 
 export async function runLogicAndReturnIfNewPeriod(
 	settings: Settings,
@@ -32,7 +32,19 @@ export async function runLogicAndReturnIfNewPeriod(
 		getPlugin().app.vault.process(getLogNote(), (data) =>
 			removeDividers(data),
 		);
-		resetToNewNotePeriod(settings);
+		const lastTrackedDate = moment(settings.lastTrackedDate);
+		const today = moment().format("YYYY-MM-DD");
+
+		consoleWarnIfVerboseMode(
+			`New day detected, last tracked date was ${lastTrackedDate.format(
+				"YYYY-MM-DD",
+			)}, now it is ${today}`,
+			settings.verboseModeEnabled,
+		);
+
+		settings.trackedFiles = [];
+
+		settings.lastTrackedDate = today;
 		await saveSettings();
 	}
 
