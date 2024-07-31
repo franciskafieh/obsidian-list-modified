@@ -1,4 +1,3 @@
-import { Settings } from "../../interfaces/Settings";
 import { getFinalNoteContent } from "../../logic/log_note/getFinalNoteContent";
 import { warnUserOnce } from "../../utils/alerter";
 import { ObsidianFileConverter } from "../implementations/ObsidianFileConverter";
@@ -6,7 +5,8 @@ import { ObsidianReplacementDictionary } from "../implementations/ObsidianReplac
 import { getPlugin, getSettings } from "../settings/settings";
 import { createLogNote, getLogNote } from "./logNote";
 
-export async function writeChangesToLogNote(settings: Settings) {
+export async function writeChangesToLogNote() {
+	const settings = getSettings();
 	if (!getLogNote()) {
 		if (settings.autoCreateLogNote) {
 			await createLogNote();

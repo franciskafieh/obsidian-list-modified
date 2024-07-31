@@ -23,7 +23,9 @@ export class SettingsTab extends PluginSettingTab {
 				href: "https://github.com/franciskafieh/obsidian-list-modified/wiki",
 				text: "the wiki",
 			}),
-			" for configuration and setup help.",
+			" for configuration and setup help. The plugin ",
+			containerEl.createEl("b", { text: "will not work" }),
+			" unless configured properly!",
 		);
 		topHeader.style.marginBottom = "50px";
 
@@ -47,7 +49,7 @@ export class SettingsTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Log Note Type")
 			.setDesc(
-				"'Weekly' and 'monthly' require you to have the Periodic Notes plugin.",
+				"The 'Weekly' and 'Monthly' options REQUIRE you to have the Periodic Notes plugin.",
 			)
 			.addDropdown((dropdown) => {
 				dropdown
@@ -65,7 +67,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Write Interval")
 			.setDesc(
 				"The interval (in seconds) at which to write your modified files to your daily note. " +
-					"Set to 0 to disable and write to your file directly after every change. " +
+					"Set to 0 to disable the interval and write to your file directly after every change. " +
 					"This is recommended especially if you do not use a sync solution. " +
 					"Please restart Obsidian after changing this value.",
 			)
@@ -109,7 +111,7 @@ export class SettingsTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Excluded Name Contains")
+			.setName("Excluded Names")
 			.setDesc(
 				"Files with names containing these strings will not be tracked.",
 			)
@@ -125,13 +127,26 @@ export class SettingsTab extends PluginSettingTab {
 			);
 
 		// OUTPUT FORMAT
-		containerEl.createEl("h2", { text: "Output Format" });
+		containerEl.createEl("h2", { text: "Output Formatting" });
+
+		const outputFormatDesc = document.createDocumentFragment();
+
+		outputFormatDesc.append(
+			"Format of the links in the log note. Use ",
+			outputFormatDesc.createEl("a", {
+				href: "",
+				text: "[[link]]",
+			}),
+			" to insert the link to the file. For a full list of placeholders, please see ",
+			outputFormatDesc.createEl("a", {
+				href: "https://github.com/franciskafieh/obsidian-list-modified/wiki/Output-Format",
+				text: "the wiki.",
+			}),
+		);
+
 		new Setting(containerEl)
 			.setName("Output Format")
-			.setDesc(
-				"Format of the links in the log note. " +
-					"Use [[link]] to insert the link to the file. ETC OTHER ONES HERE",
-			)
+			.setDesc(outputFormatDesc)
 			.addText((text) =>
 				text
 					.setPlaceholder("- [[link]]")
@@ -144,7 +159,9 @@ export class SettingsTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Time Format")
-			.setDesc("Format of the time in the log note. ")
+			.setDesc(
+				"Time format for use with the above time-related placeholders. ",
+			)
 			.addText((text) =>
 				text
 					.setPlaceholder("YYYY-MM-DD")
@@ -220,7 +237,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Verbose Mode")
 			.setDesc(
 				"Enable verbose mode for debugging. " +
-					"Only toggle this for support and development purposes.",
+					"This only needs to be on for support and development purposes.",
 			)
 			.addToggle((toggle) => {
 				toggle
