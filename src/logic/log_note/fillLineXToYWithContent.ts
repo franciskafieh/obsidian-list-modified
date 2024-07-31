@@ -8,7 +8,12 @@ export function fillLineXToYWithContent(
 	if (lineX === -1 || lineY === -1) {
 		return originalText;
 	}
-	// fill from X to Y and create extra lines in between if needed
 
-	return originalText;
+	// normal array up to lineX
+	const before = originalText.slice(0, lineX);
+	// normal array from lineY to the end
+	const after = originalText.slice(lineY + 1);
+
+	const combined = [...before, ...content, ...after];
+	return combined;
 }

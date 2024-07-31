@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { getDividerPositions } from "../../src/logic/log_note/getDividerPositions";
+import { getDividerPositions } from "../../../src/logic/log_note/getDividerPositions";
 
 describe("dividers should be matched as expected", () => {
 	it("should not match anything", () => {
