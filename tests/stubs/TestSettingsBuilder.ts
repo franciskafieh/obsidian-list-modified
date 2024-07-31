@@ -9,8 +9,8 @@ export class TestSettingsBuilder {
 		this.testSettings = new TestSettings();
 	}
 
-	public setTags(tags: string): void;
-	public setTags(tags: string[]): void;
+	public setTags(tags: string): this;
+	public setTags(tags: string[]): this;
 	public setTags(tags: string | string[]) {
 		if (Array.isArray(tags)) {
 			this.testSettings.excludedTags = tags;
@@ -21,8 +21,8 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
-	public setExcludedFolders(folders: string): void;
-	public setExcludedFolders(folders: string[]): void;
+	public setExcludedFolders(folders: string): this;
+	public setExcludedFolders(folders: string[]): this;
 	public setExcludedFolders(folders: string | string[]) {
 		if (Array.isArray(folders)) {
 			this.testSettings.excludedFolders = folders;
@@ -34,8 +34,8 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
-	public setIgnoredNameContains(names: string): void;
-	public setIgnoredNameContains(names: string[]): void;
+	public setIgnoredNameContains(names: string): this;
+	public setIgnoredNameContains(names: string[]): this;
 	public setIgnoredNameContains(names: string | string[]) {
 		if (Array.isArray(names)) {
 			this.testSettings.excludedNameContains = names;
