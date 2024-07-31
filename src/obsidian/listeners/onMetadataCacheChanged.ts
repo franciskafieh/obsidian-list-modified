@@ -1,11 +1,10 @@
 import { serialize } from "monkey-around";
-import { CachedMetadata, TFile, getAllTags, moment } from "obsidian";
+import { CachedMetadata, TFile, getAllTags } from "obsidian";
 import {
 	getSettings,
-	saveSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
-import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
+import { consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 import fileMatchesCriteria from "../../logic/file_tracking/fileMatchesCriteria";
 import { isLogNote } from "../log_note/logNote";
@@ -23,7 +22,7 @@ const onMetadataCacheChanged = serialize(
 			settings.verboseModeEnabled,
 		);
 
-		// if mtime is not within 1 second of now, ignore. Most likely an indexed file
+		// if mtime is not within 1 second of now, ignore. Most likely a file being indexed
 		if (Date.now() - file.stat.mtime >= 1000) {
 			consoleWarnIfVerboseMode(
 				"Mtime not within 1 second of now. Returning...",

@@ -6,6 +6,7 @@ import { fillLineXToYWithContent } from "./fillLineXToYWithContent";
 import { getDividerPositions } from "./getDividerPositions";
 import { getFill } from "./getFill";
 
+// TODO !!!! ALSO CREATE DEFAULT HEADINGS IF SETTINGS SAY TO DO IT. SIMPLY APPEND TO END OF FILE.
 export function getFinalNoteContent(
 	fileContent: string,
 	settings: Settings,
@@ -14,10 +15,60 @@ export function getFinalNoteContent(
 ) {
 	const contentByLine = fileContent.split("\n");
 	const dividerPositions = getDividerPositions(contentByLine);
+
+	if (settings.autoCreateCreatedDivider) {
+		if (
+			dividerPositions.created.start === -1 ||
+			dividerPositions.created.end === -1
+		) {
+			contentByLine.push("%% LIST CREATED %%");
+			contentByLine.push("%% END %%");
+
+			// update divider positions
+			dividerPositions.created.start = contentByLine.length - 2;
+			dividerPositions.created.end = contentByLine.length - 1;
+		}
+	}
+
+	if (settings.autoCreateModifiedDivider) {
+		if (
+			dividerPositions.modified.start === -1 ||
+			dividerPositions.modified.end === -1
+		) {
+			contentByLine.push("%% LIST MODIFIED %%");
+			contentByLine.push("%% END %%");
+
+			// update divider positions
+			dividerPositions.modified.start = contentByLine.length - 2;
+			dividerPositions.modified.end = contentByLine.length - 1;
+		}
+	}
+
+	if (settings.autoCreateDeletedDivider) {
+		if (
+			dividerPositions.deleted.start === -1 ||
+			dividerPositions.deleted.end === -1
+		) {
+			contentByLine.push("%% LIST DELETED %%");
+			contentByLine.push("%% END %%");
+
+			// update divider positions
+			dividerPositions.deleted.start = contentByLine.length - 2;
+			dividerPositions.deleted.end = contentByLine.length - 1;
+		}
+	}
+
+	// TODO!!!! UPDATE DIVIDER POS AT END
+
+	// TODO here - if -1 for any of the lists, check their settings and create if necessary
+
 	const fill = getFill(settings, replacementDictionary, fileConverter);
 
 	let finalContent = contentByLine;
 
+	// netLineOffset takes into account how many lines
+	// the content has been offset due to fill expansion/shrinking of dividers
+	let netLineOffset = 0;
 	for (const l in fill) {
 		const listType = l as ListType;
 		// empty array, skip
@@ -25,12 +76,14 @@ export function getFinalNoteContent(
 			continue;
 		}
 
-		finalContent = fillLineXToYWithContent(
+		const filled = fillLineXToYWithContent(
 			finalContent,
-			dividerPositions[listType].start,
-			dividerPositions[listType].end,
+			dividerPositions[listType].start + 1 + netLineOffset,
+			dividerPositions[listType].end - 1 + netLineOffset,
 			fill[listType],
 		);
+		finalContent = filled.filled;
+		netLineOffset += filled.lineOffset;
 	}
 
 	return finalContent.join("\n");
