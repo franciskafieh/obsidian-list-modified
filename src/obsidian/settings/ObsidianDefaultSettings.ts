@@ -8,7 +8,7 @@ export const OBSIDIAN_DEFAULT_SETTINGS: Settings = {
 
 	// FORMATTING
 	outputFormat: "- [[link]]",
-	timeFormat: "YYYY-MM-DD",
+	timeFormat: "h:mm A",
 
 	// LOG NOTE
 	autoCreateLogNote: true,

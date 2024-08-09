@@ -26,7 +26,6 @@ export default function fileMatchesCriteria(
 	// check folder/path
 	for (const excludedFolder of settings.excludedFolders) {
 		if (file.parent && file.parent.path.includes(excludedFolder)) {
-			console.log(file.parent);
 			return false;
 		}
 	}

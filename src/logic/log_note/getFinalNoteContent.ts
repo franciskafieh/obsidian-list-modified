@@ -6,7 +6,6 @@ import { fillLineXToYWithContent } from "./fillLineXToYWithContent";
 import { getDividerPositions } from "./getDividerPositions";
 import { getFill } from "./getFill";
 
-// TODO !!!! ALSO CREATE DEFAULT HEADINGS IF SETTINGS SAY TO DO IT. SIMPLY APPEND TO END OF FILE.
 export function getFinalNoteContent(
 	fileContent: string,
 	settings: Settings,
@@ -57,10 +56,6 @@ export function getFinalNoteContent(
 			dividerPositions.deleted.end = contentByLine.length - 1;
 		}
 	}
-
-	// TODO!!!! UPDATE DIVIDER POS AT END
-
-	// TODO here - if -1 for any of the lists, check their settings and create if necessary
 
 	const fill = getFill(settings, replacementDictionary, fileConverter);
 

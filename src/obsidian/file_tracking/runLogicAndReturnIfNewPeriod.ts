@@ -28,7 +28,7 @@ export async function runLogicAndReturnIfNewPeriod(
 		displayNoticeAndWarn("New note time period detected, resetting...");
 		// force write to log note
 		await saveSettingsAndWriteToLogNote(true);
-		// TODO REMOVE DIVIDERS
+
 		getPlugin().app.vault.process(getLogNote(), (data) =>
 			removeDividers(data),
 		);

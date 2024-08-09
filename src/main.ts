@@ -6,6 +6,7 @@ import onVaultDelete from "./obsidian/listeners/onVaultDelete";
 import onVaultRename from "./obsidian/listeners/onVaultRename";
 import onVaultCreate from "./obsidian/listeners/onVaultCreate";
 import { SettingsTab } from "./obsidian/settings/SettingsTab";
+import { OBSIDIAN_DEFAULT_SETTINGS } from "./obsidian/settings/ObsidianDefaultSettings";
 
 export default class ListModified extends Plugin {
 	async onload(): Promise<void> {
@@ -25,6 +26,7 @@ export default class ListModified extends Plugin {
 		this.addSettingTab(new SettingsTab(this.app, this));
 	}
 
+	// TODO
 	migrateToThreePointZeroIfNeeded(settings: Settings) {
 		// 	excludedTags = "";
 		// excludedFolders = "";
@@ -39,7 +41,7 @@ export default class ListModified extends Plugin {
 		// @ts-ignore
 		settings.autoCreatePrimaryHeading = null;
 
-		settings.timeFormat = "set a default here"; //todo
+		settings.timeFormat = OBSIDIAN_DEFAULT_SETTINGS.timeFormat;
 
 		// @ts-ignore - property should not exist but may
 		if (settings.separateCreated) {
@@ -49,11 +51,6 @@ export default class ListModified extends Plugin {
 			settings.separateCreated = null;
 		}
 
-		// disable the plugin and send notice with wiki until user enabled
+		// send notice that plugin will not work until configured because of update. please see settings tab
 	}
 }
-
-// getSetting("ddsfsdf")
-// setSetting("dsfsdf", "value") - this will also saveSettings()
-// writeToLogNoteIfNoDelay()
-// otherwise just do it on next save

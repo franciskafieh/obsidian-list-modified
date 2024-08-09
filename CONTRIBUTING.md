@@ -6,9 +6,6 @@ Thank you so much for your interest in contributing! If you are not a developer,
 
 -   Clone project
 -   `bun install`
--   go into `node_modules/obsidian-daily-notes-interface`
--   change `obsidian`'s version in package.json to "obsidian": "^1.5.7", - TODO - PR
--   run `npm i` and `npm run build`
 
 ## Project Structure
 
@@ -21,9 +18,7 @@ The main source code of the project resides in the `src/` directory. Within, the
 
 ## Testing
 
-Tests are all done with `bun` and reside in the `tests/` directory. The subdirectories mimic the `src/` structure. Read above for more info on what should be tested.
-
-**Please run all tests and ensure they pass before opening a PR.**
+Tests are all done with `bun` and reside in the `tests/` directory. The subdirectories mimic the `src/` structure. Read above for more info on what should be tested. Tests will automatically be ran on every PR submission.
 
 ## Code Formatting
 

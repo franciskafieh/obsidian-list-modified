@@ -4,10 +4,10 @@ import {
 	getSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
-import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
+import { consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 
-// todo - test if rename but nothing tracked
+// todo - test what happens if rename but nothing tracked
 const onVaultRename = serialize(
 	async (file: TAbstractFile, oldPath: string) => {
 		if (file instanceof TFile) {
