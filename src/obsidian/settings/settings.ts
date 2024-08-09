@@ -45,7 +45,7 @@ export async function saveSettingsAndWriteToLogNote(force?: boolean) {
 	await saveSettings();
 
 	if (force || settings.writeInterval === 0) {
-		writeChangesToLogNote(settings);
+		writeChangesToLogNote();
 	}
 }
 

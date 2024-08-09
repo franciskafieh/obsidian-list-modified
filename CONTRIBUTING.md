@@ -18,7 +18,7 @@ The main source code of the project resides in the `src/` directory. Within, the
 
 ## Testing
 
-Tests are all done with `bun` and reside in the `tests/` directory. The subdirectories mimic the `src/` structure. Read above for more info on what should be tested. Tests will automatically be ran on every PR submission.
+Tests are all done with `bun test` and reside in the `tests/` directory. The subdirectories mirror the `src/` folder structure. Read above for more info on what should be tested. Tests will automatically be ran on every PR submission.
 
 ## Code Formatting
 

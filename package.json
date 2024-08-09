@@ -22,7 +22,7 @@
 		"dev": "bun esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && bun esbuild.config.mjs production",
 		"test": "bun test",
-		"bumpVersion": "echo 'TODO...'"
+		"bumpVersion": "bun bumpVersion.ts"
 	},
 	"type": "module"
 }
