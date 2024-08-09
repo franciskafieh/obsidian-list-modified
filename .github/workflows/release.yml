@@ -1,5 +1,5 @@
 # MODIFIED FROM https://github.com/argenos/nldates-obsidian/blob/master/.github/workflows/release.yml
-name: Build obsidian plugin
+name: Release obsidian plugin
 
 on:
     push:
@@ -16,16 +16,20 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: oven-sh/setup-bun@v2
+            - name: Install Dependencies
+              id: install
+              run: bun install
+
             - name: Build
               id: build
               run: |
-                  bun install
                   bun run build
                   mkdir ${{ env.PLUGIN_NAME }}
                   cp main.js manifest.json ${{ env.PLUGIN_NAME }}
                   zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
                   ls
                   echo "::set-output name=tag_name::$(git tag --sort version:refname | tail -n 1)"
+
             - name: Create Release
               id: create_release
               uses: actions/create-release@v1

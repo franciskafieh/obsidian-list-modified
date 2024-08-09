@@ -1,0 +1,25 @@
+name: Test obsidian plugin
+
+on:
+    push:
+        branches: "master"
+    pull_request:
+        branches: "*"
+
+env:
+    PLUGIN_NAME: obsidian-list-modified
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+            - uses: oven-sh/setup-bun@v2
+            - name: Install Dependencies
+              id: install
+              run: bun install
+
+            - name: Test
+              id: test
+              run: bun run test
