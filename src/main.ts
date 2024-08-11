@@ -88,7 +88,7 @@ export default class ListModified extends Plugin {
 		displayNoticeAndWarn(
 			"Migration complete. Your settings have been preserved, but this update adds new features. " +
 				"The plugin WILL NOT WORK until you configure the new settings. Please read " +
-				'<a href="https://github.com/franciskafieh/obsidian-list-modified/wiki/3.0-Breaking-Update-Changes">https://github.com/franciskafieh/obsidian-list-modified/wiki/3.0-Breaking-Update-Changes</a> for info.',
+				'<a href="https://github.com/franciskafieh/obsidian-list-modified/wiki">https://github.com/franciskafieh/obsidian-list-modified/wiki</a> for info.',
 		);
 	}
 }
