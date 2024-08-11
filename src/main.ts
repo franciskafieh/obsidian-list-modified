@@ -1,4 +1,4 @@
-import { Plugin, getAllTags } from "obsidian";
+import { Plugin } from "obsidian";
 import { Settings } from "./interfaces/Settings";
 import { initSettings, saveSettings } from "./obsidian/settings/settings";
 import onMetadataCacheChanged from "./obsidian/listeners/onMetadataCacheChanged";
@@ -6,11 +6,7 @@ import onVaultDelete from "./obsidian/listeners/onVaultDelete";
 import onVaultRename from "./obsidian/listeners/onVaultRename";
 import onVaultCreate from "./obsidian/listeners/onVaultCreate";
 import { SettingsTab } from "./obsidian/settings/SettingsTab";
-import { OBSIDIAN_DEFAULT_SETTINGS } from "./obsidian/settings/ObsidianDefaultSettings";
-import {
-	consoleWarnIfVerboseMode,
-	displayNoticeAndWarn,
-} from "./utils/alerter";
+import { displayNoticeAndWarn } from "./utils/alerter";
 
 export default class ListModified extends Plugin {
 	async onload(): Promise<void> {

@@ -4,9 +4,9 @@ import {
 	getSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
-import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
+import { consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
-import { getLogNote, isLogNote } from "../log_note/logNote";
+import { isLogNote } from "../log_note/logNote";
 import {
 	getLastPerformedAction,
 	setLastPerformedAction,

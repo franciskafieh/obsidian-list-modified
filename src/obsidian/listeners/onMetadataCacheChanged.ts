@@ -2,7 +2,6 @@ import { serialize } from "monkey-around";
 import { CachedMetadata, TFile, getAllTags } from "obsidian";
 import {
 	getSettings,
-	saveSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
 import { consoleWarnIfVerboseMode } from "../../utils/alerter";

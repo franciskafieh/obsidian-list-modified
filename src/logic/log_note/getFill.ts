@@ -1,4 +1,3 @@
-import { TrackedFile } from "../../types";
 import { Settings } from "../../interfaces/Settings";
 import { ReplacementDictionary } from "../../interfaces/ReplacementDictionary";
 import { FileConverter } from "../../interfaces/FileConverter";

@@ -4,7 +4,7 @@ import {
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
 import { TAbstractFile, TFile } from "obsidian";
-import { consoleWarn, consoleWarnIfVerboseMode } from "../../utils/alerter";
+import { consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { isLogNote } from "../log_note/logNote";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 import { setLastPerformedAction } from "../file_tracking/lastPerformedAction";

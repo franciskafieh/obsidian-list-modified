@@ -2,7 +2,6 @@ import { describe, it, expect } from "bun:test";
 import { getFinalNoteContent } from "../../../src/logic/log_note/getFinalNoteContent";
 import { TestSettingsBuilder } from "../../stubs/TestSettingsBuilder";
 
-import { removeDividers } from "../../../src/logic/log_note/removeDividers";
 import { TestReplacementDictionary } from "../../stubs/TestReplacementDictionary";
 import { TestFileConverter } from "../../stubs/TestFileConverter";
 import { Settings } from "../../../src/interfaces/Settings";
