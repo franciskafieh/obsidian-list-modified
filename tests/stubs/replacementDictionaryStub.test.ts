@@ -1,6 +1,6 @@
 import { beforeAll, describe, it, expect } from "bun:test";
-import { TestReplacementDictionary } from "./stubs/TestReplacementDictionary";
-import { getSingleFileWithPath } from "./stubs/fakeFiles";
+import { TestReplacementDictionary } from "./TestReplacementDictionary";
+import { getSingleFileWithPath } from "./fakeFiles";
 
 let dict: TestReplacementDictionary;
 

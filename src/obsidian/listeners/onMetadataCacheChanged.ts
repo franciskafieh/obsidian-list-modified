@@ -58,8 +58,6 @@ const onMetadataCacheChanged = serialize(
 
 		const currFile = findTrackedFileWithPath(file.path, settings);
 
-		console.log(currFile);
-
 		if (currFile) {
 			consoleWarnIfVerboseMode(
 				"file already tracked",

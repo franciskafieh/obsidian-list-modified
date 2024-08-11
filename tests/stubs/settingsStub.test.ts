@@ -1,5 +1,5 @@
 import { beforeEach, describe, it, expect } from "bun:test";
-import { TestSettingsBuilder } from "./stubs/TestSettingsBuilder";
+import { TestSettingsBuilder } from "./TestSettingsBuilder";
 
 let builder: TestSettingsBuilder;
 

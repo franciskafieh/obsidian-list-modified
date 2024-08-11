@@ -1,6 +1,6 @@
 import { beforeAll, describe, it, expect } from "bun:test";
-import { getSingleFileWithPath } from "./stubs/fakeFiles";
-import { TestFileConverter } from "./stubs/TestFileConverter";
+import { getSingleFileWithPath } from "./fakeFiles";
+import { TestFileConverter } from "./TestFileConverter";
 
 let fileConverter: TestFileConverter;
 

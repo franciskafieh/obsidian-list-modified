@@ -1,12 +1,16 @@
 import { Plugin, getAllTags } from "obsidian";
 import { Settings } from "./interfaces/Settings";
-import { initSettings } from "./obsidian/settings/settings";
+import { initSettings, saveSettings } from "./obsidian/settings/settings";
 import onMetadataCacheChanged from "./obsidian/listeners/onMetadataCacheChanged";
 import onVaultDelete from "./obsidian/listeners/onVaultDelete";
 import onVaultRename from "./obsidian/listeners/onVaultRename";
 import onVaultCreate from "./obsidian/listeners/onVaultCreate";
 import { SettingsTab } from "./obsidian/settings/SettingsTab";
 import { OBSIDIAN_DEFAULT_SETTINGS } from "./obsidian/settings/ObsidianDefaultSettings";
+import {
+	consoleWarnIfVerboseMode,
+	displayNoticeAndWarn,
+} from "./utils/alerter";
 
 export default class ListModified extends Plugin {
 	async onload(): Promise<void> {
@@ -26,31 +30,69 @@ export default class ListModified extends Plugin {
 		this.addSettingTab(new SettingsTab(this.app, this));
 	}
 
-	// TODO
 	migrateToThreePointZeroIfNeeded(settings: Settings) {
-		// 	excludedTags = "";
-		// excludedFolders = "";
-		// excludedNameContains = ""; <== these all changed names and became arrays, todo in migration
+		displayNoticeAndWarn("Migrating to version 3.0...");
 
 		// @ts-ignore - property should not exist but may
-		// if still have old setting
+		// if does have old setting return
 		if (!settings.autoCreatePrimaryHeading) {
 			return;
 		}
 
-		// @ts-ignore
+		// @ts-ignore - no more primary heading. this also makes sure migrate logic runs once
 		settings.autoCreatePrimaryHeading = null;
 
-		settings.timeFormat = OBSIDIAN_DEFAULT_SETTINGS.timeFormat;
+		// @ts-ignore - became an array
+		settings.excludedFolders =
+			// @ts-ignore - became an array
+			(settings.excludedFolders as string).split(",") || [];
 
-		// @ts-ignore - property should not exist but may
+		// @ts-ignore - new name for tags and became array
+		settings.excludedTags = (settings.tags as string).split(",") || [];
+
+		// @ts-ignore - new name for name contains and became array
+		settings.excludedNameContains =
+			// @ts-ignore - new name for name contains and became array
+			(settings.ignoredNameContains as string).split(",") || [];
+
+		// @ts-ignore - no more space after headings
+		settings.appendSpaceAfterHeadings = null;
+
+		// @ts-ignore - no more headings
+		settings.primaryHeading = null;
+
+		// @ts-ignore - no more headings
+		settings.modifiedHeading = null;
+
+		// @ts-ignore - no more headings
+		settings.createdHeading = null;
+
+		// @ts-ignore - no more headings
+		settings.deletedHeading = null;
+
+		// @ts-ignore - now not a setting
+		settings.separateDeleted = null;
+
+		// @ts-ignore - new name
 		if (settings.separateCreated) {
 			// @ts-ignore
 			settings.combineCreatedAndModified = !settings.separateCreated;
 			// @ts-ignore
 			settings.separateCreated = null;
+		} else {
+			settings.combineCreatedAndModified = false;
 		}
 
-		// send notice that plugin will not work until configured because of update. please see settings tab
+		// CREATE all new divider settings
+		settings.autoCreateCreatedDivider = false;
+		settings.autoCreateModifiedDivider = false;
+		settings.autoCreateDeletedDivider = false;
+
+		saveSettings();
+		displayNoticeAndWarn(
+			"Migration complete. Your settings have been preserved, but this update adds new features. " +
+				"The plugin WILL NOT WORK until you configure the new settings. Please read " +
+				'<a href="https://github.com/franciskafieh/obsidian-list-modified/wiki/3.0-Breaking-Update-Changes">https://github.com/franciskafieh/obsidian-list-modified/wiki/3.0-Breaking-Update-Changes</a> for info.',
+		);
 	}
 }

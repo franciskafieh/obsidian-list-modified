@@ -1,6 +1,5 @@
 // USAGE: bun bumpVersion major OR bun bumpVersion minor OR bun bumpVersion patch [OPTIONAL: --alpha for an alpha github release]
 
-import { exec, execSync } from "child_process";
 import { readFileSync, writeFileSync } from "fs";
 import { parseArgs } from "util";
 
@@ -46,7 +45,6 @@ if (values.alpha) {
 }
 
 // create and push git commit and tag
-console.log("ddd");
 (async () => {
 	await Bun.spawn(["git", "add", "."]).exited;
 	await Bun.spawn([
