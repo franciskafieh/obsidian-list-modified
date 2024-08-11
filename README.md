@@ -2,9 +2,14 @@
 
 This plugin links all modified files meeting certain criteria to a daily/weekly/monthly note. This provides an accurate log/archive of files modified during specific time periods.
 
-List Modified outputs logs as standard text rather than dynamic queries, ensuring their persistence. Similarly, OLM does not rely on the system's file modification times, as they can be inaccurate when files are moved or synced.
+List Modified outputs logs as standard text rather than dynamic queries, ensuring their persistence. Similarly, OLM does not rely on the system's file modification times, as they can be inaccurate when files are moved or when using sync services.
 
-TODO - demo in light mode
+**Here's a little example...**
+With these settings:
+![example settings for a plugin demo](.github/example-settings.png)
+
+You can expect this!
+![demo of plugin that shows working modification logic](.github/olm-demo.gif)
 
 ## Usage & Config
 
@@ -22,10 +27,10 @@ If OLM has helped you in any way, and you would like to fund future development,
 
 ## Similar Plugins
 
-There are some purposes which are out of scope for OLM. Here are some great plugins which may fill your needs.
+There are some purposes which are out of scope for this plugin. Here are some great plugins that may meet your needs.
 
 -   If you are looking for a separate changelog note: [Obsidian Vault Changelog](https://github.com/badrbouslikhin/obsidian-vault-changelog/tree/main)
--   If you are looking for detailed change history and analysis: [Obsidian Git](https://github.com/denolehov/obsidian-git)
+-   If you are looking for detailed change history (part-by-part) and analysis: [Obsidian Git](https://github.com/denolehov/obsidian-git)
 
 ## Disclaimer
 
