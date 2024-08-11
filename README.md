@@ -6,9 +6,11 @@ List Modified outputs logs as standard text rather than dynamic queries, ensurin
 
 **Here's a little example...**
 With these settings:
+
 ![example settings for a plugin demo](.github/example-settings.png)
 
 You can expect this!
+
 ![demo of plugin that shows working modification logic](.github/olm-demo.gif)
 
 ## Usage & Config
