@@ -18,12 +18,15 @@ export async function writeChangesToLogNote() {
 			return;
 		}
 	}
-	getPlugin().app.vault.process(getLogNote(), (data) =>
-		getFinalNoteContent(
+	getPlugin().app.vault.process(getLogNote(), (data) => {
+		console.log(data);
+
+		return getFinalNoteContent(
 			data,
 			settings,
 			new ObsidianReplacementDictionary(),
 			new ObsidianFileConverter(),
-		),
-	);
+			getPlugin().app.vault,
+		);
+	});
 }

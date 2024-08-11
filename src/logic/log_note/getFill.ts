@@ -1,13 +1,14 @@
-import { MomentFormatComponent } from "obsidian";
 import { TrackedFile } from "../../types";
 import { Settings } from "../../interfaces/Settings";
 import { ReplacementDictionary } from "../../interfaces/ReplacementDictionary";
 import { FileConverter } from "../../interfaces/FileConverter";
+import { Vault } from "../../interfaces/Vault";
 
 export function getFill(
 	settings: Settings,
 	replacementDictionary: ReplacementDictionary,
 	fileConverter: FileConverter,
+	vault: Vault,
 ) {
 	const created = [];
 	const modified = [];
@@ -19,7 +20,7 @@ export function getFill(
 			continue;
 		}
 
-		const file = fileConverter.fromPath(trackedFile.path);
+		const file = fileConverter.fromPath(trackedFile.path, vault);
 
 		const formattedOutput = replacementDictionary.getOutputPostReplacement(
 			settings.outputFormat,

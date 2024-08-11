@@ -6,6 +6,7 @@ import { removeDividers } from "../../../src/logic/log_note/removeDividers";
 import { TestReplacementDictionary } from "../../stubs/TestReplacementDictionary";
 import { TestFileConverter } from "../../stubs/TestFileConverter";
 import { Settings } from "../../../src/interfaces/Settings";
+import { TestVault } from "../../stubs/TestVault";
 
 // no complicated tests since this function already has its inner function calls tested in other files
 
@@ -15,6 +16,7 @@ function getTestFinalNoteContent(currentContent: string, settings: Settings) {
 		settings,
 		new TestReplacementDictionary(),
 		new TestFileConverter(),
+		new TestVault(),
 	);
 }
 
@@ -136,5 +138,22 @@ describe("final note content should be correct", () => {
 		).toEqual(
 			"abc\n%% LIST MODIFIED %%\n- [[modified]]\n- [[modified2]]\n%% END %%\n\n\n%% LIST DELETED %%\n- [[deleted]]\n%% END %%\n%% LIST CREATED %%\n- [[created]]\n%% END %%\nabc",
 		);
+	});
+
+	it("should not change anything if there is no divider ends", () => {
+		expect(
+			getTestFinalNoteContent(
+				"start\n%% LIST MODIFIED %%\nabc",
+				new TestSettingsBuilder()
+					.setTrackedFiles([
+						{
+							path: "modified.md",
+							matchesCriteria: true,
+							supposedList: "modified",
+						},
+					])
+					.build(),
+			),
+		).toEqual("start\n%% LIST MODIFIED %%\nabc");
 	});
 });

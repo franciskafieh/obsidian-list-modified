@@ -10,6 +10,7 @@ import { TestSettingsBuilder } from "../../stubs/TestSettingsBuilder";
 import { getFill } from "../../../src/logic/log_note/getFill";
 import { TestReplacementDictionary } from "../../stubs/TestReplacementDictionary";
 import { TestFileConverter } from "../../stubs/TestFileConverter";
+import { TestVault } from "../../stubs/TestVault";
 
 // ** NOTE: Only tests whether files given in lists are correct. Therefore, output format
 // is always set to [[path]]. For format testing, see replacementDictionaryStub tests
@@ -29,6 +30,7 @@ describe("getFill should return the correct sorted lists", () => {
 				settings,
 				new TestReplacementDictionary(),
 				new TestFileConverter(),
+				new TestVault(),
 			),
 		).toEqual({ created: [], modified: [], deleted: [] });
 	});
@@ -59,6 +61,7 @@ describe("getFill should return the correct sorted lists", () => {
 				settings,
 				new TestReplacementDictionary(),
 				new TestFileConverter(),
+				new TestVault(),
 			),
 		).toEqual({ created: [], modified: [], deleted: [] });
 	});
@@ -94,6 +97,7 @@ describe("getFill should return the correct sorted lists", () => {
 				settings,
 				new TestReplacementDictionary(),
 				new TestFileConverter(),
+				new TestVault(),
 			),
 		).toEqual({
 			created: ["a.md"],
@@ -124,6 +128,7 @@ describe("getFill should return the correct sorted lists", () => {
 				settings,
 				new TestReplacementDictionary(),
 				new TestFileConverter(),
+				new TestVault(),
 			),
 		).toEqual({
 			created: [],

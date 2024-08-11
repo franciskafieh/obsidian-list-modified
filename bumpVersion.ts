@@ -24,7 +24,9 @@ if (!["major", "minor", "patch"].includes(bumpType)) {
 	process.exit(1);
 }
 
-const manifest = JSON.parse(readFileSync("manifest.json", "utf-8"));
+const manifest = JSON.parse(readFileSync("manifest.json", "utf-8")) as {
+	version: string;
+};
 const [currMajor, currMinor, currPatch] = manifest.version.split(".");
 
 if (bumpType === "major") {
@@ -43,9 +45,26 @@ if (values.alpha) {
 	manifest.version = `${manifest.version}-alpha`;
 }
 
-// create git tag
-Bun.spawn(["git", "tag", manifest.version], {
-	onExit() {
-		Bun.spawn(["git", "push", "origin", "--tags"]);
-	},
-});
+// create and push git commit and tag
+console.log("ddd");
+(async () => {
+	await Bun.spawn(["git", "add", "."]).exited;
+	await Bun.spawn([
+		"git",
+		"commit",
+		"-m",
+		'"release',
+		"version",
+		manifest.version,
+		'"',
+	]).exited;
+	await Bun.spawn(["git", "tag", manifest.version]).exited;
+	Bun.spawn([
+		"git",
+		"push",
+		"--atomic",
+		"origin",
+		"master",
+		manifest.version,
+	]);
+})();

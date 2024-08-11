@@ -1,6 +1,7 @@
 import { FileConverter } from "../../interfaces/FileConverter";
 import { ReplacementDictionary } from "../../interfaces/ReplacementDictionary";
 import { Settings } from "../../interfaces/Settings";
+import { Vault } from "../../interfaces/Vault";
 import { ListType } from "../../types";
 import { fillLineXToYWithContent } from "./fillLineXToYWithContent";
 import { getDividerPositions } from "./getDividerPositions";
@@ -11,6 +12,7 @@ export function getFinalNoteContent(
 	settings: Settings,
 	replacementDictionary: ReplacementDictionary,
 	fileConverter: FileConverter,
+	vault: Vault,
 ) {
 	const contentByLine = fileContent.split("\n");
 	const dividerPositions = getDividerPositions(contentByLine);
@@ -57,7 +59,7 @@ export function getFinalNoteContent(
 		}
 	}
 
-	const fill = getFill(settings, replacementDictionary, fileConverter);
+	const fill = getFill(settings, replacementDictionary, fileConverter, vault);
 
 	let finalContent = contentByLine;
 
@@ -68,6 +70,13 @@ export function getFinalNoteContent(
 		const listType = l as ListType;
 		// empty array, skip
 		if (fill[listType].length === 0) {
+			continue;
+		}
+
+		if (
+			dividerPositions[listType].start === -1 ||
+			dividerPositions[listType].end === -1
+		) {
 			continue;
 		}
 
