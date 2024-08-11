@@ -5,6 +5,7 @@ This plugin links all modified files meeting certain criteria to a daily/weekly/
 List Modified outputs logs as standard text rather than dynamic queries, ensuring their persistence. Similarly, OLM does not rely on the system's file modification times, as they can be inaccurate when files are moved or when using sync services.
 
 **Here's a little example...**
+
 With these settings:
 
 ![example settings for a plugin demo](.github/example-settings.png)
