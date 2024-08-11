@@ -1,7 +1,9 @@
 import { serialize } from "monkey-around";
 import { TAbstractFile, TFile } from "obsidian";
 import {
+	getPlugin,
 	getSettings,
+	saveSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
 import { consoleWarnIfVerboseMode } from "../../utils/alerter";
@@ -31,7 +33,13 @@ const onVaultRename = serialize(
 				oldFile.path = file.path;
 			}
 
-			await saveSettingsAndWriteToLogNote();
+			// this makes sure link does not mess up if user has alwaysUpdateLinks disabled
+			// @ts-ignore
+			if (!getPlugin().app.vault.getConfig("alwaysUpdateLinks")) {
+				await saveSettings();
+			} else {
+				await saveSettingsAndWriteToLogNote();
+			}
 		}
 	},
 );

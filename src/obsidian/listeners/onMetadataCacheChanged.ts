@@ -2,6 +2,7 @@ import { serialize } from "monkey-around";
 import { CachedMetadata, TFile, getAllTags } from "obsidian";
 import {
 	getSettings,
+	saveSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
 import { consoleWarnIfVerboseMode } from "../../utils/alerter";
@@ -56,6 +57,8 @@ const onMetadataCacheChanged = serialize(
 		);
 
 		const currFile = findTrackedFileWithPath(file.path, settings);
+
+		console.log(currFile);
 
 		if (currFile) {
 			consoleWarnIfVerboseMode(
