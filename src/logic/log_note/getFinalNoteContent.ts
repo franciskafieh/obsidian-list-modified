@@ -17,7 +17,10 @@ export function getFinalNoteContent(
 	const contentByLine = fileContent.split("\n");
 	const dividerPositions = getDividerPositions(contentByLine);
 
-	if (settings.autoCreateCreatedDivider) {
+	if (
+		settings.autoCreateCreatedDivider &&
+		!settings.combineCreatedAndModified
+	) {
 		if (
 			dividerPositions.created.start === -1 ||
 			dividerPositions.created.end === -1

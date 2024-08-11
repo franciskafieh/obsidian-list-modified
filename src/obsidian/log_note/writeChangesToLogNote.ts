@@ -19,8 +19,6 @@ export async function writeChangesToLogNote() {
 		}
 	}
 	getPlugin().app.vault.process(getLogNote(), (data) => {
-		console.log(data);
-
 		return getFinalNoteContent(
 			data,
 			settings,

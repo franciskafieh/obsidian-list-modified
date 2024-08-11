@@ -6,6 +6,8 @@ import {
 } from "./settings";
 import { LogNoteType } from "../../types";
 import { convertCommaListToArray } from "../../utils/converCommaListToArray";
+import { getLogNote } from "../log_note/logNote";
+import { getContentWithoutCreatedSection } from "../../logic/log_note/getContentWithoutCreatedSection";
 
 export class SettingsTab extends PluginSettingTab {
 	display(): void {
@@ -182,6 +184,14 @@ export class SettingsTab extends PluginSettingTab {
 					.setValue(settings.combineCreatedAndModified)
 					.onChange(async (value) => {
 						settings.combineCreatedAndModified = value;
+
+						// if set to true get rid of created section
+						if (value) {
+							await this.app.vault.process(getLogNote(), (data) =>
+								getContentWithoutCreatedSection(data),
+							);
+						}
+
 						saveSettingsAndWriteToLogNote();
 					});
 			});
