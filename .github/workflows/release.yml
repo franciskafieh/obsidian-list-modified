@@ -70,3 +70,4 @@ jobs:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
                   asset_path: ./manifest.json
                   asset_name: manifest.json
+                  asset_content_type: application/json

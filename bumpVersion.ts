@@ -47,15 +47,8 @@ if (values.alpha) {
 // create and push git commit and tag
 (async () => {
 	await Bun.spawn(["git", "add", "."]).exited;
-	await Bun.spawn([
-		"git",
-		"commit",
-		"-m",
-		'"release',
-		"version",
-		manifest.version,
-		'"',
-	]).exited;
+	await Bun.spawn([`git commit -m "release version ${manifest.version}"`])
+		.exited;
 	await Bun.spawn(["git", "tag", manifest.version]).exited;
 	Bun.spawn([
 		"git",
