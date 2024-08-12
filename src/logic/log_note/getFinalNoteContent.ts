@@ -3,7 +3,6 @@ import { ReplacementDictionary } from "../../interfaces/ReplacementDictionary";
 import { Settings } from "../../interfaces/Settings";
 import { Vault } from "../../interfaces/Vault";
 import { ListType } from "../../types";
-import { consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { fillLineXToYWithContent } from "./fillLineXToYWithContent";
 import { getDividerPositions } from "./getDividerPositions";
 import { getFill } from "./getFill";
@@ -26,11 +25,6 @@ export function getFinalNoteContent(
 			dividerPositions.created.start === -1 ||
 			dividerPositions.created.end === -1
 		) {
-			consoleWarnIfVerboseMode(
-				"auto creating created divider...",
-				settings.verboseModeEnabled,
-			);
-
 			contentByLine.push("%% LIST CREATED %%");
 			contentByLine.push("%% END %%");
 
@@ -45,10 +39,6 @@ export function getFinalNoteContent(
 			dividerPositions.modified.start === -1 ||
 			dividerPositions.modified.end === -1
 		) {
-			consoleWarnIfVerboseMode(
-				"auto creating modified divider...",
-				settings.verboseModeEnabled,
-			);
 			contentByLine.push("%% LIST MODIFIED %%");
 			contentByLine.push("%% END %%");
 
@@ -63,10 +53,6 @@ export function getFinalNoteContent(
 			dividerPositions.deleted.start === -1 ||
 			dividerPositions.deleted.end === -1
 		) {
-			consoleWarnIfVerboseMode(
-				"auto creating deleted divider...",
-				settings.verboseModeEnabled,
-			);
 			contentByLine.push("%% LIST DELETED %%");
 			contentByLine.push("%% END %%");
 
