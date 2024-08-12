@@ -11,6 +11,7 @@ import {
 } from "obsidian-daily-notes-interface";
 import { moment, TFile } from "obsidian";
 import { getSettings } from "../settings/settings";
+import { consoleWarnIfVerboseMode } from "../../utils/alerter";
 
 export function getLogNote(): TFile {
 	const settings = getSettings();
@@ -27,6 +28,8 @@ export function getLogNote(): TFile {
 
 export async function createLogNote() {
 	const settings = getSettings();
+
+	consoleWarnIfVerboseMode("creating log note", settings.verboseModeEnabled);
 
 	switch (settings.logNoteType) {
 		case "daily":

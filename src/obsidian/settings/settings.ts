@@ -50,5 +50,6 @@ export async function saveSettingsAndWriteToLogNote(force?: boolean) {
 }
 
 export async function saveSettings() {
+	consoleWarnIfVerboseMode("saving settings", settings.verboseModeEnabled);
 	await plugin.saveData(settings);
 }

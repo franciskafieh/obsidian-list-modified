@@ -1,5 +1,5 @@
 import { getFinalNoteContent } from "../../logic/log_note/getFinalNoteContent";
-import { warnUserOnce } from "../../utils/alerter";
+import { consoleWarnIfVerboseMode, warnUserOnce } from "../../utils/alerter";
 import { ObsidianFileConverter } from "../implementations/ObsidianFileConverter";
 import { ObsidianReplacementDictionary } from "../implementations/ObsidianReplacementDictionary";
 import { getPlugin, getSettings } from "../settings/settings";
@@ -7,6 +7,12 @@ import { createLogNote, getLogNote } from "./logNote";
 
 export async function writeChangesToLogNote() {
 	const settings = getSettings();
+
+	consoleWarnIfVerboseMode(
+		"writing to log note",
+		settings.verboseModeEnabled,
+	);
+
 	if (!getLogNote()) {
 		if (settings.autoCreateLogNote) {
 			await createLogNote();
