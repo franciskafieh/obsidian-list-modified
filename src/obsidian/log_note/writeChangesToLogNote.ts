@@ -16,6 +16,10 @@ export async function writeChangesToLogNote() {
 	if (!getLogNote()) {
 		if (settings.autoCreateLogNote) {
 			await createLogNote();
+			consoleWarnIfVerboseMode(
+				"log note did not exist, but will autocreate...",
+				settings.verboseModeEnabled,
+			);
 		} else {
 			warnUserOnce(
 				"fileNotExisting",

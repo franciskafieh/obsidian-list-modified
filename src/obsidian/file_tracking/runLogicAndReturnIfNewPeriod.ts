@@ -12,7 +12,7 @@ import {
 	saveSettings,
 	saveSettingsAndWriteToLogNote,
 } from "../settings/settings";
-import { moment } from "obsidian";
+import { TFile, moment } from "obsidian";
 
 export async function runLogicAndReturnIfNewPeriod(
 	settings: Settings,
@@ -29,7 +29,7 @@ export async function runLogicAndReturnIfNewPeriod(
 		// force write to log note
 		await saveSettingsAndWriteToLogNote(true);
 
-		getPlugin().app.vault.process(getLogNote(), (data) =>
+		await getPlugin().app.vault.process(getLogNote(), (data) =>
 			removeDividers(data),
 		);
 		const lastTrackedDate = moment(settings.lastTrackedDate);
