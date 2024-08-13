@@ -1,6 +1,7 @@
 // USAGE: bun bumpVersion major OR bun bumpVersion minor OR bun bumpVersion patch [OPTIONAL: --alpha for an alpha github release]
 
 import { readFileSync, writeFileSync } from "fs";
+import { stdout } from "process";
 import { parseArgs } from "util";
 
 const { values, positionals } = parseArgs({
@@ -46,16 +47,24 @@ if (values.alpha) {
 
 // create and push git commit and tag
 (async () => {
-	await Bun.spawn(["git", "add", "."]).exited;
-	await Bun.spawn([`git commit -m "release version ${manifest.version}"`])
-		.exited;
-	await Bun.spawn(["git", "tag", manifest.version]).exited;
-	Bun.spawn([
+	Bun.spawnSync(["git", "add", "."]);
+
+	const commitCmd = [
 		"git",
-		"push",
-		"--atomic",
-		"origin",
-		"master",
-		manifest.version,
-	]);
+		"commit",
+		"-m",
+		'"release',
+		"version",
+		`${manifest.version}"`,
+	];
+	Bun.spawnSync(commitCmd, { stdio: ["inherit", "inherit", "inherit"] });
+
+	// Bun.spawn([
+	// 	"git",
+	// 	"push",
+	// 	"--atomic",
+	// 	"origin",
+	// 	"master",
+	// 	manifest.version,
+	// ]);
 })();

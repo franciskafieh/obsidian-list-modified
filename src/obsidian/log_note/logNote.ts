@@ -26,6 +26,28 @@ export function getLogNote(): TFile {
 	}
 }
 
+export function getYesterdaysLogNote() {
+	const settings = getSettings();
+
+	switch (settings.logNoteType) {
+		case "daily":
+			return getDailyNote(
+				moment().subtract(1, "day"),
+				getAllDailyNotes(),
+			);
+		case "weekly":
+			return getWeeklyNote(
+				moment().subtract(1, "day"),
+				getAllWeeklyNotes(),
+			);
+		case "monthly":
+			return getMonthlyNote(
+				moment().subtract(1, "day"),
+				getAllMonthlyNotes(),
+			);
+	}
+}
+
 export async function createLogNote() {
 	const settings = getSettings();
 
