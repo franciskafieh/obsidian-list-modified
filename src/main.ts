@@ -1,6 +1,10 @@
 import { Plugin } from "obsidian";
 import { Settings } from "./interfaces/Settings";
-import { initSettings, saveSettings } from "./obsidian/settings/settings";
+import {
+	getSettings,
+	initSettings,
+	saveSettings,
+} from "./obsidian/settings/settings";
 import onMetadataCacheChanged from "./obsidian/listeners/onMetadataCacheChanged";
 import onVaultDelete from "./obsidian/listeners/onVaultDelete";
 import onVaultRename from "./obsidian/listeners/onVaultRename";
@@ -23,17 +27,19 @@ export default class ListModified extends Plugin {
 			this.registerEvent(this.app.vault.on("create", onVaultCreate));
 		});
 
+		this.migrateToThreePointZeroIfNeeded(getSettings());
+
 		this.addSettingTab(new SettingsTab(this.app, this));
 	}
 
 	migrateToThreePointZeroIfNeeded(settings: Settings) {
-		displayNoticeAndWarn("Migrating to version 3.0...");
-
 		// @ts-ignore - property should not exist but may
 		// if does have old setting return
 		if (!settings.autoCreatePrimaryHeading) {
 			return;
 		}
+
+		displayNoticeAndWarn("Migrating to version 3.0...");
 
 		// @ts-ignore - no more primary heading. this also makes sure migrate logic runs once
 		settings.autoCreatePrimaryHeading = null;
@@ -41,15 +47,23 @@ export default class ListModified extends Plugin {
 		// @ts-ignore - became an array
 		settings.excludedFolders =
 			// @ts-ignore - became an array
-			(settings.excludedFolders as string).split(",") || [];
+			((settings.excludedFolders as string) || "")
+				.split(",")
+				.filter((t) => t != "") || [];
 
 		// @ts-ignore - new name for tags and became array
-		settings.excludedTags = (settings.tags as string).split(",") || [];
+		settings.excludedTags =
+			// @ts-ignore - new name for tags and became array
+			((settings.tags as string) || "")
+				.split(",")
+				.filter((t) => t != "") || [];
 
 		// @ts-ignore - new name for name contains and became array
 		settings.excludedNameContains =
 			// @ts-ignore - new name for name contains and became array
-			(settings.ignoredNameContains as string).split(",") || [];
+			((settings.ignoredNameContains as string) || "")
+				.split(",")
+				.filter((t) => t != "") || [];
 
 		// @ts-ignore - no more space after headings
 		settings.appendSpaceAfterHeadings = null;
