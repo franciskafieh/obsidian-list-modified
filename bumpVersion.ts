@@ -53,18 +53,16 @@ if (values.alpha) {
 		"git",
 		"commit",
 		"-m",
-		'"release',
-		"version",
-		`${manifest.version}"`,
+		`release version ${manifest.version}`,
 	];
 	Bun.spawnSync(commitCmd, { stdio: ["inherit", "inherit", "inherit"] });
 
-	// Bun.spawn([
-	// 	"git",
-	// 	"push",
-	// 	"--atomic",
-	// 	"origin",
-	// 	"master",
-	// 	manifest.version,
-	// ]);
+	Bun.spawn([
+		"git",
+		"push",
+		"--atomic",
+		"origin",
+		"master",
+		manifest.version,
+	]);
 })();
