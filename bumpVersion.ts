@@ -57,7 +57,9 @@ if (values.alpha) {
 	];
 	Bun.spawnSync(commitCmd, { stdio: ["inherit", "inherit", "inherit"] });
 
-	Bun.spawn([
+	Bun.spawnSync(["git", "tag", manifest.version]);
+
+	Bun.spawnSync([
 		"git",
 		"push",
 		"--atomic",
