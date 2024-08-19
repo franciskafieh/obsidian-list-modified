@@ -39,10 +39,11 @@ if (bumpType === "patch") {
 	manifest.version = `${currMajor}.${currMinor}.${parseInt(currPatch) + 1}`;
 }
 
-writeFileSync("manifest.json", JSON.stringify(manifest, null, 2));
-
 if (values.alpha) {
+	writeFileSync("manifest-beta.json", JSON.stringify(manifest, null, 2));
 	manifest.version = `${manifest.version}-alpha`;
+} else {
+	writeFileSync("manifest.json", JSON.stringify(manifest, null, 2));
 }
 
 // create and push git commit and tag
