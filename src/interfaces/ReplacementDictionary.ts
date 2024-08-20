@@ -9,10 +9,8 @@ export abstract class ReplacementDictionary {
 		frontmatter: FrontMatterCache,
 		path: string,
 	): string {
-		// for deleted section, etc where no metadata is stored - TODO
-		if (!file) {
-			return "- " + path;
-		}
+		// for deleted section, etc where no metadata is stored
+		const disableAllTemplatesExceptPath = !file;
 
 		// matches all text in btwn [[ and ]]. EXCLUDES the brackets
 		let templates = format.matchAll(/(?<=\[\[)[^\]]+(?=]])/gm);
@@ -31,6 +29,19 @@ export abstract class ReplacementDictionary {
 
 			// frontmatter-based templates
 			if (templateStr.startsWith("f.")) {
+				if (disableAllTemplatesExceptPath) {
+					const replaced = replaceStrFromIndexToIndex(
+						output,
+						startIdx + netCharOffset,
+						endIdx + netCharOffset,
+						"",
+					);
+					output = replaced.string;
+					netCharOffset += replaced.offset;
+
+					continue;
+				}
+
 				// string without f. at start
 				const targetProperty = frontmatter[templateStr.substring(2)];
 
@@ -75,6 +86,21 @@ export abstract class ReplacementDictionary {
 				({ template }) => template === templateStr,
 			);
 			if (preDefinedReplacement) {
+				if (disableAllTemplatesExceptPath) {
+					const replaced = replaceStrFromIndexToIndex(
+						output,
+						startIdx + netCharOffset,
+						endIdx + netCharOffset,
+						["path", "link", "name"].includes(templateStr)
+							? path
+							: "",
+					);
+					output = replaced.string;
+					netCharOffset += replaced.offset;
+
+					continue;
+				}
+
 				const replaced = replaceStrFromIndexToIndex(
 					output,
 					startIdx + netCharOffset,

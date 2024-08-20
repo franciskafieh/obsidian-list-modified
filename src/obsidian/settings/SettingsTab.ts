@@ -160,6 +160,21 @@ export class SettingsTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
+			.setName("Separate Output Formats")
+			.setDesc(
+				"If turned on, you may use different output formats for created/deleted/modified.",
+			)
+			.addText((text) =>
+				text
+					.setPlaceholder("- [[link]]")
+					.setValue(settings.outputFormat)
+					.onChange(async (value) => {
+						settings.outputFormat = value;
+						saveSettingsAndWriteToLogNote();
+					}),
+			);
+
+		new Setting(containerEl)
 			.setName("Time Format")
 			.setDesc(
 				"Time format for use with the above time-related placeholders. ",
@@ -274,5 +289,21 @@ export class SettingsTab extends PluginSettingTab {
 				},
 			});
 		coffeeImg.height = 30;
+
+		const separateOutputFormats = containerEl.createDiv();
+		separateOutputFormats.style.display = "block";
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
+		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
 	}
 }

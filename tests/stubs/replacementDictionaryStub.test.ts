@@ -112,3 +112,39 @@ describe("mix of frontmatter and built-in replacements should work", () => {
 		expect(replacement).toBe("00:00:00 100");
 	});
 });
+
+describe("templates should work with deleted files", () => {
+	it("should return path of file if given [[path]], [[name]], or [[link]] templates", () => {
+		const replacement = dict.getOutputPostReplacement(
+			"[[path]] [[name]] [[link]]",
+			null,
+			{},
+			"file.md",
+		);
+
+		expect(replacement).toBe("file.md file.md file.md");
+	});
+
+	it("other built-in templates should be removed", () => {
+		const replacement = dict.getOutputPostReplacement(
+			"[[ctime]][[mtime]][[tags]]",
+			null,
+			{},
+			"file.md",
+		);
+
+		expect(replacement).toBe("");
+	});
+
+	it("all frontmatter property templates should be removed", () => {
+		const replacement = dict.getOutputPostReplacement(
+			"[[f.a]][[f.time]][[f.c]]",
+			null,
+			{},
+			"file.md",
+		);
+
+		expect(replacement).toBe("");
+	});
+});
+// TODO - test deleted should only work with path, other templates should return "". [[link]] or [[name]] should return [[path]]
