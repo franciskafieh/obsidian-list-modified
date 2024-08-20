@@ -190,11 +190,46 @@ export class SettingsTab extends PluginSettingTab {
 			? "block"
 			: "none";
 
-		// TODO - these settings
-		new Setting(separateOutputFormats).setName("temp").setDesc("test desc");
 		new Setting(separateOutputFormats)
-			.setName("another")
-			.setDesc("test desc");
+			.setName("Created Output Format")
+			.setDesc("Output format for created files.")
+			.addText((text) =>
+				text
+					.setPlaceholder("- [[link]]")
+					.setValue(settings.createdFormat)
+					.onChange(async (value) => {
+						settings.createdFormat = value;
+						saveSettingsAndWriteToLogNote();
+					}),
+			);
+
+		new Setting(separateOutputFormats)
+			.setName("Modified Output Format")
+			.setDesc("Output format for modified files.")
+			.addText((text) =>
+				text
+					.setPlaceholder("- [[link]]")
+					.setValue(settings.modifiedFormat)
+					.onChange(async (value) => {
+						settings.modifiedFormat = value;
+						saveSettingsAndWriteToLogNote();
+					}),
+			);
+
+		new Setting(separateOutputFormats)
+			.setName("Deleted Output Format")
+			.setDesc(
+				"Output format for deleted files. You cannot use most templates here. Please see the above wiki for info.",
+			)
+			.addText((text) =>
+				text
+					.setPlaceholder("- [[path]]")
+					.setValue(settings.deletedFormat)
+					.onChange(async (value) => {
+						settings.deletedFormat = value;
+						saveSettingsAndWriteToLogNote();
+					}),
+			);
 
 		new Setting(containerEl)
 			.setName("Time Format")
