@@ -52,6 +52,26 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
+	public setSeparateOutputFormats(separate: boolean) {
+		this.testSettings.separateOutputFormats = separate;
+		return this;
+	}
+
+	public setCreatedFormat(format: string) {
+		this.testSettings.createdFormat = format;
+		return this;
+	}
+
+	public setModifiedFormat(format: string) {
+		this.testSettings.modifiedFormat = format;
+		return this;
+	}
+
+	public setDeletedFormat(format: string) {
+		this.testSettings.deletedFormat = format;
+		return this;
+	}
+
 	public setTimeFormat(format: string) {
 		this.testSettings.timeFormat = format;
 		return this;

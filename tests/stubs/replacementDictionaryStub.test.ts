@@ -147,4 +147,3 @@ describe("templates should work with deleted files", () => {
 		expect(replacement).toBe("");
 	});
 });
-// TODO - test deleted should only work with path, other templates should return "". [[link]] or [[name]] should return [[path]]

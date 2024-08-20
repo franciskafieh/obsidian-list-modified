@@ -8,6 +8,10 @@ export interface Settings {
 
 	// FORMATTING
 	outputFormat: string;
+	separateOutputFormats: boolean;
+	createdFormat: string;
+	modifiedFormat: string;
+	deletedFormat: string;
 	timeFormat: string;
 
 	// LOG NOTE

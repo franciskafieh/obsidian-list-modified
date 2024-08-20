@@ -6,6 +6,10 @@ export class TestSettings implements Settings {
 	excludedFolders = OBSIDIAN_DEFAULT_SETTINGS.excludedFolders;
 	excludedNameContains = OBSIDIAN_DEFAULT_SETTINGS.excludedNameContains;
 	outputFormat = OBSIDIAN_DEFAULT_SETTINGS.outputFormat;
+	separateOutputFormats = OBSIDIAN_DEFAULT_SETTINGS.separateOutputFormats;
+	createdFormat = OBSIDIAN_DEFAULT_SETTINGS.createdFormat;
+	modifiedFormat = OBSIDIAN_DEFAULT_SETTINGS.modifiedFormat;
+	deletedFormat = OBSIDIAN_DEFAULT_SETTINGS.deletedFormat;
 	timeFormat = OBSIDIAN_DEFAULT_SETTINGS.timeFormat;
 	autoCreateLogNote = OBSIDIAN_DEFAULT_SETTINGS.autoCreateLogNote;
 	logNoteType = OBSIDIAN_DEFAULT_SETTINGS.logNoteType;

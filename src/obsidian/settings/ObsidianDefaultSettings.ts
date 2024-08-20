@@ -8,6 +8,10 @@ export const OBSIDIAN_DEFAULT_SETTINGS: Settings = {
 
 	// FORMATTING
 	outputFormat: "- [[link]]",
+	separateOutputFormats: false,
+	createdFormat: "- [[link]]",
+	modifiedFormat: "- [[link]]",
+	deletedFormat: "- [[path]]",
 	timeFormat: "h:mm A",
 
 	// LOG NOTE

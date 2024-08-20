@@ -146,7 +146,7 @@ export class SettingsTab extends PluginSettingTab {
 			}),
 		);
 
-		new Setting(containerEl)
+		const outputFormatSetting = new Setting(containerEl)
 			.setName("Output Format")
 			.setDesc(outputFormatDesc)
 			.addText((text) =>
@@ -159,20 +159,42 @@ export class SettingsTab extends PluginSettingTab {
 					}),
 			);
 
+		outputFormatSetting.setDisabled(settings.separateOutputFormats);
+		outputFormatSetting.settingEl.style.opacity =
+			settings.separateOutputFormats ? "0.5" : "1"; // fade out and disable if separate output formats
+
 		new Setting(containerEl)
 			.setName("Separate Output Formats")
 			.setDesc(
 				"If turned on, you may use different output formats for created/deleted/modified.",
 			)
-			.addText((text) =>
-				text
-					.setPlaceholder("- [[link]]")
-					.setValue(settings.outputFormat)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(settings.separateOutputFormats)
 					.onChange(async (value) => {
-						settings.outputFormat = value;
+						settings.separateOutputFormats = value;
+
+						outputFormatSetting.setDisabled(value);
+						outputFormatSetting.settingEl.style.opacity = value
+							? "0.5"
+							: "1";
+						separateOutputFormats.style.display = value
+							? "block"
+							: "none";
 						saveSettingsAndWriteToLogNote();
-					}),
-			);
+					});
+			});
+
+		const separateOutputFormats = containerEl.createDiv();
+		separateOutputFormats.style.display = settings.separateOutputFormats
+			? "block"
+			: "none";
+
+		// TODO - these settings
+		new Setting(separateOutputFormats).setName("temp").setDesc("test desc");
+		new Setting(separateOutputFormats)
+			.setName("another")
+			.setDesc("test desc");
 
 		new Setting(containerEl)
 			.setName("Time Format")
@@ -289,21 +311,5 @@ export class SettingsTab extends PluginSettingTab {
 				},
 			});
 		coffeeImg.height = 30;
-
-		const separateOutputFormats = containerEl.createDiv();
-		separateOutputFormats.style.display = "block";
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
-		new Setting(separateOutputFormats).setName("lol").setDesc("test desc");
 	}
 }
