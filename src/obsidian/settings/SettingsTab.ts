@@ -258,7 +258,7 @@ export class SettingsTab extends PluginSettingTab {
 						settings.combineCreatedAndModified = value;
 
 						// if set to true get rid of created section
-						if (value) {
+						if (value && getLogNote()) {
 							await this.app.vault.process(getLogNote(), (data) =>
 								getContentWithoutCreatedSection(data),
 							);

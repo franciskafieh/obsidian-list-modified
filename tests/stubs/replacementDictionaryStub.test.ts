@@ -147,3 +147,16 @@ describe("templates should work with deleted files", () => {
 		expect(replacement).toBe("");
 	});
 });
+
+describe("separated vs single output formats should be respected depending on toggle", () => {
+	it("should use single format if turned off", () => {
+		const replacement = dict.getOutputPostReplacement(
+			"[[path]]",
+			getSingleFileWithPath("a/b/test.md"),
+			{},
+			"a/b/test.md",
+		);
+
+		expect(replacement).toBe("TEMP FAIL");
+	});
+});

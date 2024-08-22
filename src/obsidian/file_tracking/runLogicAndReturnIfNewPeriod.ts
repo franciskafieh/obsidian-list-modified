@@ -6,7 +6,7 @@ import {
 	consoleWarnIfVerboseMode,
 	displayNoticeAndWarn,
 } from "../../utils/alerter";
-import { getLogNote, getYesterdaysLogNote } from "../log_note/logNote";
+import { getYesterdaysLogNote } from "../log_note/logNote";
 import {
 	getPlugin,
 	saveSettings,
@@ -29,9 +29,12 @@ export async function runLogicAndReturnIfNewPeriod(
 		// force write to log note
 		await saveSettingsAndWriteToLogNote(true);
 
-		await getPlugin().app.vault.process(getYesterdaysLogNote(), (data) =>
-			removeDividers(data),
-		);
+		if (getYesterdaysLogNote()) {
+			await getPlugin().app.vault.process(
+				getYesterdaysLogNote(),
+				(data) => removeDividers(data),
+			);
+		}
 		const lastTrackedDate = moment(settings.lastTrackedDate);
 		const today = moment().format("YYYY-MM-DD");
 
