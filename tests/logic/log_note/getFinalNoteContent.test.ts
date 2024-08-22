@@ -6,14 +6,21 @@ import { TestReplacementDictionary } from "../../stubs/TestReplacementDictionary
 import { TestFileConverter } from "../../stubs/TestFileConverter";
 import { Settings } from "../../../src/interfaces/Settings";
 import { TestVault } from "../../stubs/TestVault";
+import { FrontMatterCache } from "obsidian";
 
-// no complicated tests since this function already has its inner function calls tested in other files
+// no complicated inner-working tests here. See inner function calls for those.
+// these tests are more of "integration" tests.
 
-function getTestFinalNoteContent(currentContent: string, settings: Settings) {
+function getTestFinalNoteContent(
+	currentContent: string,
+	settings: Settings,
+	frontmatterCache: FrontMatterCache | null = null,
+) {
 	return getFinalNoteContent(
 		currentContent,
 		settings,
 		new TestReplacementDictionary(),
+		frontmatterCache,
 		new TestFileConverter(),
 		new TestVault(),
 	);

@@ -6,10 +6,10 @@ export abstract class ReplacementDictionary {
 	getOutputPostReplacement(
 		format: string,
 		file: File | null,
-		frontmatter: FrontMatterCache,
+		frontmatter: FrontMatterCache | null,
 		path: string,
 	): string {
-		// for deleted section, etc where no metadata is stored
+		// for deleted section, etc where no metadata is stored - TODO get rid of this
 		const disableAllTemplatesExceptPath = !file;
 
 		// matches all text in btwn [[ and ]]. EXCLUDES the brackets
@@ -42,13 +42,17 @@ export abstract class ReplacementDictionary {
 					continue;
 				}
 
+				if (!frontmatter) {
+					frontmatter = {};
+				}
+
 				// string without f. at start
+
 				const targetProperty = frontmatter[templateStr.substring(2)];
 
 				// can't just use ! since booleans should work
 				if (
-					frontmatter === null ||
-					frontmatter === undefined ||
+					!frontmatter ||
 					targetProperty === null ||
 					targetProperty === undefined
 				) {
