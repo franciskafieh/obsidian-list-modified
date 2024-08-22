@@ -189,9 +189,10 @@ export class SettingsTab extends PluginSettingTab {
 		separateOutputFormats.style.display = settings.separateOutputFormats
 			? "block"
 			: "none";
+		separateOutputFormats.style.marginLeft = "20px";
 
 		new Setting(separateOutputFormats)
-			.setName("Created Output Format")
+			.setName("↳ Created Output Format")
 			.setDesc("Output format for created files.")
 			.addText((text) =>
 				text
@@ -204,7 +205,7 @@ export class SettingsTab extends PluginSettingTab {
 			);
 
 		new Setting(separateOutputFormats)
-			.setName("Modified Output Format")
+			.setName("↳ Modified Output Format")
 			.setDesc("Output format for modified files.")
 			.addText((text) =>
 				text
@@ -217,7 +218,7 @@ export class SettingsTab extends PluginSettingTab {
 			);
 
 		new Setting(separateOutputFormats)
-			.setName("Deleted Output Format")
+			.setName("↳ Deleted Output Format")
 			.setDesc(
 				"Output format for deleted files. You cannot use most templates here. Please see the above wiki for info.",
 			)
