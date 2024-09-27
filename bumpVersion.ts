@@ -57,25 +57,25 @@ if (values.alpha) {
 console.log(manifest.version);
 
 // create and push git commit and tag
-// (async () => {
-// 	Bun.spawnSync(["git", "add", "."]);
+(async () => {
+	Bun.spawnSync(["git", "add", "."]);
 
-// 	const commitCmd = [
-// 		"git",
-// 		"commit",
-// 		"-m",
-// 		`release version ${manifest.version}`,
-// 	];
-// 	Bun.spawnSync(commitCmd, { stdio: ["inherit", "inherit", "inherit"] });
+	const commitCmd = [
+		"git",
+		"commit",
+		"-m",
+		`release version ${manifest.version}`,
+	];
+	Bun.spawnSync(commitCmd, { stdio: ["inherit", "inherit", "inherit"] });
 
-// 	Bun.spawnSync(["git", "tag", manifest.version]);
+	Bun.spawnSync(["git", "tag", manifest.version]);
 
-// 	Bun.spawnSync([
-// 		"git",
-// 		"push",
-// 		"--atomic",
-// 		"origin",
-// 		"master",
-// 		manifest.version,
-// 	]);
-// })();
+	Bun.spawnSync([
+		"git",
+		"push",
+		"--atomic",
+		"origin",
+		"master",
+		manifest.version,
+	]);
+})();
