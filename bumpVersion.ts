@@ -24,48 +24,58 @@ if (!["major", "minor", "patch"].includes(bumpType)) {
 	process.exit(1);
 }
 
-const manifest = JSON.parse(readFileSync("manifest.json", "utf-8")) as {
+const manifest = JSON.parse(
+	readFileSync(
+		values.alpha ? "manifest-beta.json" : "manifest.json",
+		"utf-8",
+	),
+) as {
 	version: string;
 };
+
+console.log(manifest.version);
 const [currMajor, currMinor, currPatch] = manifest.version.split(".");
 
 if (bumpType === "major") {
 	manifest.version = `${parseInt(currMajor) + 1}.0.0`;
-}
-if (bumpType === "minor") {
+} else if (bumpType === "minor") {
+	console.log(currMajor);
+	console.log(currMinor);
+	console.log(currPatch);
 	manifest.version = `${currMajor}.${parseInt(currMinor) + 1}.0`;
-}
-if (bumpType === "patch") {
+} else if (bumpType === "patch") {
 	manifest.version = `${currMajor}.${currMinor}.${parseInt(currPatch) + 1}`;
 }
 
 if (values.alpha) {
-	writeFileSync("manifest-beta.json", JSON.stringify(manifest, null, 2));
+	writeFileSync("manifest-beta.json", JSON.stringify(manifest, null, 4));
 	manifest.version = `${manifest.version}-alpha`;
 } else {
-	writeFileSync("manifest.json", JSON.stringify(manifest, null, 2));
+	writeFileSync("manifest.json", JSON.stringify(manifest, null, 4));
 }
 
+console.log(manifest.version);
+
 // create and push git commit and tag
-(async () => {
-	Bun.spawnSync(["git", "add", "."]);
+// (async () => {
+// 	Bun.spawnSync(["git", "add", "."]);
 
-	const commitCmd = [
-		"git",
-		"commit",
-		"-m",
-		`release version ${manifest.version}`,
-	];
-	Bun.spawnSync(commitCmd, { stdio: ["inherit", "inherit", "inherit"] });
+// 	const commitCmd = [
+// 		"git",
+// 		"commit",
+// 		"-m",
+// 		`release version ${manifest.version}`,
+// 	];
+// 	Bun.spawnSync(commitCmd, { stdio: ["inherit", "inherit", "inherit"] });
 
-	Bun.spawnSync(["git", "tag", manifest.version]);
+// 	Bun.spawnSync(["git", "tag", manifest.version]);
 
-	Bun.spawnSync([
-		"git",
-		"push",
-		"--atomic",
-		"origin",
-		"master",
-		manifest.version,
-	]);
-})();
+// 	Bun.spawnSync([
+// 		"git",
+// 		"push",
+// 		"--atomic",
+// 		"origin",
+// 		"master",
+// 		manifest.version,
+// 	]);
+// })();
