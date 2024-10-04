@@ -1,13 +1,16 @@
 import { beforeEach, describe, it, expect } from "bun:test";
-import { TestSettingsBuilder } from "../../stubs/TestSettingsBuilder";
+import { TestSettingsBuilder } from "../../stubs/context/TestSettingsBuilder";
 import { getFill } from "../../../src/logic/log_note/getFill";
-import { TestReplacementDictionary } from "../../stubs/TestReplacementDictionary";
-import { TestFileConverter } from "../../stubs/TestFileConverter";
-import { TestVault } from "../../stubs/TestVault";
+import { TestReplacementDictionary } from "../../stubs/context/TestReplacementDictionary";
+import { TestFileConverter } from "../../stubs/context/TestFileConverter";
+import { TestVault } from "../../stubs/context/TestVault";
+import { TestContext } from "../../stubs/context/TestContext";
+import { TestFileMetadataCacheProvider } from "../../stubs/context/TestFileMetadataCacheProvider";
+import { createTestContextWithSettings } from "../../stubs/context/testContextCreator";
 
 // ** NOTE: Only tests whether files given in lists are correct. Therefore, output format
-// is always set to [[path]] and frontmatter cache is blank. For format testing, see replacementDictionaryStub tests
-// Exception; also tests separate vs single output format
+// is always set to [[path]]. For format testing, see replacementDictionaryStub tests
+// *EXCEPTION: this file tests separate vs single output format
 
 let builder: TestSettingsBuilder;
 
@@ -20,14 +23,13 @@ describe("getFill should return the correct sorted lists", () => {
 	it("should return empty arrays if no trackedfiles provided", () => {
 		const settings = builder.build();
 
-		expect(
-			getFill(
-				settings,
-				new TestReplacementDictionary(),
-				new TestFileConverter(),
-				new TestVault(),
-			),
-		).toEqual({ created: [], modified: [], deleted: [] });
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context)).toEqual({
+			created: [],
+			modified: [],
+			deleted: [],
+		});
 	});
 
 	it("should return empty arrays if no trackedfiles match criteria", () => {
@@ -51,14 +53,13 @@ describe("getFill should return the correct sorted lists", () => {
 			])
 			.build();
 
-		expect(
-			getFill(
-				settings,
-				new TestReplacementDictionary(),
-				new TestFileConverter(),
-				new TestVault(),
-			),
-		).toEqual({ created: [], modified: [], deleted: [] });
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context)).toEqual({
+			created: [],
+			modified: [],
+			deleted: [],
+		});
 	});
 
 	it("should sort files into correct lists", () => {
@@ -87,14 +88,9 @@ describe("getFill should return the correct sorted lists", () => {
 			])
 			.build();
 
-		expect(
-			getFill(
-				settings,
-				new TestReplacementDictionary(),
-				new TestFileConverter(),
-				new TestVault(),
-			),
-		).toEqual({
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context)).toEqual({
 			created: ["a.md"],
 			modified: ["c.md", "d.md"],
 			deleted: ["b.md"],
@@ -118,14 +114,9 @@ describe("getFill should return the correct sorted lists", () => {
 			])
 			.build();
 
-		expect(
-			getFill(
-				settings,
-				new TestReplacementDictionary(),
-				new TestFileConverter(),
-				new TestVault(),
-			),
-		).toEqual({
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context)).toEqual({
 			created: [],
 			modified: ["a.md", "c.md"],
 			deleted: [],
@@ -146,14 +137,9 @@ describe("separated vs combined output formats should be respected depending on 
 			.setOutputFormat("[[path]]")
 			.build();
 
-		expect(
-			getFill(
-				settings,
-				new TestReplacementDictionary(),
-				new TestFileConverter(),
-				new TestVault(),
-			),
-		).toEqual({
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context)).toEqual({
 			created: [],
 			modified: ["a.md"],
 			deleted: [],
@@ -173,14 +159,9 @@ describe("separated vs combined output formats should be respected depending on 
 			.setModifiedFormat("a+[[path]]")
 			.build();
 
-		expect(
-			getFill(
-				settings,
-				new TestReplacementDictionary(),
-				new TestFileConverter(),
-				new TestVault(),
-			),
-		).toEqual({
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context)).toEqual({
 			created: [],
 			modified: ["a+a.md"],
 			deleted: [],
@@ -212,14 +193,9 @@ describe("separated vs combined output formats should be respected depending on 
 			.setDeletedFormat("del: [[path]]")
 			.build();
 
-		expect(
-			getFill(
-				settings,
-				new TestReplacementDictionary(),
-				new TestFileConverter(),
-				new TestVault(),
-			),
-		).toEqual({
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context)).toEqual({
 			created: ["create: a.md"],
 			modified: ["mod: b.md"],
 			deleted: ["del: c.md"],

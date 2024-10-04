@@ -1,31 +1,22 @@
-import { Settings } from "../../interfaces/Settings";
-import { ReplacementDictionary } from "../../interfaces/ReplacementDictionary";
-import { FileConverter } from "../../interfaces/FileConverter";
-import { Vault } from "../../interfaces/Vault";
-import { FrontMatterCache } from "../../interfaces/FrontmatterCache";
-import { getPlugin } from "../../obsidian/settings/settings";
-import { TFile } from "obsidian";
+import { Context } from "../../interfaces/context/Context";
 
-export function getFill(
-	settings: Settings,
-	replacementDictionary: ReplacementDictionary,
-	fileConverter: FileConverter,
-	vault: Vault,
-) {
+export function getFill(context: Context) {
+	const settings = context.settings;
+	const replacementDictionary = context.replacementDictionary;
+	const fileConverter = context.fileConverter;
+	const vault = context.vault;
+	const fileMetadataCacheProvider = context.fileMetadataCacheProvider;
+
 	const created = [];
 	const modified = [];
 	const deleted = [];
-
 	const trackedFiles = settings.trackedFiles;
 	for (const trackedFile of trackedFiles) {
 		if (!trackedFile.matchesCriteria || !trackedFile.path) {
 			continue;
 		}
-
 		const file = fileConverter.fromPath(trackedFile.path, vault);
-
 		let outputFormatToUse = settings.outputFormat;
-
 		if (settings.separateOutputFormats) {
 			switch (trackedFile.supposedList) {
 				case "created":
@@ -39,17 +30,12 @@ export function getFill(
 					break;
 			}
 		}
-
 		const formattedOutput = replacementDictionary.getOutputPostReplacement(
 			outputFormatToUse,
 			file,
-			file
-				? getPlugin().app.metadataCache.getFileCache(file as TFile)
-						?.frontmatter || null
-				: {},
-			trackedFile.path,
+			fileMetadataCacheProvider,
+			trackedFile.path
 		);
-
 		if (trackedFile.supposedList === "created") {
 			if (settings.combineCreatedAndModified) {
 				modified.push(formattedOutput);
@@ -62,6 +48,5 @@ export function getFill(
 			deleted.push(formattedOutput);
 		}
 	}
-
 	return { created, modified, deleted };
 }

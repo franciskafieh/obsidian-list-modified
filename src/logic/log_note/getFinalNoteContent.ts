@@ -1,19 +1,12 @@
-import { FileConverter } from "../../interfaces/FileConverter";
-import { ReplacementDictionary } from "../../interfaces/ReplacementDictionary";
-import { Settings } from "../../interfaces/Settings";
-import { Vault } from "../../interfaces/Vault";
+import { Context } from "../../interfaces/context/Context";
 import { ListType } from "../../types";
 import { fillLineXToYWithContent } from "./fillLineXToYWithContent";
 import { getDividerPositions } from "./getDividerPositions";
 import { getFill } from "./getFill";
 
-export function getFinalNoteContent(
-	fileContent: string,
-	settings: Settings,
-	replacementDictionary: ReplacementDictionary,
-	fileConverter: FileConverter,
-	vault: Vault,
-) {
+export function getFinalNoteContent(fileContent: string, context: Context) {
+	const settings = context.settings;
+
 	const contentByLine = fileContent.split("\n");
 	const dividerPositions = getDividerPositions(contentByLine);
 
@@ -62,7 +55,7 @@ export function getFinalNoteContent(
 		}
 	}
 
-	const fill = getFill(settings, replacementDictionary, fileConverter, vault);
+	const fill = getFill(context);
 
 	let finalContent = contentByLine;
 
@@ -87,7 +80,7 @@ export function getFinalNoteContent(
 			finalContent,
 			dividerPositions[listType].start + 1 + netLineOffset,
 			dividerPositions[listType].end - 1 + netLineOffset,
-			fill[listType],
+			fill[listType]
 		);
 		finalContent = filled.filled;
 		netLineOffset += filled.lineOffset;

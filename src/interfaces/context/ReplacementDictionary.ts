@@ -1,13 +1,13 @@
-import { replaceStrFromIndexToIndex } from "../utils/replaceStrFromIndexToIndex";
-import { File } from "./File";
-import { FrontMatterCache } from "./FrontmatterCache";
+import { replaceStrFromIndexToIndex } from "../../utils/replaceStrFromIndexToIndex";
+import { File } from "../File";
+import { FileMetadataCacheProvider } from "./FileMetadataCacheProvider";
 
 export abstract class ReplacementDictionary {
 	getOutputPostReplacement(
 		format: string,
 		file: File | null,
-		frontmatter: FrontMatterCache | null,
-		path: string,
+		fileMetadataCacheProvider: FileMetadataCacheProvider,
+		path: string
 	): string {
 		// for deleted section, etc where no metadata is stored
 		const disableAllTemplatesExceptPath = !file;
@@ -33,7 +33,7 @@ export abstract class ReplacementDictionary {
 						output,
 						startIdx + netCharOffset,
 						endIdx + netCharOffset,
-						"",
+						""
 					);
 					output = replaced.string;
 					netCharOffset += replaced.offset;
@@ -41,9 +41,12 @@ export abstract class ReplacementDictionary {
 					continue;
 				}
 
-				if (!frontmatter) {
-					frontmatter = {};
-				}
+				let frontmatter =
+					fileMetadataCacheProvider.getFileFrontmatter(file);
+
+				// if (!frontmatter) {
+				// 	frontmatter = {};
+				// }
 
 				console.log("frontmatter for ", path, ": ", frontmatter);
 
@@ -62,7 +65,7 @@ export abstract class ReplacementDictionary {
 						output,
 						startIdx + netCharOffset,
 						endIdx + netCharOffset,
-						"",
+						""
 					);
 					output = replaced.string;
 					netCharOffset += replaced.offset;
@@ -80,7 +83,7 @@ export abstract class ReplacementDictionary {
 					output,
 					startIdx + netCharOffset,
 					endIdx + netCharOffset,
-					targetPropertyValue,
+					targetPropertyValue
 				);
 				output = replaced.string;
 				netCharOffset += replaced.offset;
@@ -90,7 +93,7 @@ export abstract class ReplacementDictionary {
 
 			// OLM templates
 			const preDefinedReplacement = this.replacements.find(
-				({ template }) => template === templateStr,
+				({ template }) => template === templateStr
 			);
 			if (preDefinedReplacement) {
 				if (disableAllTemplatesExceptPath) {
@@ -100,7 +103,7 @@ export abstract class ReplacementDictionary {
 						endIdx + netCharOffset,
 						["path", "link", "name"].includes(templateStr)
 							? path
-							: "",
+							: ""
 					);
 					output = replaced.string;
 					netCharOffset += replaced.offset;
@@ -112,7 +115,10 @@ export abstract class ReplacementDictionary {
 					output,
 					startIdx + netCharOffset,
 					endIdx + netCharOffset,
-					preDefinedReplacement.replaceWith(file),
+					preDefinedReplacement.replaceWith(
+						file,
+						fileMetadataCacheProvider
+					)
 				);
 
 				output = replaced.string;
@@ -125,6 +131,9 @@ export abstract class ReplacementDictionary {
 
 	abstract replacements: Array<{
 		template: string;
-		replaceWith: (file: File) => string;
+		replaceWith: (
+			file: File,
+			cacheProvider: FileMetadataCacheProvider
+		) => string;
 	}>;
 }

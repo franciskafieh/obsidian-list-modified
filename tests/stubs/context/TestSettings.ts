@@ -1,5 +1,5 @@
-import { Settings } from "../../src/interfaces/Settings";
-import { OBSIDIAN_DEFAULT_SETTINGS } from "../../src/obsidian/settings/ObsidianDefaultSettings";
+import { Settings } from "../../../src/interfaces/Settings";
+import { OBSIDIAN_DEFAULT_SETTINGS } from "../../../src/obsidian/settings/ObsidianDefaultSettings";
 
 export class TestSettings implements Settings {
 	excludedTags = OBSIDIAN_DEFAULT_SETTINGS.excludedTags;

@@ -1,8 +1,9 @@
-import { ReplacementDictionary } from "../../interfaces/ReplacementDictionary";
-import { File } from "../../interfaces/File";
-import { TFile, getAllTags, moment } from "obsidian";
-import { getLogNote } from "../log_note/logNote";
-import { getPlugin, getSettings } from "../settings/settings";
+import { ReplacementDictionary } from "../../../interfaces/context/ReplacementDictionary";
+import { File } from "../../../interfaces/File";
+import { TFile, moment } from "obsidian";
+import { getLogNote } from "../../log_note/logNote";
+import { getPlugin, getSettings } from "../../settings/settings";
+import { FileMetadataCacheProvider } from "../../../interfaces/context/FileMetadataCacheProvider";
 
 export class ObsidianReplacementDictionary extends ReplacementDictionary {
 	replacements = [
@@ -12,13 +13,16 @@ export class ObsidianReplacementDictionary extends ReplacementDictionary {
 			replaceWith: (file: File) =>
 				getPlugin().app.fileManager.generateMarkdownLink(
 					file as TFile,
-					getLogNote()?.path || "",
+					getLogNote()?.path || ""
 				),
 		},
 		{ template: "name", replaceWith: (file: File) => file.basename },
 		{
 			template: "tags",
-			replaceWith: (file: File) => getTags(file),
+			replaceWith: (
+				file: File,
+				fileMetadataCacheProvider: FileMetadataCacheProvider
+			) => getTags(file, fileMetadataCacheProvider),
 		},
 		{
 			template: "ctime",
@@ -33,10 +37,11 @@ export class ObsidianReplacementDictionary extends ReplacementDictionary {
 	];
 }
 
-function getTags(file: File) {
-	const cache = getPlugin().app.metadataCache.getFileCache(file as TFile);
-	if (!cache) return "";
-	const tags = getAllTags(cache);
+function getTags(
+	file: File,
+	fileMetadataCacheProvider: FileMetadataCacheProvider
+) {
+	const tags = fileMetadataCacheProvider.getAllTagsFromFile(file);
 	if (!tags) return "";
 	return tags.map((tag) => "\\" + tag).join(", ");
 }

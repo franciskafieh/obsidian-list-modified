@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
 import fileMatchesCriteria from "../../../src/logic/file_tracking/fileMatchesCriteria";
-import { TestSettingsBuilder } from "../../stubs/TestSettingsBuilder";
+import { TestSettingsBuilder } from "../../stubs/context/TestSettingsBuilder";
 import { getSingleFileWithPath } from "../../stubs/fakeFiles";
 
 describe("fileMatchesCriteria should correctly match tags", () => {
@@ -9,8 +9,8 @@ describe("fileMatchesCriteria should correctly match tags", () => {
 			fileMatchesCriteria(
 				getSingleFileWithPath("a.md"),
 				null,
-				new TestSettingsBuilder().setTags("ignored").build(),
-			),
+				new TestSettingsBuilder().setTags("ignored").build()
+			)
 		).toBe(true);
 	});
 
@@ -19,8 +19,8 @@ describe("fileMatchesCriteria should correctly match tags", () => {
 			fileMatchesCriteria(
 				getSingleFileWithPath("a.md"),
 				["some", "tags", "ignored"],
-				new TestSettingsBuilder().setTags(["a", "ignored"]).build(),
-			),
+				new TestSettingsBuilder().setTags(["a", "ignored"]).build()
+			)
 		).toBe(false);
 	});
 });
@@ -31,8 +31,8 @@ describe("fileMatchesCriteria should correctly match ignored name text", () => {
 			fileMatchesCriteria(
 				getSingleFileWithPath("a.md"),
 				[""],
-				new TestSettingsBuilder().setIgnoredNameContains("abc").build(),
-			),
+				new TestSettingsBuilder().setIgnoredNameContains("abc").build()
+			)
 		).toBe(true);
 	});
 
@@ -41,8 +41,8 @@ describe("fileMatchesCriteria should correctly match ignored name text", () => {
 			fileMatchesCriteria(
 				getSingleFileWithPath("abc.md"),
 				[""],
-				new TestSettingsBuilder().setIgnoredNameContains("abc").build(),
-			),
+				new TestSettingsBuilder().setIgnoredNameContains("abc").build()
+			)
 		).toBe(false);
 	});
 });
@@ -55,8 +55,8 @@ describe("fileMatchesCriteria should correctly match ignored folder/path", () =>
 				[""],
 				new TestSettingsBuilder()
 					.setExcludedFolders("fail-folder")
-					.build(),
-			),
+					.build()
+			)
 		).toBe(true);
 	});
 
@@ -67,8 +67,8 @@ describe("fileMatchesCriteria should correctly match ignored folder/path", () =>
 				[""],
 				new TestSettingsBuilder()
 					.setExcludedFolders("fail-folder")
-					.build(),
-			),
+					.build()
+			)
 		).toBe(false);
 	});
 });

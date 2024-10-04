@@ -19,27 +19,27 @@ const onMetadataCacheChanged = serialize(
 		const settings = getSettings();
 		consoleWarnIfVerboseMode(
 			"File modified: " + file.path,
-			settings.verboseModeEnabled,
+			settings.verboseModeEnabled
 		);
 
 		// if mtime is not within 1 second of now, ignore. Most likely a file being indexed
 		if (Date.now() - file.stat.mtime >= 1000) {
 			consoleWarnIfVerboseMode(
 				"Mtime not within 1 second of now. Returning...",
-				settings.verboseModeEnabled,
+				settings.verboseModeEnabled
 			);
 			return;
 		}
 
 		const isNewNotePeriod = await runLogicAndReturnIfNewPeriod(
 			settings,
-			getLastPerformedAction(),
+			getLastPerformedAction()
 		);
 
 		if (isLogNote(file)) {
 			consoleWarnIfVerboseMode(
 				"File is log note. Returning...",
-				settings.verboseModeEnabled,
+				settings.verboseModeEnabled
 			);
 			return;
 		}
@@ -47,12 +47,12 @@ const onMetadataCacheChanged = serialize(
 		const matchesCriteria = fileMatchesCriteria(
 			file,
 			getAllTags(cache),
-			settings,
+			settings
 		);
 
 		consoleWarnIfVerboseMode(
 			"File matches criteria: " + matchesCriteria,
-			settings.verboseModeEnabled,
+			settings.verboseModeEnabled
 		);
 
 		const currFile = findTrackedFileWithPath(file.path, settings);
@@ -60,7 +60,7 @@ const onMetadataCacheChanged = serialize(
 		if (currFile) {
 			consoleWarnIfVerboseMode(
 				"file already tracked",
-				settings.verboseModeEnabled,
+				settings.verboseModeEnabled
 			);
 			currFile.matchesCriteria = matchesCriteria;
 		} else {
@@ -69,7 +69,7 @@ const onMetadataCacheChanged = serialize(
 			}
 			consoleWarnIfVerboseMode(
 				"file not tracked. pushing...",
-				settings.verboseModeEnabled,
+				settings.verboseModeEnabled
 			);
 
 			settings.trackedFiles.push({
@@ -83,7 +83,7 @@ const onMetadataCacheChanged = serialize(
 
 		saveSettingsAndWriteToLogNote();
 		setLastPerformedAction("modified");
-	},
+	}
 );
 
 export default onMetadataCacheChanged;

@@ -1,11 +1,13 @@
 import { describe, it, expect } from "bun:test";
 import { getFinalNoteContent } from "../../../src/logic/log_note/getFinalNoteContent";
-import { TestSettingsBuilder } from "../../stubs/TestSettingsBuilder";
+import { TestSettingsBuilder } from "../../stubs/context/TestSettingsBuilder";
 
-import { TestReplacementDictionary } from "../../stubs/TestReplacementDictionary";
-import { TestFileConverter } from "../../stubs/TestFileConverter";
+import { TestReplacementDictionary } from "../../stubs/context/TestReplacementDictionary";
+import { TestFileConverter } from "../../stubs/context/TestFileConverter";
 import { Settings } from "../../../src/interfaces/Settings";
-import { TestVault } from "../../stubs/TestVault";
+import { TestVault } from "../../stubs/context/TestVault";
+import { TestContext } from "../../stubs/context/TestContext";
+import { TestFileMetadataCacheProvider } from "../../stubs/context/TestFileMetadataCacheProvider";
 
 // no complicated inner-working tests here. See inner function calls for those.
 // these tests are more of "integration" tests.
@@ -13,17 +15,20 @@ import { TestVault } from "../../stubs/TestVault";
 function getTestFinalNoteContent(currentContent: string, settings: Settings) {
 	return getFinalNoteContent(
 		currentContent,
-		settings,
-		new TestReplacementDictionary(),
-		new TestFileConverter(),
-		new TestVault(),
+		new TestContext(
+			settings,
+			new TestReplacementDictionary(),
+			new TestFileConverter(),
+			new TestVault(),
+			new TestFileMetadataCacheProvider()
+		)
 	);
 }
 
 describe("final note content should be correct", () => {
 	it("should return nothing if no file content", () => {
 		expect(
-			getTestFinalNoteContent("", new TestSettingsBuilder().build()),
+			getTestFinalNoteContent("", new TestSettingsBuilder().build())
 		).toEqual("");
 	});
 
@@ -31,8 +36,8 @@ describe("final note content should be correct", () => {
 		expect(
 			getTestFinalNoteContent(
 				"%% LIST MODIFIED %%\n%% END %%\nabc",
-				new TestSettingsBuilder().build(),
-			),
+				new TestSettingsBuilder().build()
+			)
 		).toEqual("%% LIST MODIFIED %%\n%% END %%\nabc");
 	});
 
@@ -48,8 +53,8 @@ describe("final note content should be correct", () => {
 							supposedList: "modified",
 						},
 					])
-					.build(),
-			),
+					.build()
+			)
 		).toEqual("%% LIST MODIFIED %%\n- [[c]]\n%% END %%\nabc");
 	});
 
@@ -66,8 +71,8 @@ describe("final note content should be correct", () => {
 						},
 					])
 					.setAutoCreateModifiedDivider(true)
-					.build(),
-			),
+					.build()
+			)
 		).toEqual("abc\n%% LIST MODIFIED %%\n- [[c]]\n%% END %%");
 	});
 
@@ -96,10 +101,10 @@ describe("final note content should be correct", () => {
 					.setAutoCreateModifiedDivider(true)
 					.setAutoCreateDeletedDivider(true)
 					.setAutoCreateCreatedDivider(true)
-					.build(),
-			),
+					.build()
+			)
 		).toEqual(
-			"abc\n%% LIST CREATED %%\n- [[created]]\n%% END %%\n%% LIST MODIFIED %%\n- [[modified]]\n%% END %%\n%% LIST DELETED %%\n- [[deleted]]\n%% END %%",
+			"abc\n%% LIST CREATED %%\n- [[created]]\n%% END %%\n%% LIST MODIFIED %%\n- [[modified]]\n%% END %%\n%% LIST DELETED %%\n- [[deleted]]\n%% END %%"
 		);
 	});
 
@@ -133,10 +138,10 @@ describe("final note content should be correct", () => {
 					.setAutoCreateModifiedDivider(true)
 					.setAutoCreateDeletedDivider(true)
 					.setAutoCreateCreatedDivider(true)
-					.build(),
-			),
+					.build()
+			)
 		).toEqual(
-			"abc\n%% LIST MODIFIED %%\n- [[modified]]\n- [[modified2]]\n%% END %%\n\n\n%% LIST DELETED %%\n- [[deleted]]\n%% END %%\n%% LIST CREATED %%\n- [[created]]\n%% END %%\nabc",
+			"abc\n%% LIST MODIFIED %%\n- [[modified]]\n- [[modified2]]\n%% END %%\n\n\n%% LIST DELETED %%\n- [[deleted]]\n%% END %%\n%% LIST CREATED %%\n- [[created]]\n%% END %%\nabc"
 		);
 	});
 
@@ -152,8 +157,8 @@ describe("final note content should be correct", () => {
 							supposedList: "modified",
 						},
 					])
-					.build(),
-			),
+					.build()
+			)
 		).toEqual("start\n%% LIST MODIFIED %%\nabc");
 	});
 });

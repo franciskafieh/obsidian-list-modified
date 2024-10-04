@@ -1,7 +1,9 @@
 import { getFinalNoteContent } from "../../logic/log_note/getFinalNoteContent";
 import { consoleWarnIfVerboseMode, warnUserOnce } from "../../utils/alerter";
-import { ObsidianFileConverter } from "../implementations/ObsidianFileConverter";
-import { ObsidianReplacementDictionary } from "../implementations/ObsidianReplacementDictionary";
+import { ObsidianContext } from "../implementations/context/ObsidianContext";
+import { ObsidianFileConverter } from "../implementations/context/ObsidianFileConverter";
+import { ObsidianFileMetadataCacheProvider } from "../implementations/context/ObsidianFileMetadataCacheProvider";
+import { ObsidianReplacementDictionary } from "../implementations/context/ObsidianReplacementDictionary";
 import { getPlugin, getSettings } from "../settings/settings";
 import { createLogNote, getLogNote } from "./logNote";
 
@@ -10,7 +12,7 @@ export async function writeChangesToLogNote() {
 
 	consoleWarnIfVerboseMode(
 		"writing to log note",
-		settings.verboseModeEnabled,
+		settings.verboseModeEnabled
 	);
 
 	if (!getLogNote()) {
@@ -18,12 +20,12 @@ export async function writeChangesToLogNote() {
 			await createLogNote();
 			consoleWarnIfVerboseMode(
 				"log note did not exist, but will autocreate...",
-				settings.verboseModeEnabled,
+				settings.verboseModeEnabled
 			);
 		} else {
 			warnUserOnce(
 				"fileNotExisting",
-				"Log note not found. You must create one or enable auto-creation in settings for the plugin to work.",
+				"Log note not found. You must create one or enable auto-creation in settings for the plugin to work."
 			);
 			return;
 		}
@@ -32,10 +34,13 @@ export async function writeChangesToLogNote() {
 	getPlugin().app.vault.process(getLogNote(), (data) => {
 		return getFinalNoteContent(
 			data,
-			settings,
-			new ObsidianReplacementDictionary(),
-			new ObsidianFileConverter(),
-			getPlugin().app.vault,
+			new ObsidianContext(
+				settings,
+				new ObsidianReplacementDictionary(),
+				new ObsidianFileConverter(),
+				getPlugin().app.vault,
+				new ObsidianFileMetadataCacheProvider()
+			)
 		);
 	});
 }

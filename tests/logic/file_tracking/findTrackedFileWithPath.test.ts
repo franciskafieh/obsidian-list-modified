@@ -1,12 +1,12 @@
 import { describe, it, expect } from "bun:test";
 import { findTrackedFileWithPath } from "../../../src/logic/file_tracking/findTrackedFileWithPath";
-import { TestSettingsBuilder } from "../../stubs/TestSettingsBuilder";
+import { TestSettingsBuilder } from "../../stubs/context/TestSettingsBuilder";
 import { ListType } from "../../../src/types";
 
 describe("findTrackedFileWithPath should find correct file in list", () => {
 	it("should return undefined if does not match anything", () => {
 		expect(
-			findTrackedFileWithPath("a.md", new TestSettingsBuilder().build()),
+			findTrackedFileWithPath("a.md", new TestSettingsBuilder().build())
 		).toBeUndefined();
 	});
 
@@ -28,8 +28,8 @@ describe("findTrackedFileWithPath should find correct file in list", () => {
 						},
 						fileObj,
 					])
-					.build(),
-			),
+					.build()
+			)
 		).toEqual(fileObj);
 	});
 });

@@ -1,6 +1,8 @@
 import { moment } from "obsidian";
-import { File } from "../../src/interfaces/File";
-import { ReplacementDictionary } from "../../src/interfaces/ReplacementDictionary";
+import { File } from "../../../src/interfaces/File";
+import { ReplacementDictionary } from "../../../src/interfaces/context/ReplacementDictionary";
+import { TestFileMetadataCacheProvider } from "./TestFileMetadataCacheProvider";
+import { FileMetadataCacheProvider } from "../../../src/interfaces/context/FileMetadataCacheProvider";
 
 export class TestReplacementDictionary extends ReplacementDictionary {
 	replacements = [
@@ -12,7 +14,8 @@ export class TestReplacementDictionary extends ReplacementDictionary {
 		{ template: "name", replaceWith: (file: File) => file.basename },
 		{
 			template: "tags",
-			replaceWith: (_file: File) => "#tags not implemented for tests",
+			replaceWith: (file: File, cache: FileMetadataCacheProvider) =>
+				cache.getAllTagsFromFile(file).join(", "),
 		},
 		{
 			template: "ctime",

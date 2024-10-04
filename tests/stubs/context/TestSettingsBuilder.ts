@@ -1,5 +1,5 @@
-import { LogNoteType, TrackedFile } from "../../src/types";
-import { convertCommaListToArray } from "../../src/utils/converCommaListToArray";
+import { LogNoteType, TrackedFile } from "../../../src/types";
+import { convertCommaListToArray } from "../../../src/utils/converCommaListToArray";
 import { TestSettings } from "./TestSettings";
 
 export class TestSettingsBuilder {
