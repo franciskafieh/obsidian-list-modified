@@ -44,12 +44,6 @@ export abstract class ReplacementDictionary {
 				let frontmatter =
 					fileMetadataCacheProvider.getFileFrontmatter(file);
 
-				// if (!frontmatter) {
-				// 	frontmatter = {};
-				// }
-
-				console.log("frontmatter for ", path, ": ", frontmatter);
-
 				// the string with start f. removed
 
 				const targetProperty = frontmatter[templateStr.substring(2)];
@@ -69,8 +63,6 @@ export abstract class ReplacementDictionary {
 					);
 					output = replaced.string;
 					netCharOffset += replaced.offset;
-
-					console.log("frontmatter 0 fill");
 
 					continue;
 				}
@@ -133,7 +125,7 @@ export abstract class ReplacementDictionary {
 		template: string;
 		replaceWith: (
 			file: File,
-			cacheProvider: FileMetadataCacheProvider
+			fileMetadataCacheProvider: FileMetadataCacheProvider
 		) => string;
 	}>;
 }
