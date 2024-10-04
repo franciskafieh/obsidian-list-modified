@@ -18,7 +18,6 @@ export class SettingsTab extends PluginSettingTab {
 
 		// TOP HEADER
 		const topHeader = containerEl.createDiv("top-header");
-		topHeader.createEl("h3", { text: "List Modified Settings" });
 		topHeader.append(
 			"Please read ",
 			containerEl.createEl("a", {
@@ -27,17 +26,17 @@ export class SettingsTab extends PluginSettingTab {
 			}),
 			" for configuration and setup help. The plugin ",
 			containerEl.createEl("b", { text: "will not work" }),
-			" unless configured properly!",
+			" unless configured properly!"
 		);
-		topHeader.style.marginBottom = "50px";
 
 		// LOG NOTE
-		containerEl.createEl("h2", { text: "Log Note" });
+		new Setting(containerEl).setName("Log note").setHeading();
+
 		new Setting(containerEl)
-			.setName("Auto Create Log Note")
+			.setName("Auto create log note")
 			.setDesc(
 				"If this setting is turned off, your modified files will not " +
-					"be linked unless you create a log note yourself.",
+					"be linked unless you create a log note yourself."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -49,9 +48,9 @@ export class SettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Log Note Type")
+			.setName("Log note type")
 			.setDesc(
-				"The 'Weekly' and 'Monthly' options REQUIRE you to have the Periodic Notes plugin.",
+				"The 'Weekly' and 'Monthly' options REQUIRE you to have the Periodic Notes plugin."
 			)
 			.addDropdown((dropdown) => {
 				dropdown
@@ -66,12 +65,12 @@ export class SettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Write Interval")
+			.setName("Write interval")
 			.setDesc(
 				"The interval (in seconds) at which to write your modified files to your daily note. " +
 					"Set to 0 to disable the interval and write to your file directly after every change. " +
 					"This is recommended especially if you do not use a sync solution. " +
-					"Please restart Obsidian after changing this value.",
+					"Please restart Obsidian after changing this value."
 			)
 			.addText((text) =>
 				text
@@ -80,13 +79,14 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.writeInterval = parseInt(value);
 						await saveSettings();
-					}),
+					})
 			);
 
 		// CRITERIA
-		containerEl.createEl("h2", { text: "Criteria" });
+		new Setting(containerEl).setName("Criteria").setHeading();
+
 		new Setting(containerEl)
-			.setName("Excluded Tags")
+			.setName("Excluded tags")
 			.setDesc("Files with these tags will not be tracked.")
 			.addText((text) =>
 				text
@@ -95,11 +95,11 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.excludedTags = convertCommaListToArray(value);
 						saveSettingsAndWriteToLogNote();
-					}),
+					})
 			);
 
 		new Setting(containerEl)
-			.setName("Excluded Folders")
+			.setName("Excluded folders")
 			.setDesc("Files in these folders will not be tracked.")
 			.addText((text) =>
 				text
@@ -109,13 +109,13 @@ export class SettingsTab extends PluginSettingTab {
 						settings.excludedFolders =
 							convertCommaListToArray(value);
 						saveSettingsAndWriteToLogNote();
-					}),
+					})
 			);
 
 		new Setting(containerEl)
-			.setName("Excluded Names")
+			.setName("Excluded names")
 			.setDesc(
-				"Files with names containing these strings will not be tracked.",
+				"Files with names containing these strings will not be tracked."
 			)
 			.addText((text) =>
 				text
@@ -125,11 +125,11 @@ export class SettingsTab extends PluginSettingTab {
 						settings.excludedNameContains =
 							convertCommaListToArray(value);
 						saveSettingsAndWriteToLogNote();
-					}),
+					})
 			);
 
 		// OUTPUT FORMAT
-		containerEl.createEl("h2", { text: "Output Formatting" });
+		new Setting(containerEl).setName("Output formatting").setHeading();
 
 		const outputFormatDesc = document.createDocumentFragment();
 
@@ -143,11 +143,11 @@ export class SettingsTab extends PluginSettingTab {
 			outputFormatDesc.createEl("a", {
 				href: "https://github.com/franciskafieh/obsidian-list-modified/wiki/Output-Format",
 				text: "the wiki.",
-			}),
+			})
 		);
 
 		const outputFormatSetting = new Setting(containerEl)
-			.setName("Output Format")
+			.setName("Output format")
 			.setDesc(outputFormatDesc)
 			.addText((text) =>
 				text
@@ -156,7 +156,7 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.outputFormat = value;
 						saveSettingsAndWriteToLogNote();
-					}),
+					})
 			);
 
 		outputFormatSetting.setDisabled(settings.separateOutputFormats);
@@ -164,9 +164,9 @@ export class SettingsTab extends PluginSettingTab {
 			settings.separateOutputFormats ? "0.5" : "1"; // fade out and disable if separate output formats
 
 		new Setting(containerEl)
-			.setName("Separate Output Formats")
+			.setName("Separate output formats")
 			.setDesc(
-				"If turned on, you may use different output formats for created/deleted/modified.",
+				"If turned on, you may use different output formats for created/deleted/modified."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -192,7 +192,7 @@ export class SettingsTab extends PluginSettingTab {
 		separateOutputFormats.style.marginLeft = "20px";
 
 		new Setting(separateOutputFormats)
-			.setName("↳ Created Output Format")
+			.setName("↳ Created output format")
 			.setDesc("Output format for created files.")
 			.addText((text) =>
 				text
@@ -201,11 +201,11 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.createdFormat = value;
 						saveSettingsAndWriteToLogNote();
-					}),
+					})
 			);
 
 		new Setting(separateOutputFormats)
-			.setName("↳ Modified Output Format")
+			.setName("↳ Modified output format")
 			.setDesc("Output format for modified files.")
 			.addText((text) =>
 				text
@@ -214,13 +214,13 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.modifiedFormat = value;
 						saveSettingsAndWriteToLogNote();
-					}),
+					})
 			);
 
 		new Setting(separateOutputFormats)
-			.setName("↳ Deleted Output Format")
+			.setName("↳ Deleted output format")
 			.setDesc(
-				"Output format for deleted files. You cannot use most templates here. Please see the above wiki for info.",
+				"Output format for deleted files. You cannot use most templates here. Please see the above wiki for info."
 			)
 			.addText((text) =>
 				text
@@ -229,13 +229,13 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.deletedFormat = value;
 						saveSettingsAndWriteToLogNote();
-					}),
+					})
 			);
 
 		new Setting(containerEl)
-			.setName("Time Format")
+			.setName("Time format")
 			.setDesc(
-				"Time format for use with the above time-related placeholders. ",
+				"Time format for use with the above time-related placeholders. "
 			)
 			.addText((text) =>
 				text
@@ -244,13 +244,14 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.timeFormat = value;
 						saveSettingsAndWriteToLogNote();
-					}),
+					})
 			);
 
 		// DIVIDERS
-		containerEl.createEl("h2", { text: "Dividers" });
+		new Setting(containerEl).setName("Dividers").setHeading();
+
 		new Setting(containerEl)
-			.setName("Combine Created and Modified")
+			.setName("Combine created and modified")
 			.setDesc("Combine the 'created' and 'modified' dividers into one.")
 			.addToggle((toggle) => {
 				toggle
@@ -261,7 +262,7 @@ export class SettingsTab extends PluginSettingTab {
 						// if set to true get rid of created section
 						if (value && getLogNote()) {
 							await this.app.vault.process(getLogNote(), (data) =>
-								getContentWithoutCreatedSection(data),
+								getContentWithoutCreatedSection(data)
 							);
 						}
 
@@ -270,10 +271,10 @@ export class SettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Auto Create Created Divider")
+			.setName("Auto create created divider")
 			.setDesc(
 				"Automatically append a 'created' divider to " +
-					"the bottom of your note if it is not present.",
+					"the bottom of your note if it is not present."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -285,10 +286,10 @@ export class SettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Auto Create Modified Divider")
+			.setName("Auto create modified divider")
 			.setDesc(
 				"Automatically append a 'modified' divider to " +
-					"the bottom of your note if it is not present.",
+					"the bottom of your note if it is not present."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -300,10 +301,10 @@ export class SettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Auto Create Deleted Divider")
+			.setName("Auto create deleted divider")
 			.setDesc(
 				"Automatically append a 'deleted' divider to " +
-					"the bottom of your note if it is not present.",
+					"the bottom of your note if it is not present."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -315,12 +316,13 @@ export class SettingsTab extends PluginSettingTab {
 			});
 
 		// DEBUG
-		containerEl.createEl("h2", { text: "Debug" });
+		new Setting(containerEl).setName("Debug").setHeading();
+
 		new Setting(containerEl)
-			.setName("Verbose Mode")
+			.setName("Verbose mode")
 			.setDesc(
 				"Enable verbose mode for debugging. " +
-					"This only needs to be on for support and development purposes.",
+					"This only needs to be on for support and development purposes."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -332,9 +334,10 @@ export class SettingsTab extends PluginSettingTab {
 			});
 
 		// DONATIONS
-		containerEl.createEl("h2", { text: "Donations 🫶" });
+		new Setting(containerEl).setName("Donations 🫶").setHeading();
+
 		containerEl.createEl("p", {
-			text: "If this plugin has helped you, feel free to donate. Thank you so much!",
+			text: "If this plugin has helped you in anyway, feel free to donate :). Thank you so much!",
 		});
 
 		const coffeeImg = containerEl
