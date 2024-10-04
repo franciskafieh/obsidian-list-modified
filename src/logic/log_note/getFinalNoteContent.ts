@@ -1,4 +1,3 @@
-import { FrontMatterCache } from "obsidian";
 import { FileConverter } from "../../interfaces/FileConverter";
 import { ReplacementDictionary } from "../../interfaces/ReplacementDictionary";
 import { Settings } from "../../interfaces/Settings";
@@ -12,7 +11,6 @@ export function getFinalNoteContent(
 	fileContent: string,
 	settings: Settings,
 	replacementDictionary: ReplacementDictionary,
-	frontmatterCache: FrontMatterCache | null,
 	fileConverter: FileConverter,
 	vault: Vault,
 ) {
@@ -64,13 +62,7 @@ export function getFinalNoteContent(
 		}
 	}
 
-	const fill = getFill(
-		settings,
-		replacementDictionary,
-		frontmatterCache,
-		fileConverter,
-		vault,
-	);
+	const fill = getFill(settings, replacementDictionary, fileConverter, vault);
 
 	let finalContent = contentByLine;
 

@@ -9,12 +9,11 @@ export abstract class ReplacementDictionary {
 		frontmatter: FrontMatterCache | null,
 		path: string,
 	): string {
-		// for deleted section, etc where no metadata is stored - TODO get rid of this
+		// for deleted section, etc where no metadata is stored
 		const disableAllTemplatesExceptPath = !file;
 
 		// matches all text in btwn [[ and ]]. EXCLUDES the brackets
 		let templates = format.matchAll(/(?<=\[\[)[^\]]+(?=]])/gm);
-		const preDefinedReplacements = this.replacements.map((r) => r.template);
 		let output = format;
 
 		// netCharOffset takes into account how many characters
@@ -46,7 +45,9 @@ export abstract class ReplacementDictionary {
 					frontmatter = {};
 				}
 
-				// string without f. at start
+				console.log("frontmatter for ", path, ": ", frontmatter);
+
+				// the string with start f. removed
 
 				const targetProperty = frontmatter[templateStr.substring(2)];
 
@@ -65,6 +66,8 @@ export abstract class ReplacementDictionary {
 					);
 					output = replaced.string;
 					netCharOffset += replaced.offset;
+
+					console.log("frontmatter 0 fill");
 
 					continue;
 				}

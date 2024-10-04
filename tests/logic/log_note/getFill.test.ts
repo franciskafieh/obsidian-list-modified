@@ -24,7 +24,6 @@ describe("getFill should return the correct sorted lists", () => {
 			getFill(
 				settings,
 				new TestReplacementDictionary(),
-				{},
 				new TestFileConverter(),
 				new TestVault(),
 			),
@@ -56,7 +55,6 @@ describe("getFill should return the correct sorted lists", () => {
 			getFill(
 				settings,
 				new TestReplacementDictionary(),
-				{},
 				new TestFileConverter(),
 				new TestVault(),
 			),
@@ -93,7 +91,6 @@ describe("getFill should return the correct sorted lists", () => {
 			getFill(
 				settings,
 				new TestReplacementDictionary(),
-				{},
 				new TestFileConverter(),
 				new TestVault(),
 			),
@@ -125,7 +122,6 @@ describe("getFill should return the correct sorted lists", () => {
 			getFill(
 				settings,
 				new TestReplacementDictionary(),
-				{},
 				new TestFileConverter(),
 				new TestVault(),
 			),
@@ -154,7 +150,6 @@ describe("separated vs combined output formats should be respected depending on 
 			getFill(
 				settings,
 				new TestReplacementDictionary(),
-				{},
 				new TestFileConverter(),
 				new TestVault(),
 			),
@@ -182,7 +177,6 @@ describe("separated vs combined output formats should be respected depending on 
 			getFill(
 				settings,
 				new TestReplacementDictionary(),
-				{},
 				new TestFileConverter(),
 				new TestVault(),
 			),
@@ -222,7 +216,6 @@ describe("separated vs combined output formats should be respected depending on 
 			getFill(
 				settings,
 				new TestReplacementDictionary(),
-				{},
 				new TestFileConverter(),
 				new TestVault(),
 			),

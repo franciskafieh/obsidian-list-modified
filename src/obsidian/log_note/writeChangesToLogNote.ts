@@ -29,15 +29,11 @@ export async function writeChangesToLogNote() {
 		}
 	}
 
-	const frontmatterCache =
-		getPlugin().app.metadataCache.getFileCache(getLogNote());
-
 	getPlugin().app.vault.process(getLogNote(), (data) => {
 		return getFinalNoteContent(
 			data,
 			settings,
 			new ObsidianReplacementDictionary(),
-			frontmatterCache,
 			new ObsidianFileConverter(),
 			getPlugin().app.vault,
 		);

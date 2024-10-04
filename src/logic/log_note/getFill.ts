@@ -3,11 +3,12 @@ import { ReplacementDictionary } from "../../interfaces/ReplacementDictionary";
 import { FileConverter } from "../../interfaces/FileConverter";
 import { Vault } from "../../interfaces/Vault";
 import { FrontMatterCache } from "../../interfaces/FrontmatterCache";
+import { getPlugin } from "../../obsidian/settings/settings";
+import { TFile } from "obsidian";
 
 export function getFill(
 	settings: Settings,
 	replacementDictionary: ReplacementDictionary,
-	frontmatterCache: FrontMatterCache | null,
 	fileConverter: FileConverter,
 	vault: Vault,
 ) {
@@ -42,7 +43,10 @@ export function getFill(
 		const formattedOutput = replacementDictionary.getOutputPostReplacement(
 			outputFormatToUse,
 			file,
-			frontmatterCache,
+			file
+				? getPlugin().app.metadataCache.getFileCache(file as TFile)
+						?.frontmatter || null
+				: {},
 			trackedFile.path,
 		);
 

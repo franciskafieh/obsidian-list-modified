@@ -16,11 +16,11 @@ import { TFile, moment } from "obsidian";
 
 export async function runLogicAndReturnIfNewPeriod(
 	settings: Settings,
-	lastPerformedAction: ListType,
+	lastPerformedAction: ListType
 ) {
 	consoleWarnIfVerboseMode(
 		"New period logic is being ran by " + lastPerformedAction,
-		settings.verboseModeEnabled,
+		settings.verboseModeEnabled
 	);
 
 	const isNewPeriod = isNewNotePeriod(settings);
@@ -32,7 +32,7 @@ export async function runLogicAndReturnIfNewPeriod(
 		if (getYesterdaysLogNote()) {
 			await getPlugin().app.vault.process(
 				getYesterdaysLogNote(),
-				(data) => removeDividers(data),
+				(data) => removeDividers(data)
 			);
 		}
 		const lastTrackedDate = moment(settings.lastTrackedDate);
@@ -40,9 +40,9 @@ export async function runLogicAndReturnIfNewPeriod(
 
 		consoleWarnIfVerboseMode(
 			`New day detected, last tracked date was ${lastTrackedDate.format(
-				"YYYY-MM-DD",
+				"YYYY-MM-DD"
 			)}, now it is ${today}`,
-			settings.verboseModeEnabled,
+			settings.verboseModeEnabled
 		);
 
 		settings.trackedFiles = [];
