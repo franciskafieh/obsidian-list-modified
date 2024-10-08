@@ -10,8 +10,10 @@ export class ObsidianFileMetadataCacheProvider
 		const metadataCache = getPlugin().app.metadataCache;
 		if (file && metadataCache.getFileCache(file as TFile)) {
 			return (
-				getAllTags(metadataCache.getFileCache(file as TFile) || {}) ||
-				[]
+				// make tags unique
+				getAllTags(
+					metadataCache.getFileCache(file as TFile) || {}
+				)?.filter((x, i, a) => a.indexOf(x) == i) || []
 			);
 		}
 
