@@ -252,7 +252,10 @@ export class SettingsTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Combine created and modified")
-			.setDesc("Combine the 'created' and 'modified' dividers into one.")
+			.setDesc(
+				"Combine the 'created' and 'modified' dividers into one. This will disable the " +
+					"created divider and use the modified divider for both."
+			)
 			.addToggle((toggle) => {
 				toggle
 					.setValue(settings.combineCreatedAndModified)
