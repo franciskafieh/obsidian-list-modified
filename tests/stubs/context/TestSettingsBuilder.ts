@@ -77,6 +77,16 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
+	public setSortPlaceholder(placeholder: string) {
+		this.testSettings.sortPlaceholder = placeholder;
+		return this;
+	}
+
+	public setSortOrder(order: "asc" | "desc") {
+		this.testSettings.sortOrder = order;
+		return this;
+	}
+
 	public setAutoCreateLogNote(autoCreate: boolean) {
 		this.testSettings.autoCreateLogNote = autoCreate;
 		return this;

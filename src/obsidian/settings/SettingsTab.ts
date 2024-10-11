@@ -253,8 +253,10 @@ export class SettingsTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Sort placeholder")
 			.setDesc(
-				"The tag/placeholder to sort by. If left blank, the plugin will list " +
-					"files in the order they were initally changed in."
+				"The placeholder to sort by. If left blank, the plugin will list " +
+					"files in the order they were initally changed in. This setting does not " +
+					"work with tags or list frontmatter properties. Please read the output " +
+					"format wiki above for more details."
 			)
 			.addText((text) =>
 				text
