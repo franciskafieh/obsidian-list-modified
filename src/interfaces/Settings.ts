@@ -14,6 +14,10 @@ export interface Settings {
 	deletedFormat: string;
 	timeFormat: string;
 
+	// SORTING
+	sortPlaceholder: string;
+	sortOrder: "asc" | "desc";
+
 	// LOG NOTE
 	autoCreateLogNote: boolean;
 	logNoteType: LogNoteType;

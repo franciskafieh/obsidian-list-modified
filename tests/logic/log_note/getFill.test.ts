@@ -201,4 +201,27 @@ describe("separated vs combined output formats should be respected depending on 
 			deleted: ["del: c.md"],
 		});
 	});
+
+	// TODO
+	it("should sort by default chronological order if sort ", () => {
+		const settings = builder
+			.setTrackedFiles([
+				{
+					path: "a.md",
+					matchesCriteria: true,
+					supposedList: "modified",
+				},
+			])
+			.setSeparateOutputFormats(true)
+			.setModifiedFormat("a+[[path]]")
+			.build();
+
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context)).toEqual({
+			created: [],
+			modified: ["a+a.md"],
+			deleted: [],
+		});
+	});
 });

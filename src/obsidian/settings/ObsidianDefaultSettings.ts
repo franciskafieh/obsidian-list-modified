@@ -14,6 +14,10 @@ export const OBSIDIAN_DEFAULT_SETTINGS: Settings = {
 	deletedFormat: "- [[path]]",
 	timeFormat: "h:mm A",
 
+	// SORTING
+	sortPlaceholder: "",
+	sortOrder: "asc",
+
 	// LOG NOTE
 	autoCreateLogNote: true,
 	logNoteType: "daily",
