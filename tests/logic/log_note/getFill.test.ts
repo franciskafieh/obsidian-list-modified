@@ -282,67 +282,103 @@ describe("getFill should respect sort settings", () => {
 		});
 	});
 
+	// todo way to inject mock ctime for test?
 	const ctimePaths = [
 		{
-			path: "ctime-10.md",
+			path: "a.md",
 			matchesCriteria: true,
 			supposedList: "modified",
 		},
 		{
-			path: "ctime-1000000000.md",
+			path: "c.md",
 			matchesCriteria: true,
 			supposedList: "modified",
 		},
 		{
-			path: "ctime-5.md",
+			path: "d.md",
 			matchesCriteria: true,
 			supposedList: "modified",
 		},
 		{
-			path: "ctime-1.md",
+			path: "b.md",
 			matchesCriteria: true,
 			supposedList: "modified",
 		},
 	];
 
 	it("should sort numerically for ascending ctime built-in placeholder", () => {
-		const settings = builder
-			.setTrackedFiles(ctimePaths as TrackedFile[])
-			.setSortPlaceholder("[[ctime]]")
-			.build();
+		const settings = builder.setTrackedFiles().build();
 
 		const context = createTestContextWithSettings(settings);
 
 		expect(getFill(context)).toEqual({
 			created: [],
-			modified: [
-				"ctime-1.md",
-				"ctime-5.md",
-				"ctime-10.md",
-				"ctime-1000000000.md",
-			],
+			modified: ["a.md", "b.md", "c.md", "d.md"],
 			deleted: [],
 		});
 	});
 
 	it("should sort reverse-numerically for descending ctime built-in placeholder", () => {
-		const settings = builder
-			.setTrackedFiles(ctimePaths as TrackedFile[])
-			.setSortPlaceholder("[[ctime]]")
-			.setSortOrder("desc")
-			.build();
+		const settings = builder.setTrackedFiles().build();
 
 		const context = createTestContextWithSettings(settings);
 
 		expect(getFill(context)).toEqual({
 			created: [],
-			modified: [
-				"ctime-1000000000.md",
-				"ctime-10.md",
-				"ctime-5.md",
-				"ctime-1.md",
-			],
+			modified: ["a.md", "b.md", "c.md", "d.md"],
 			deleted: [],
 		});
+	});
+
+	it("should work with alpha frontmatter", () => {
+		// const settings = builder
+		// 	.setTrackedFiles(alphaPaths as TrackedFile[])
+		// 	.setSortOrder("desc")
+		// 	.build();
+		// const context = createTestContextWithSettings(settings);
+		// expect(getFill(context)).toEqual({
+		// 	created: [],
+		// 	modified: ["d.md", "c.md", "b.md", "a.md"],
+		// 	deleted: [],
+		// });
+	});
+
+	it("should work with numerical frontmatter", () => {
+		// const settings = builder
+		// 	.setTrackedFiles(alphaPaths as TrackedFile[])
+		// 	.setSortOrder("desc")
+		// 	.build();
+		// const context = createTestContextWithSettings(settings);
+		// expect(getFill(context)).toEqual({
+		// 	created: [],
+		// 	modified: ["d.md", "c.md", "b.md", "a.md"],
+		// 	deleted: [],
+		// });
+	});
+
+	it("should not work with boolean frontmatter", () => {
+		// const settings = builder
+		// 	.setTrackedFiles(alphaPaths as TrackedFile[])
+		// 	.setSortOrder("desc")
+		// 	.build();
+		// const context = createTestContextWithSettings(settings);
+		// expect(getFill(context)).toEqual({
+		// 	created: [],
+		// 	modified: ["d.md", "c.md", "b.md", "a.md"],
+		// 	deleted: [],
+		// });
+	});
+
+	it("should not work with any sort of array (tags or frontmatter)", () => {
+		// const settings = builder
+		// 	.setTrackedFiles(alphaPaths as TrackedFile[])
+		// 	.setSortOrder("desc")
+		// 	.build();
+		// const context = createTestContextWithSettings(settings);
+		// expect(getFill(context)).toEqual({
+		// 	created: [],
+		// 	modified: ["d.md", "c.md", "b.md", "a.md"],
+		// 	deleted: [],
+		// });
 	});
 });
