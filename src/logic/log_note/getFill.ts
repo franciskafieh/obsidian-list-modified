@@ -1,4 +1,6 @@
+import { Settings } from "../../interfaces/Settings";
 import { Context } from "../../interfaces/context/Context";
+import { TrackedFile } from "../../types";
 
 export function getFill(context: Context) {
 	const settings = context.settings;
@@ -10,7 +12,7 @@ export function getFill(context: Context) {
 	const created = [];
 	const modified = [];
 	const deleted = [];
-	const trackedFiles = settings.trackedFiles;
+	const trackedFiles = getSortedTrackedFiles(settings.trackedFiles, settings);
 	for (const trackedFile of trackedFiles) {
 		if (!trackedFile.matchesCriteria || !trackedFile.path) {
 			continue;
@@ -49,4 +51,16 @@ export function getFill(context: Context) {
 		}
 	}
 	return { created, modified, deleted };
+}
+
+// todo
+function getSortedTrackedFiles(
+	nonSorted: TrackedFile[],
+	settings: Settings
+): TrackedFile[] {
+	if (!settings.sortPlaceholder) {
+		return nonSorted;
+	}
+
+	return nonSorted.sort((a, b) => a.path - b);
 }
