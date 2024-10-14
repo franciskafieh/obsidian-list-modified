@@ -4,14 +4,11 @@ import { Folder } from "../../src/interfaces/Folder";
 import { Vault } from "../../src/interfaces/Vault";
 
 export const getSingleFileWithPath = (path: string) =>
-	getSingleFileWithPathAndCtime(path, 0);
-
-export const getSingleFileWithPathAndCtime = (path: string, ctime: number) =>
 	({
 		basename: getBasenameFromPath(path),
 		extension: "", // not used
 		path: path,
-		stat: { ctime: ctime, mtime: 0, size: 0 },
+		stat: { ctime: 0, mtime: 0, size: 0 },
 		name: "", // not used
 		parent: {
 			name: "", // not used
@@ -21,7 +18,7 @@ export const getSingleFileWithPathAndCtime = (path: string, ctime: number) =>
 			path: path.substring(0, path.lastIndexOf("/")),
 		} as Folder,
 		vault: {} as Vault, // not used
-	} as File);
+	}) as File;
 
 function getBasenameFromPath(path: string) {
 	return path.split("/").pop()?.slice(0, -3) || "";

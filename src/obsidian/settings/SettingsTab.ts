@@ -247,43 +247,6 @@ export class SettingsTab extends PluginSettingTab {
 					})
 			);
 
-		// SORTING
-		new Setting(containerEl).setName("Sorting").setHeading();
-
-		new Setting(containerEl)
-			.setName("Sort placeholder")
-			.setDesc(
-				"The placeholder to sort by. If left blank, the plugin will list " +
-					"files in the order they were initally changed in. This setting does not " +
-					"work with tags or list frontmatter properties. Please read the output " +
-					"format wiki above for more details."
-			)
-			.addText((text) =>
-				text
-					.setPlaceholder("e.g. [[link]]")
-					.setValue(settings.sortPlaceholder)
-					.onChange(async (value) => {
-						settings.sortPlaceholder = value;
-						saveSettingsAndWriteToLogNote();
-					})
-			);
-
-		new Setting(containerEl)
-			.setName("Sort order")
-			.setDesc(
-				"Whether the plugin should sort in ascending or descending order."
-			)
-			.addDropdown((dropdown) => {
-				dropdown
-					.addOption("asc", "Ascending")
-					.addOption("desc", "Descending")
-					.setValue(settings.sortOrder)
-					.onChange(async (value) => {
-						settings.sortOrder = value as "asc" | "desc";
-						saveSettingsAndWriteToLogNote();
-					});
-			});
-
 		// DIVIDERS
 		new Setting(containerEl).setName("Dividers").setHeading();
 
