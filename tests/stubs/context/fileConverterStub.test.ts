@@ -15,7 +15,7 @@ describe("file converter should work as expected", () => {
 		);
 	});
 
-	// improve this maybe? be able to inject this into file converter without having to re-write all the tests
+	// improve this maybe? need a way to inject this into file converter without having to re-write all the tests
 	it("should return file with ctime if special name", () => {
 		expect(fileConverter.fromPath("ctime-10.md")?.stat.ctime).toBe(10);
 	});
