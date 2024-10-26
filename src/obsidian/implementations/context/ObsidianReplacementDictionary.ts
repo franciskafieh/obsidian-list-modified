@@ -4,7 +4,6 @@ import { TFile, moment } from "obsidian";
 import { getLogNote } from "../../log_note/logNote";
 import { getPlugin, getSettings } from "../../settings/settings";
 import { FileMetadataCacheProvider } from "../../../interfaces/context/FileMetadataCacheProvider";
-import { file } from "bun";
 
 export class ObsidianReplacementDictionary extends ReplacementDictionary {
 	replacements = [
