@@ -20,23 +20,23 @@ export async function initSettings(initPlugin: ListModified) {
 	settings = Object.assign(
 		{},
 		OBSIDIAN_DEFAULT_SETTINGS,
-		await plugin.loadData(),
+		await plugin.loadData()
 	);
 
 	consoleWarnIfVerboseMode(
 		"Settings loaded: " + JSON.stringify(settings),
-		settings.verboseModeEnabled,
+		settings.verboseModeEnabled
 	);
 
 	if (settings.writeInterval !== 0) {
 		consoleWarnIfVerboseMode(
 			"Write interval enabled. Running...",
-			settings.verboseModeEnabled,
+			settings.verboseModeEnabled
 		);
 		initPlugin.registerInterval(
 			window.setInterval(async () => {
 				await saveSettingsAndWriteToLogNote(true);
-			}, settings.writeInterval * 1000),
+			}, settings.writeInterval * 1000)
 		);
 	}
 }

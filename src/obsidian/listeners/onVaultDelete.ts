@@ -7,11 +7,7 @@ import {
 import { consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
 import { isLogNote } from "../log_note/logNote";
-import {
-	getLastPerformedAction,
-	setLastPerformedAction,
-} from "../file_tracking/lastPerformedAction";
-import { runLogicAndReturnIfNewPeriod } from "../file_tracking/runLogicAndReturnIfNewPeriod";
+import { setLastPerformedAction } from "../file_tracking/lastPerformedAction";
 
 const onVaultDelete = serialize(async (file: TAbstractFile) => {
 	if (!(file instanceof TFile)) return;
@@ -19,26 +15,20 @@ const onVaultDelete = serialize(async (file: TAbstractFile) => {
 	const settings = getSettings();
 	consoleWarnIfVerboseMode(
 		"Delete called for " + file.path,
-		settings.verboseModeEnabled,
-	);
-
-	// delete does not call cache changed, can do this here
-	const isNewNotePeriod = await runLogicAndReturnIfNewPeriod(
-		settings,
-		getLastPerformedAction(),
+		settings.verboseModeEnabled
 	);
 
 	if (isLogNote(file)) {
 		consoleWarnIfVerboseMode(
 			"Delete: File is log note. Returning...",
-			settings.verboseModeEnabled,
+			settings.verboseModeEnabled
 		);
 		return;
 	}
 
 	consoleWarnIfVerboseMode(
 		"File deleted: " + file.path,
-		settings.verboseModeEnabled,
+		settings.verboseModeEnabled
 	);
 
 	const currFile = findTrackedFileWithPath(file.path, settings);

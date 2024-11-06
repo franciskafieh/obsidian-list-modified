@@ -17,7 +17,7 @@ export default class ListModified extends Plugin {
 		await initSettings(this);
 
 		this.registerEvent(
-			this.app.metadataCache.on("changed", onMetadataCacheChanged),
+			this.app.metadataCache.on("changed", onMetadataCacheChanged)
 		);
 		this.registerEvent(this.app.vault.on("delete", onVaultDelete));
 		this.registerEvent(this.app.vault.on("rename", onVaultRename));
@@ -93,16 +93,21 @@ export default class ListModified extends Plugin {
 			settings.combineCreatedAndModified = false;
 		}
 
+		settings.separateOutputFormats = false;
+		settings.createdFormat = "";
+		settings.modifiedFormat = "";
+		settings.deletedFormat = "";
+
 		// CREATE all new divider settings
-		settings.autoCreateCreatedDivider = false;
-		settings.autoCreateModifiedDivider = false;
-		settings.autoCreateDeletedDivider = false;
+		settings.autoCreateCreatedDivider = true;
+		settings.autoCreateModifiedDivider = true;
+		settings.autoCreateDeletedDivider = true;
 
 		saveSettings();
 		displayNoticeAndWarn(
 			"Migration complete. Your settings have been preserved, but this update adds new features. " +
 				"The plugin WILL NOT WORK until you configure the new settings. Please read " +
-				'<a href="https://github.com/franciskafieh/obsidian-list-modified/wiki">https://github.com/franciskafieh/obsidian-list-modified/wiki</a> for info.',
+				'<a href="https://github.com/franciskafieh/obsidian-list-modified/wiki">https://github.com/franciskafieh/obsidian-list-modified/wiki</a> for info.'
 		);
 	}
 }

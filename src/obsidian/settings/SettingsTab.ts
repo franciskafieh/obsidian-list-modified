@@ -8,6 +8,8 @@ import { LogNoteType } from "../../types";
 import { convertCommaListToArray } from "../../utils/converCommaListToArray";
 import { getLogNote } from "../log_note/logNote";
 import { getContentWithoutCreatedSection } from "../../logic/log_note/getContentWithoutCreatedSection";
+import { ConfirmModal } from "../modal/ConfirmModal";
+import { displayNoticeAndWarn } from "../../utils/alerter";
 
 export class SettingsTab extends PluginSettingTab {
 	display(): void {
@@ -333,6 +335,46 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.verboseModeEnabled = value;
 						saveSettingsAndWriteToLogNote();
+					});
+			});
+
+		// TODO WRITE LOG NOTE NOT WORKING
+		new Setting(containerEl)
+			.setName("Force update log note")
+			.setDesc("This will force your log note content to be refreshed.")
+			.addButton((button) => {
+				button
+					.setButtonText("Force update log note")
+					.onClick(async () => {
+						saveSettingsAndWriteToLogNote(true);
+						displayNoticeAndWarn("Tracked files updated.");
+					});
+			});
+
+		new Setting(containerEl)
+			.setName("Clear tracked files")
+			.setDesc(
+				"This will get rid of all current modified/created/deleted files, as if it is a new day."
+			)
+			.addButton((button) => {
+				button
+					.setButtonText("Clear tracked files")
+					.onClick(async () => {
+						new ConfirmModal(
+							this.app,
+							"Are you sure you want to clear tracked files? This will get " +
+								"rid of all current modified/created/deleted files, " +
+								"as if it is a new day. This cannot be undone.",
+							async (result) => {
+								if (result === "yes") {
+									displayNoticeAndWarn(
+										"Tracked files cleared."
+									);
+									settings.trackedFiles = [];
+									await saveSettingsAndWriteToLogNote(true);
+								}
+							}
+						).open();
 					});
 			});
 

@@ -2,7 +2,7 @@ export function fillLineXToYWithContent(
 	originalText: string[],
 	lineX: number,
 	lineY: number,
-	content: string[],
+	content: string[]
 ): { filled: string[]; lineOffset: number } {
 	// placeholder does not exist or does not have ending
 	if (lineX === -1 || lineY === -1) {

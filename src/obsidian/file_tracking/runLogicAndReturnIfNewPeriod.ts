@@ -6,13 +6,9 @@ import {
 	consoleWarnIfVerboseMode,
 	displayNoticeAndWarn,
 } from "../../utils/alerter";
-import { getYesterdaysLogNote } from "../log_note/logNote";
-import {
-	getPlugin,
-	saveSettings,
-	saveSettingsAndWriteToLogNote,
-} from "../settings/settings";
-import { TFile, moment } from "obsidian";
+import { getLastLogNote } from "../log_note/logNote";
+import { getPlugin, saveSettingsAndWriteToLogNote } from "../settings/settings";
+import { moment } from "obsidian";
 
 export async function runLogicAndReturnIfNewPeriod(
 	settings: Settings,
@@ -29,10 +25,9 @@ export async function runLogicAndReturnIfNewPeriod(
 		// force write to log note
 		await saveSettingsAndWriteToLogNote(true);
 
-		if (getYesterdaysLogNote()) {
-			await getPlugin().app.vault.process(
-				getYesterdaysLogNote(),
-				(data) => removeDividers(data)
+		if (getLastLogNote()) {
+			await getPlugin().app.vault.process(getLastLogNote(), (data) =>
+				removeDividers(data)
 			);
 		}
 		const lastTrackedDate = moment(settings.lastTrackedDate);
@@ -48,7 +43,7 @@ export async function runLogicAndReturnIfNewPeriod(
 		settings.trackedFiles = [];
 
 		settings.lastTrackedDate = today;
-		await saveSettings();
+		await saveSettingsAndWriteToLogNote();
 	}
 
 	return isNewPeriod;

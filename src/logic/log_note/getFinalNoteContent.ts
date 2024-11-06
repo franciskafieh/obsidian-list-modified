@@ -64,10 +64,6 @@ export function getFinalNoteContent(fileContent: string, context: Context) {
 	let netLineOffset = 0;
 	for (const l in fill) {
 		const listType = l as ListType;
-		// empty array, skip
-		if (fill[listType].length === 0) {
-			continue;
-		}
 
 		if (
 			dividerPositions[listType].start === -1 ||

@@ -48,5 +48,6 @@ export function getFill(context: Context) {
 			deleted.push(formattedOutput);
 		}
 	}
+
 	return { created, modified, deleted };
 }

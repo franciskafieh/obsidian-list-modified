@@ -19,7 +19,7 @@ const onVaultCreate = serialize(async (file: TAbstractFile) => {
 
 	consoleWarnIfVerboseMode(
 		"File created: " + file.path,
-		settings.verboseModeEnabled,
+		settings.verboseModeEnabled
 	);
 
 	const currFile = findTrackedFileWithPath(file.path, settings);
