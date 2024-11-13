@@ -29,6 +29,10 @@ const onVaultCreate = serialize(async (file: TAbstractFile) => {
 		currFile.supposedList = "created";
 		currFile.matchesCriteria = false;
 	} else {
+		if (file.basename.contains("~syncthing~")) {
+			return;
+		}
+
 		settings.trackedFiles.push({
 			path: file.path,
 			supposedList: "created",
