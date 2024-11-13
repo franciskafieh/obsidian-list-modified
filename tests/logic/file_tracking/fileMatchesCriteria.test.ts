@@ -45,6 +45,16 @@ describe("fileMatchesCriteria should correctly match ignored name text", () => {
 			)
 		).toBe(false);
 	});
+
+	it("should fail on name if matching one, combined with other text", () => {
+		expect(
+			fileMatchesCriteria(
+				getSingleFileWithPath("a-abcaa.md"),
+				[""],
+				new TestSettingsBuilder().setIgnoredNameContains("abc").build()
+			)
+		).toBe(false);
+	});
 });
 
 describe("fileMatchesCriteria should correctly match ignored folder/path", () => {

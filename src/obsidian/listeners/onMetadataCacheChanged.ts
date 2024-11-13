@@ -46,7 +46,7 @@ const onMetadataCacheChanged = serialize(
 
 		const matchesCriteria = fileMatchesCriteria(
 			file,
-			getAllTags(cache),
+			getAllTags(cache)?.map((tag) => tag.substring(1)) || null,
 			settings
 		);
 

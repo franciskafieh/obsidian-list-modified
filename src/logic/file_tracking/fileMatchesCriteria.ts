@@ -5,7 +5,7 @@ import { Settings } from "../../interfaces/Settings";
 export default function fileMatchesCriteria(
 	file: File,
 	allTags: string[] | null,
-	settings: Settings,
+	settings: Settings
 ) {
 	// check tags
 	if (allTags) {

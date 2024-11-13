@@ -11,6 +11,7 @@ export function getFill(context: Context) {
 	const modified = [];
 	const deleted = [];
 	const trackedFiles = settings.trackedFiles;
+
 	for (const trackedFile of trackedFiles) {
 		if (!trackedFile.matchesCriteria || !trackedFile.path) {
 			continue;
