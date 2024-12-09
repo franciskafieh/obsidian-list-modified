@@ -22,7 +22,7 @@ const onMetadataCacheChanged = serialize(
 			settings.verboseModeEnabled
 		);
 
-		// if mtime is not within 1 second of now, ignore. Most likely a file being indexed
+		// if mtime is not within 1 second of now, ignore. Most likely a file being indexed/synced
 		if (Date.now() - file.stat.mtime >= 1000) {
 			consoleWarnIfVerboseMode(
 				"Mtime not within 1 second of now. Returning...",

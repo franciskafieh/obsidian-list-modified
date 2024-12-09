@@ -29,6 +29,8 @@ const onVaultCreate = serialize(async (file: TAbstractFile) => {
 		currFile.supposedList = "created";
 		currFile.matchesCriteria = false;
 	} else {
+		// TODO did this work?
+		// bandaid fix for syncthing sync solution, common among Obsidian users
 		if (file.basename.contains("~syncthing~")) {
 			return;
 		}

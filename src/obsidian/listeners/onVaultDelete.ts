@@ -11,6 +11,15 @@ import { setLastPerformedAction } from "../file_tracking/lastPerformedAction";
 
 const onVaultDelete = serialize(async (file: TAbstractFile) => {
 	if (!(file instanceof TFile)) return;
+
+	if (file.path.endsWith(".tmp")) {
+		consoleWarnIfVerboseMode(
+			`ignoring deleted ${file.path} file since it has .tmp extension`,
+			getSettings().verboseModeEnabled
+		);
+		return;
+	}
+
 	setLastPerformedAction("deleted");
 	const settings = getSettings();
 	consoleWarnIfVerboseMode(
