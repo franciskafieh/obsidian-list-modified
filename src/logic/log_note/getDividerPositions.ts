@@ -17,16 +17,16 @@ export function getDividerPositions(text: string[]) {
 	let prevMatched = "";
 
 	for (let i = 0; i < text.length; i++) {
-		if (text[i] === "%% LIST MODIFIED %%") {
+		if (text[i].trim() === "%% LIST MODIFIED %%") {
 			index.modified.start = i;
 			prevMatched = "modified";
-		} else if (text[i] === "%% LIST CREATED %%") {
+		} else if (text[i].trim() === "%% LIST CREATED %%") {
 			index.created.start = i;
 			prevMatched = "created";
-		} else if (text[i] === "%% LIST DELETED %%") {
+		} else if (text[i].trim() === "%% LIST DELETED %%") {
 			index.deleted.start = i;
 			prevMatched = "deleted";
-		} else if (text[i] === "%% END %%") {
+		} else if (text[i].trim() === "%% END %%") {
 			switch (prevMatched) {
 				case "created":
 					if (index.created.end === -1) {

@@ -79,4 +79,13 @@ describe("dividers should be matched as expected", () => {
 			end: 1,
 		});
 	});
+
+	it("should match with leading and trailing whitespace", () => {
+		const duplicateEndPos = ["  %% LIST DELETED %%", "%% END %%  "];
+
+		expect(getDividerPositions(duplicateEndPos).deleted).toEqual({
+			start: 0,
+			end: 1,
+		});
+	});
 });
