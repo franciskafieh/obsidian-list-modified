@@ -1,7 +1,6 @@
 import { moment } from "obsidian";
 import { File } from "../../../src/interfaces/File";
 import { ReplacementDictionary } from "../../../src/interfaces/context/ReplacementDictionary";
-import { TestFileMetadataCacheProvider } from "./TestFileMetadataCacheProvider";
 import { FileMetadataCacheProvider } from "../../../src/interfaces/context/FileMetadataCacheProvider";
 
 export class TestReplacementDictionary extends ReplacementDictionary {

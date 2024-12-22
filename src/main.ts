@@ -10,18 +10,27 @@ import onVaultDelete from "./obsidian/listeners/onVaultDelete";
 import onVaultRename from "./obsidian/listeners/onVaultRename";
 import onVaultCreate from "./obsidian/listeners/onVaultCreate";
 import { SettingsTab } from "./obsidian/settings/SettingsTab";
-import { displayNoticeAndWarn } from "./utils/alerter";
+import {
+	consoleWarnIfVerboseMode,
+	displayNoticeAndWarn,
+} from "./utils/alerter";
 
 export default class ListModified extends Plugin {
 	async onload(): Promise<void> {
 		await initSettings(this);
 
+		const settings = getSettings();
+
 		const pluginDisabledLocally = // @ts-ignore
 			this.app.loadLocalStorage(
 				"obsidian-list-modified:disableLocally"
-			) !== "true";
+			) === "true";
 
 		if (!pluginDisabledLocally) {
+			consoleWarnIfVerboseMode(
+				"Plugin enabled. Registering event listeners...",
+				settings.verboseModeEnabled
+			);
 			this.registerEvent(
 				this.app.metadataCache.on("changed", onMetadataCacheChanged)
 			);
@@ -34,7 +43,7 @@ export default class ListModified extends Plugin {
 			});
 		}
 
-		this.migrateToThreePointZeroIfNeeded(getSettings());
+		this.migrateToThreePointZeroIfNeeded(settings);
 
 		this.addSettingTab(new SettingsTab(this.app, this));
 	}

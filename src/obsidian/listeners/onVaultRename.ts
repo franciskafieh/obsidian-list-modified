@@ -1,5 +1,5 @@
 import { serialize } from "monkey-around";
-import { TAbstractFile, TFile } from "obsidian";
+import { TAbstractFile, TFile, getAllTags } from "obsidian";
 import {
 	getPlugin,
 	getSettings,
@@ -8,6 +8,7 @@ import {
 } from "../settings/settings";
 import { consoleWarnIfVerboseMode } from "../../utils/alerter";
 import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFileWithPath";
+import fileMatchesCriteria from "../../logic/file_tracking/fileMatchesCriteria";
 
 const onVaultRename = serialize(
 	async (file: TAbstractFile, oldPath: string) => {
@@ -16,7 +17,7 @@ const onVaultRename = serialize(
 
 			consoleWarnIfVerboseMode(
 				"File renamed: " + file.path,
-				settings.verboseModeEnabled,
+				settings.verboseModeEnabled
 			);
 
 			// if entry with current new path, remove it (assume it was previously deleted)
@@ -26,10 +27,22 @@ const onVaultRename = serialize(
 				settings.trackedFiles.remove(currFile);
 			}
 
-			// rename file in tracked files array
 			const oldFile = findTrackedFileWithPath(oldPath, settings);
+			const tags =
+				// @ts-ignore
+				getAllTags(
+					getPlugin().app.metadataCache.getFileCache(file) || {}
+				)?.map((tag) => tag.substring(1)) || null;
+
 			if (oldFile) {
+				// rename file if exists previously in tracked files array
 				oldFile.path = file.path;
+				// tags do not matter for this.. update file matches criteria since the file was moved
+				oldFile.matchesCriteria = fileMatchesCriteria(
+					file,
+					tags,
+					settings
+				);
 			}
 
 			// this makes sure link does not mess up if user has alwaysUpdateLinks disabled
@@ -40,7 +53,7 @@ const onVaultRename = serialize(
 				await saveSettingsAndWriteToLogNote();
 			}
 		}
-	},
+	}
 );
 
 export default onVaultRename;
