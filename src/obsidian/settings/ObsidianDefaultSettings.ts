@@ -26,7 +26,7 @@ export const OBSIDIAN_DEFAULT_SETTINGS: Settings = {
 	autoCreateModifiedDivider: false,
 	autoCreateDeletedDivider: false,
 
-	// DEBUG
+	// MISC
 	verboseModeEnabled: false,
 
 	// INTERNAL

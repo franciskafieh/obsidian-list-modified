@@ -320,23 +320,8 @@ export class SettingsTab extends PluginSettingTab {
 					});
 			});
 
-		// DEBUG
-		new Setting(containerEl).setName("Debug").setHeading();
-
-		new Setting(containerEl)
-			.setName("Verbose mode")
-			.setDesc(
-				"Enable verbose mode for debugging. " +
-					"This only needs to be on for support and development purposes."
-			)
-			.addToggle((toggle) => {
-				toggle
-					.setValue(settings.verboseModeEnabled)
-					.onChange(async (value) => {
-						settings.verboseModeEnabled = value;
-						saveSettingsAndWriteToLogNote();
-					});
-			});
+		// MISC
+		new Setting(containerEl).setName("Misc").setHeading();
 
 		new Setting(containerEl)
 			.setName("Force update log note")
@@ -374,6 +359,48 @@ export class SettingsTab extends PluginSettingTab {
 								}
 							}
 						).open();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName("Verbose mode")
+			.setDesc(
+				"Enable verbose mode for debugging. " +
+					"This only needs to be on for support and development purposes."
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(settings.verboseModeEnabled)
+					.onChange(async (value) => {
+						settings.verboseModeEnabled = value;
+						saveSettingsAndWriteToLogNote();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName("Disable plugin on this device")
+			.setDesc(
+				"Disable the plugin on this device. This setting will not sync. " +
+					"Use this to resolve sync conflicts or temporarily disable the plugin."
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(
+						// @ts-ignore
+						this.app.loadLocalStorage(
+							"obsidian-list-modified:disableLocally"
+						) === "true"
+					)
+					.onChange((value) => {
+						// @ts-ignore
+						this.app.saveLocalStorage(
+							"obsidian-list-modified:disableLocally",
+							`${value}`
+						);
+
+						displayNoticeAndWarn(
+							"Please restart Obsidian for this change to take effect."
+						);
 					});
 			});
 

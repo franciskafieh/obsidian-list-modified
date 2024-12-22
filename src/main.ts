@@ -16,16 +16,23 @@ export default class ListModified extends Plugin {
 	async onload(): Promise<void> {
 		await initSettings(this);
 
-		this.registerEvent(
-			this.app.metadataCache.on("changed", onMetadataCacheChanged)
-		);
-		this.registerEvent(this.app.vault.on("delete", onVaultDelete));
-		this.registerEvent(this.app.vault.on("rename", onVaultRename));
+		const pluginDisabledLocally = // @ts-ignore
+			this.app.loadLocalStorage(
+				"obsidian-list-modified:disableLocally"
+			) !== "true";
 
-		this.app.workspace.onLayoutReady(async () => {
-			// onLayoutReady prevents this from firing for every single file in the vault on startup.
-			this.registerEvent(this.app.vault.on("create", onVaultCreate));
-		});
+		if (!pluginDisabledLocally) {
+			this.registerEvent(
+				this.app.metadataCache.on("changed", onMetadataCacheChanged)
+			);
+			this.registerEvent(this.app.vault.on("delete", onVaultDelete));
+			this.registerEvent(this.app.vault.on("rename", onVaultRename));
+
+			this.app.workspace.onLayoutReady(async () => {
+				// onLayoutReady prevents this from firing for every single file in the vault on startup.
+				this.registerEvent(this.app.vault.on("create", onVaultCreate));
+			});
+		}
 
 		this.migrateToThreePointZeroIfNeeded(getSettings());
 

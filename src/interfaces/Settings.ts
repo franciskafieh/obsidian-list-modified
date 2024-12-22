@@ -26,7 +26,7 @@ export interface Settings {
 	autoCreateModifiedDivider: boolean;
 	autoCreateDeletedDivider: boolean;
 
-	// DEBUG
+	// MISC
 	verboseModeEnabled: boolean;
 
 	// INTERNAL
