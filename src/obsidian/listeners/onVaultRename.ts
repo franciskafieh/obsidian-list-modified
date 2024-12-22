@@ -37,7 +37,7 @@ const onVaultRename = serialize(
 			if (oldFile) {
 				// rename file if exists previously in tracked files array
 				oldFile.path = file.path;
-				// tags do not matter for this.. update file matches criteria since the file was moved
+				// update file matches criteria since the file was moved (e.g. new name, new path)
 				oldFile.matchesCriteria = fileMatchesCriteria(
 					file,
 					tags,
