@@ -5,9 +5,9 @@ export class TestFileMetadataCacheProvider
 	implements FileMetadataCacheProvider
 {
 	tags: string[] = [];
-	frontmatter: { [key: string]: any } = {};
+	frontmatter: { [key: string]: unknown } = {};
 
-	constructor(tags?: string[], frontmatter?: { [key: string]: any }) {
+	constructor(tags?: string[], frontmatter?: { [key: string]: unknown }) {
 		if (tags) {
 			this.tags = tags;
 		}
@@ -20,7 +20,7 @@ export class TestFileMetadataCacheProvider
 	getAllTagsFromFile(file: File): string[] {
 		return this.tags;
 	}
-	getFileFrontmatter(file: File): { [key: string]: any } {
+	getFileFrontmatter(file: File): { [key: string]: unknown } {
 		return this.frontmatter;
 	}
 }

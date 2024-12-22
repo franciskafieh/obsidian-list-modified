@@ -20,7 +20,7 @@ export class ObsidianFileMetadataCacheProvider
 		return [];
 	}
 
-	getFileFrontmatter(file: File): { [key: string]: any } {
+	getFileFrontmatter(file: File): { [key: string]: unknown } {
 		const metadataCache = getPlugin().app.metadataCache;
 		if (file && metadataCache.getFileCache(file as TFile)) {
 			const fileCache = metadataCache.getFileCache(file as TFile);

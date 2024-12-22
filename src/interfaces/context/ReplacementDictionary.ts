@@ -13,7 +13,7 @@ export abstract class ReplacementDictionary {
 		const disableAllTemplatesExceptPath = !file;
 
 		// matches all text in btwn [[ and ]]. EXCLUDES the brackets
-		let templates = format.matchAll(/(?<=\[\[)[^\]]+(?=]])/gm);
+		const templates = format.matchAll(/(?<=\[\[)[^\]]+(?=]])/gm);
 		let output = format;
 
 		// netCharOffset takes into account how many characters
@@ -41,7 +41,7 @@ export abstract class ReplacementDictionary {
 					continue;
 				}
 
-				let frontmatter =
+				const frontmatter =
 					fileMetadataCacheProvider.getFileFrontmatter(file);
 
 				// the string with start f. removed
