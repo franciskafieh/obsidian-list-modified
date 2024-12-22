@@ -338,7 +338,6 @@ export class SettingsTab extends PluginSettingTab {
 					});
 			});
 
-		// TODO WRITE LOG NOTE NOT WORKING
 		new Setting(containerEl)
 			.setName("Force update log note")
 			.setDesc("This will force your log note content to be refreshed.")
