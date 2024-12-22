@@ -67,17 +67,20 @@ const onMetadataCacheChanged = serialize(
 			if (!matchesCriteria) {
 				return;
 			}
+
+			const list = isNewNotePeriod
+				? getLastPerformedAction()
+				: "modified";
+
 			consoleWarnIfVerboseMode(
-				"file not tracked. pushing...",
+				`file ${file.path} not tracked. pushing to list ${list}...`,
 				settings.verboseModeEnabled
 			);
 
 			settings.trackedFiles.push({
 				path: file.path,
 				matchesCriteria: matchesCriteria,
-				supposedList: isNewNotePeriod
-					? getLastPerformedAction()
-					: "modified",
+				supposedList: list,
 			});
 		}
 

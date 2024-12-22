@@ -10,12 +10,13 @@ import { findTrackedFileWithPath } from "../../logic/file_tracking/findTrackedFi
 import { setLastPerformedAction } from "../file_tracking/lastPerformedAction";
 
 const onVaultCreate = serialize(async (file: TAbstractFile) => {
-	setLastPerformedAction("created");
 	const settings = getSettings();
 
 	if (!(file instanceof TFile)) return;
 
 	if (isLogNote(file)) return;
+
+	setLastPerformedAction("created");
 
 	consoleWarnIfVerboseMode(
 		"File created: " + file.path,

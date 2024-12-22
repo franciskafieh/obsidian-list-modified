@@ -14,14 +14,13 @@ export async function runLogicAndReturnIfNewPeriod(
 	settings: Settings,
 	lastPerformedAction: ListType
 ) {
-	consoleWarnIfVerboseMode(
-		"New period logic is being ran by " + lastPerformedAction,
-		settings.verboseModeEnabled
-	);
-
 	const isNewPeriod = isNewNotePeriod(settings);
 	if (isNewPeriod) {
 		displayNoticeAndWarn("New note time period detected, resetting...");
+		consoleWarnIfVerboseMode(
+			"New period logic is being ran by " + lastPerformedAction,
+			settings.verboseModeEnabled
+		);
 		// force write to log note
 		await saveSettingsAndWriteToLogNote(true);
 

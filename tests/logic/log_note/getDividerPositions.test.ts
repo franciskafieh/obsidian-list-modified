@@ -81,9 +81,9 @@ describe("dividers should be matched as expected", () => {
 	});
 
 	it("should match with leading and trailing whitespace", () => {
-		const duplicateEndPos = ["  %% LIST DELETED %%", "%% END %%  "];
+		const dividersWithWhitespace = ["  %% LIST DELETED %%", "%% END %%  "];
 
-		expect(getDividerPositions(duplicateEndPos).deleted).toEqual({
+		expect(getDividerPositions(dividersWithWhitespace).deleted).toEqual({
 			start: 0,
 			end: 1,
 		});
