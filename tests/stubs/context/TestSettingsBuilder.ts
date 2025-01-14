@@ -47,6 +47,19 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
+	public setExcludedExtensions(extensions: string): this;
+	public setExcludedExtensions(extensions: string[]): this;
+	public setExcludedExtensions(extensions: string | string[]) {
+		if (Array.isArray(extensions)) {
+			this.testSettings.excludedExtensions = extensions;
+		} else {
+			this.testSettings.excludedExtensions =
+				convertCommaListToArray(extensions);
+		}
+
+		return this;
+	}
+
 	public setOutputFormat(format: string) {
 		this.testSettings.outputFormat = format;
 		return this;

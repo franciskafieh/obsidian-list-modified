@@ -5,6 +5,7 @@ export interface Settings {
 	excludedTags: string[];
 	excludedFolders: string[];
 	excludedNameContains: string[];
+	excludedExtensions: string[];
 
 	// FORMATTING
 	outputFormat: string;

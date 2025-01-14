@@ -5,6 +5,7 @@ export const OBSIDIAN_DEFAULT_SETTINGS: Settings = {
 	excludedTags: [],
 	excludedFolders: [],
 	excludedNameContains: [],
+	excludedExtensions: [],
 
 	// FORMATTING
 	outputFormat: "- [[link]]",

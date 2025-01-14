@@ -102,7 +102,9 @@ export class SettingsTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Excluded folders")
-			.setDesc("Files in these folders will not be tracked.")
+			.setDesc(
+				"Files in these folders will not be tracked. This is case-sensitive."
+			)
 			.addText((text) =>
 				text
 					.setPlaceholder("folder1, folder2, folder3")
@@ -117,7 +119,7 @@ export class SettingsTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Excluded names")
 			.setDesc(
-				"Files with names containing these strings will not be tracked."
+				"Files with names containing these strings will not be tracked. This is case-sensitive."
 			)
 			.addText((text) =>
 				text
@@ -125,6 +127,22 @@ export class SettingsTab extends PluginSettingTab {
 					.setValue(settings.excludedNameContains.join(", "))
 					.onChange(async (value) => {
 						settings.excludedNameContains =
+							convertCommaListToArray(value);
+						saveSettingsAndWriteToLogNote();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName("Excluded extensions")
+			.setDesc(
+				"Files with these extensions will not be tracked. Please exclude the period."
+			)
+			.addText((text) =>
+				text
+					.setPlaceholder("e.g. png, pdf, jpeg")
+					.setValue(settings.excludedExtensions.join(", "))
+					.onChange(async (value) => {
+						settings.excludedExtensions =
 							convertCommaListToArray(value);
 						saveSettingsAndWriteToLogNote();
 					})

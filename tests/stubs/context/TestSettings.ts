@@ -5,6 +5,7 @@ export class TestSettings implements Settings {
 	excludedTags = OBSIDIAN_DEFAULT_SETTINGS.excludedTags;
 	excludedFolders = OBSIDIAN_DEFAULT_SETTINGS.excludedFolders;
 	excludedNameContains = OBSIDIAN_DEFAULT_SETTINGS.excludedNameContains;
+	excludedExtensions = OBSIDIAN_DEFAULT_SETTINGS.excludedExtensions;
 	outputFormat = OBSIDIAN_DEFAULT_SETTINGS.outputFormat;
 	separateOutputFormats = OBSIDIAN_DEFAULT_SETTINGS.separateOutputFormats;
 	createdFormat = OBSIDIAN_DEFAULT_SETTINGS.createdFormat;

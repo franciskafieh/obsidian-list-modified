@@ -30,5 +30,13 @@ export default function fileMatchesCriteria(
 		}
 	}
 
+	// check extensions
+	for (const excludedExtension of settings.excludedExtensions) {
+		// file.extension always lowercase
+		if (file.extension === excludedExtension.toLocaleLowerCase()) {
+			return false;
+		}
+	}
+
 	return true;
 }
