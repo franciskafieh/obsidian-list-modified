@@ -135,7 +135,9 @@ export class SettingsTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Excluded extensions")
 			.setDesc(
-				"Files with these extensions will not be tracked. Please exclude the period."
+				"Files with these extensions will not be tracked. " +
+					"Please exclude the period. This is mostly useful for " +
+					"deleted files that are not notes, for example temporary/sync files."
 			)
 			.addText((text) =>
 				text

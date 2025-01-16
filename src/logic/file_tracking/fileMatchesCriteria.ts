@@ -30,13 +30,14 @@ export default function fileMatchesCriteria(
 		}
 	}
 
-	// check extensions
-	for (const excludedExtension of settings.excludedExtensions) {
-		// file.extension always lowercase
-		if (file.extension === excludedExtension.toLocaleLowerCase()) {
-			return false;
-		}
-	}
+	// // check extensions
+	// for (const excludedExtension of settings.excludedExtensions) {
+	// 	// file.extension always lowercase
+	// 	if (file.extension === excludedExtension.toLocaleLowerCase()) {
+	// 		return false;
+	// 	}
+	// }
+	// NOT NECESSARY TMK ^^^, since these will always be .md notes. Check now done in onVaultDelete for deleted files
 
 	return true;
 }

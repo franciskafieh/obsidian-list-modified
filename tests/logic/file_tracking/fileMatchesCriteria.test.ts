@@ -82,25 +82,3 @@ describe("fileMatchesCriteria should correctly match ignored folder/path", () =>
 		).toBe(false);
 	});
 });
-
-describe("fileMatchesCriteria should correctly match ignored extensions", () => {
-	it("should fail on extension if matching one", () => {
-		expect(
-			fileMatchesCriteria(
-				getSingleFileWithPath("file.png"),
-				[""],
-				new TestSettingsBuilder().setExcludedExtensions("png").build()
-			)
-		).toBe(false);
-	});
-
-	it("should match ignoring case", () => {
-		expect(
-			fileMatchesCriteria(
-				getSingleFileWithPath("file.png"),
-				[""],
-				new TestSettingsBuilder().setExcludedExtensions("pNg").build()
-			)
-		).toBe(false);
-	});
-});

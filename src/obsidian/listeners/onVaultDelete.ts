@@ -12,16 +12,20 @@ import { setLastPerformedAction } from "../file_tracking/lastPerformedAction";
 const onVaultDelete = serialize(async (file: TAbstractFile) => {
 	if (!(file instanceof TFile)) return;
 
-	if (file.path.endsWith(".tmp")) {
+	const settings = getSettings();
+
+	if (
+		settings.excludedExtensions.includes(file.extension) ||
+		file.extension === "tmp"
+	) {
 		consoleWarnIfVerboseMode(
-			`ignoring deleted ${file.path} file since it has .tmp extension`,
+			`ignoring deleted ${file.path} file since it has extension`,
 			getSettings().verboseModeEnabled
 		);
 		return;
 	}
 
 	setLastPerformedAction("deleted");
-	const settings = getSettings();
 	consoleWarnIfVerboseMode(
 		"Delete called for " + file.path,
 		settings.verboseModeEnabled
