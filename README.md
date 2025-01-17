@@ -1,5 +1,7 @@
 # Obsidian List Modified
 
+[Click here for plugin quick-install and statistics!](https://obsidian.md/plugins?id=obsidian-list-modified)
+
 This plugin links all modified files meeting certain criteria to a daily/weekly/monthly note. This provides an accurate log/archive of files modified during specific time periods.
 
 List Modified outputs logs as standard text rather than dynamic queries, ensuring their persistence. Similarly, OLM does not rely on the system's file modification times, as they can be inaccurate when files are moved or when using sync services.
