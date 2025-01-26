@@ -82,3 +82,41 @@ describe("fileMatchesCriteria should correctly match ignored folder/path", () =>
 		).toBe(false);
 	});
 });
+
+describe("fileMatchesCriteria should correctly match ignored extension", () => {
+	it("should pass on extension if none ignored", () => {
+		expect(
+			fileMatchesCriteria(
+				getSingleFileWithPath("pass.md"),
+				[""],
+				new TestSettingsBuilder()
+					.setExcludedExtensions("ignored")
+					.build()
+			)
+		).toBe(true);
+	});
+
+	it("should fail on extension if matching one", () => {
+		expect(
+			fileMatchesCriteria(
+				getSingleFileWithPath("fail.ignored"),
+				[""],
+				new TestSettingsBuilder()
+					.setExcludedExtensions("ignored")
+					.build()
+			)
+		).toBe(false);
+	});
+
+	it("should fail on extension if matching one, case insensitive", () => {
+		expect(
+			fileMatchesCriteria(
+				getSingleFileWithPath("fail.ignored"),
+				[""],
+				new TestSettingsBuilder()
+					.setExcludedExtensions("igNoRed")
+					.build()
+			)
+		).toBe(false);
+	});
+});

@@ -41,7 +41,7 @@ describe("built-in replacements should work as expected", () => {
 			new TestFileMetadataCacheProvider(),
 			"a/b/test.md"
 		);
-
+		
 		expect(replacement).toBe("a/b/test.md test");
 	});
 
