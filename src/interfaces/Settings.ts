@@ -22,6 +22,7 @@ export interface Settings {
 
 	// DIVIDERS
 	combineCreatedAndModified: boolean;
+	autoRemoveDividers: boolean;
 
 	autoCreateCreatedDivider: boolean;
 	autoCreateModifiedDivider: boolean;

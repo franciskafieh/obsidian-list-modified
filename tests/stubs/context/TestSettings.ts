@@ -17,6 +17,7 @@ export class TestSettings implements Settings {
 	writeInterval = OBSIDIAN_DEFAULT_SETTINGS.writeInterval;
 	combineCreatedAndModified =
 		OBSIDIAN_DEFAULT_SETTINGS.combineCreatedAndModified;
+	autoRemoveDividers = OBSIDIAN_DEFAULT_SETTINGS.autoRemoveDividers;
 	autoCreateCreatedDivider =
 		OBSIDIAN_DEFAULT_SETTINGS.autoCreateCreatedDivider;
 	autoCreateModifiedDivider =

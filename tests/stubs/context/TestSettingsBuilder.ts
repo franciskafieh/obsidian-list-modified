@@ -110,6 +110,11 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
+	public setAutoRemoveDividers(remove: boolean) {
+		this.testSettings.autoRemoveDividers = remove;
+		return this;
+	}
+
 	public setAutoCreateCreatedDivider(autoCreate: boolean) {
 		this.testSettings.autoCreateCreatedDivider = autoCreate;
 		return this;

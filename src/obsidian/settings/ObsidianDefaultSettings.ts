@@ -22,6 +22,7 @@ export const OBSIDIAN_DEFAULT_SETTINGS: Settings = {
 
 	// DIVIDERS
 	combineCreatedAndModified: false,
+	autoRemoveDividers: true,
 
 	autoCreateCreatedDivider: false,
 	autoCreateModifiedDivider: false,

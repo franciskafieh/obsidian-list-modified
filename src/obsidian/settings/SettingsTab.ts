@@ -296,6 +296,22 @@ export class SettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
+			.setName("Auto remove dividers")
+			.setDesc(
+				"Automatically remove the %% dividers %% in old log note " +
+					"when a new one is created."
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(settings.autoRemoveDividers)
+					.onChange(async (value) => {
+						settings.autoRemoveDividers = value;
+
+						saveSettings(); // no need to write to log note, no immediate affect
+					});
+			});
+
+		new Setting(containerEl)
 			.setName("Auto create created divider")
 			.setDesc(
 				"Automatically append a 'created' divider to " +
@@ -358,7 +374,8 @@ export class SettingsTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Clear tracked files")
 			.setDesc(
-				"This will get rid of all current modified/created/deleted files, as if it is a new day."
+				"This will get rid of all current modified/created/deleted files, " +
+					"as if it were a new day."
 			)
 			.addButton((button) => {
 				button

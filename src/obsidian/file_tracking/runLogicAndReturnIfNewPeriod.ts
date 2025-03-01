@@ -24,7 +24,7 @@ export async function runLogicAndReturnIfNewPeriod(
 		// force write to log note
 		await saveSettingsAndWriteToLogNote(true);
 
-		if (getLastLogNote()) {
+		if (getLastLogNote() && settings.autoRemoveDividers) {
 			await getPlugin().app.vault.process(getLastLogNote(), (data) =>
 				removeDividers(data)
 			);

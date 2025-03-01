@@ -4,7 +4,7 @@ import { Settings } from "../../interfaces/Settings";
 export function isNewNotePeriod(settings: Settings) {
 	const lastTrackedDate = moment(settings.lastTrackedDate);
 
-	let granularity = new Map([
+	const granularity = new Map([
 		["daily", "day"],
 		["weekly", "week"],
 		["monthly", "month"],
