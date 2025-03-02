@@ -28,6 +28,12 @@ export async function runLogicAndReturnIfNewPeriod(
 			await getPlugin().app.vault.process(getLastLogNote(), (data) =>
 				removeDividers(data)
 			);
+
+			// fixes race condition where removing header is counted as a modification
+			// for the new date, since onChange ignores mtime difference > 1 sec.
+			// since Obsidian changes mtime on the next modification, this should effectively
+			// ignore exactly ONE modification to the old log note.
+			getLastLogNote().stat.mtime = 0;
 		}
 		const lastTrackedDate = moment(settings.lastTrackedDate);
 		const today = moment().format("YYYY-MM-DD");
