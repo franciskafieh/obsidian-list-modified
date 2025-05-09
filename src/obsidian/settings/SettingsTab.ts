@@ -4,7 +4,7 @@ import {
 	saveSettings,
 	saveSettingsAndWriteToLogNote,
 } from "./settings";
-import { LogNoteType } from "../../types";
+import { LogNoteType, SortOption } from "../../types";
 import { convertCommaListToArray } from "../../utils/converCommaListToArray";
 import { getLogNote } from "../log_note/logNote";
 import { getContentWithoutCreatedSection } from "../../logic/log_note/getContentWithoutCreatedSection";
@@ -352,6 +352,71 @@ export class SettingsTab extends PluginSettingTab {
 					.setValue(settings.autoCreateDeletedDivider)
 					.onChange(async (value) => {
 						settings.autoCreateDeletedDivider = value;
+						saveSettingsAndWriteToLogNote();
+					});
+			});
+
+		// SORTING
+		new Setting(containerEl).setName("Sorting").setHeading();
+
+		new Setting(containerEl)
+			.setName("Sort created files")
+			.setDesc("Method to sort files in the created list")
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOption("none", "No sorting")
+					.addOption("alphabetical", "Name (A to Z)")
+					.addOption("alphabetical-reverse", "Name (Z to A)")
+					.addOption("mtime", "Modification time (old to new)")
+					.addOption(
+						"mtime-reverse",
+						"Modification time (new to old)"
+					)
+					.addOption("ctime", "Creation time (old to new)")
+					.addOption("ctime-reverse", "Creation time (new to old)")
+					.setValue(settings.sortCreated)
+					.onChange(async (value: string) => {
+						settings.sortCreated = value as SortOption;
+						saveSettingsAndWriteToLogNote();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName("Sort modified files")
+			.setDesc("Method to sort files in the modified list")
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOption("none", "No sorting")
+					.addOption("alphabetical", "Name (A to Z)")
+					.addOption("alphabetical-reverse", "Name (Z to A)")
+					.addOption("mtime", "Modification time (old to new)")
+					.addOption(
+						"mtime-reverse",
+						"Modification time (new to old)"
+					)
+					.addOption("ctime", "Creation time (old to new)")
+					.addOption("ctime-reverse", "Creation time (new to old)")
+					.setValue(settings.sortModified)
+					.onChange(async (value: string) => {
+						settings.sortModified = value as SortOption;
+						saveSettingsAndWriteToLogNote();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName("Sort deleted files")
+			.setDesc(
+				"Method to sort files in the deleted list. For now, " +
+					"only sort by name is possible"
+			)
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOption("none", "No sorting (ordered by detection)")
+					.addOption("alphabetical", "A to Z")
+					.addOption("alphabetical-reverse", "Z to A")
+					.setValue(settings.sortDeleted)
+					.onChange(async (value: string) => {
+						settings.sortDeleted = value as SortOption;
 						saveSettingsAndWriteToLogNote();
 					});
 			});

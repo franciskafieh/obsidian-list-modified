@@ -24,6 +24,9 @@ export class TestSettings implements Settings {
 		OBSIDIAN_DEFAULT_SETTINGS.autoCreateModifiedDivider;
 	autoCreateDeletedDivider =
 		OBSIDIAN_DEFAULT_SETTINGS.autoCreateDeletedDivider;
+	sortCreated = OBSIDIAN_DEFAULT_SETTINGS.sortCreated;
+	sortModified = OBSIDIAN_DEFAULT_SETTINGS.sortModified;
+	sortDeleted = OBSIDIAN_DEFAULT_SETTINGS.sortDeleted;
 	verboseModeEnabled = OBSIDIAN_DEFAULT_SETTINGS.verboseModeEnabled;
 	lastTrackedDate = OBSIDIAN_DEFAULT_SETTINGS.lastTrackedDate;
 	trackedFiles = OBSIDIAN_DEFAULT_SETTINGS.trackedFiles;

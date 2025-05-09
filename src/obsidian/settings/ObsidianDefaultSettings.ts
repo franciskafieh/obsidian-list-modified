@@ -28,6 +28,11 @@ export const OBSIDIAN_DEFAULT_SETTINGS: Settings = {
 	autoCreateModifiedDivider: false,
 	autoCreateDeletedDivider: false,
 
+	// SORTING
+	sortCreated: "none",
+	sortModified: "none",
+	sortDeleted: "none",
+
 	// MISC
 	verboseModeEnabled: false,
 

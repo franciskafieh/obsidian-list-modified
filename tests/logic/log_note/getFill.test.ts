@@ -197,3 +197,133 @@ describe("separated vs combined output formats should be respected depending on 
 		});
 	});
 });
+
+describe("sorting should work as expected", () => {
+	it("should not sort lists when sort option is set to none", () => {
+		const settings = builder
+			.setTrackedFiles([
+				{
+					path: "c.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+				{
+					path: "a.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+				{
+					path: "b.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+			])
+			.setSortCreated("none")
+			.build();
+
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context).created).toEqual(["c.md", "a.md", "b.md"]);
+	});
+
+	it("should sort lists alphabetically when sort option is set to alphabetical", () => {
+		const settings = builder
+			.setTrackedFiles([
+				{
+					path: "c.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+				{
+					path: "a.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+				{
+					path: "b.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+			])
+			.setSortCreated("alphabetical")
+			.build();
+
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context).created).toEqual(["a.md", "b.md", "c.md"]);
+	});
+
+	it("should sort lists reverse alphabetically when sort option is set to alphabetical-reverse", () => {
+		const settings = builder
+			.setTrackedFiles([
+				{
+					path: "c.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+				{
+					path: "a.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+				{
+					path: "b.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+			])
+			.setSortCreated("alphabetical-reverse")
+			.build();
+
+		const context = createTestContextWithSettings(settings);
+
+		expect(getFill(context).created).toEqual(["c.md", "b.md", "a.md"]);
+	});
+
+	it("should apply different sorting for each list type", () => {
+		const settings = builder
+			.setTrackedFiles([
+				{
+					path: "c.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+				{
+					path: "a.md",
+					matchesCriteria: true,
+					supposedList: "created",
+				},
+				{
+					path: "z.md",
+					matchesCriteria: true,
+					supposedList: "modified",
+				},
+				{
+					path: "x.md",
+					matchesCriteria: true,
+					supposedList: "modified",
+				},
+				{
+					path: "j.md",
+					matchesCriteria: true,
+					supposedList: "deleted",
+				},
+				{
+					path: "m.md",
+					matchesCriteria: true,
+					supposedList: "deleted",
+				},
+			])
+			.setSortCreated("alphabetical")
+			.setSortModified("alphabetical-reverse")
+			.setSortDeleted("none")
+			.build();
+
+		const context = createTestContextWithSettings(settings);
+		const result = getFill(context);
+
+		expect(result.created).toEqual(["a.md", "c.md"]);
+		expect(result.modified).toEqual(["z.md", "x.md"]);
+		expect(result.deleted).toEqual(["j.md", "m.md"]);
+	});
+});

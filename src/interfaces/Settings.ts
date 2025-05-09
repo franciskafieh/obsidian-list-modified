@@ -1,4 +1,4 @@
-import { LogNoteType, TrackedFile } from "../types";
+import { LogNoteType, TrackedFile, SortOption } from "../types";
 
 export interface Settings {
 	// CRITERIA
@@ -27,6 +27,11 @@ export interface Settings {
 	autoCreateCreatedDivider: boolean;
 	autoCreateModifiedDivider: boolean;
 	autoCreateDeletedDivider: boolean;
+
+	// SORTING
+	sortCreated: SortOption;
+	sortModified: SortOption;
+	sortDeleted: SortOption;
 
 	// MISC
 	verboseModeEnabled: boolean;

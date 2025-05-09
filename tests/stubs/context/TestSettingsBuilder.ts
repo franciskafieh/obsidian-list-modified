@@ -1,4 +1,4 @@
-import { LogNoteType, TrackedFile } from "../../../src/types";
+import { LogNoteType, SortOption, TrackedFile } from "../../../src/types";
 import { convertCommaListToArray } from "../../../src/utils/converCommaListToArray";
 import { TestSettings } from "./TestSettings";
 
@@ -127,6 +127,21 @@ export class TestSettingsBuilder {
 
 	public setAutoCreateDeletedDivider(autoCreate: boolean) {
 		this.testSettings.autoCreateDeletedDivider = autoCreate;
+		return this;
+	}
+
+	public setSortCreated(sortOption: SortOption) {
+		this.testSettings.sortCreated = sortOption;
+		return this;
+	}
+
+	public setSortModified(sortOption: SortOption) {
+		this.testSettings.sortModified = sortOption;
+		return this;
+	}
+
+	public setSortDeleted(sortOption: SortOption) {
+		this.testSettings.sortDeleted = sortOption;
 		return this;
 	}
 

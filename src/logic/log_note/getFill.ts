@@ -1,4 +1,6 @@
 import { Context } from "../../interfaces/context/Context";
+import { sortList } from "./sortList";
+import { OutputFile } from "../../types";
 
 export function getFill(context: Context) {
 	const settings = context.settings;
@@ -7,48 +9,92 @@ export function getFill(context: Context) {
 	const vault = context.vault;
 	const fileMetadataCacheProvider = context.fileMetadataCacheProvider;
 
-	const created = [];
-	const modified = [];
-	const deleted = [];
+	const created: OutputFile[] = [];
+	const modified: OutputFile[] = [];
+	const deleted: OutputFile[] = [];
+
 	const trackedFiles = settings.trackedFiles;
 
+	// collect files into appropriate lists
 	for (const trackedFile of trackedFiles) {
 		if (!trackedFile.matchesCriteria || !trackedFile.path) {
 			continue;
 		}
+
 		const file = fileConverter.fromPath(trackedFile.path, vault);
-		let outputFormatToUse = settings.outputFormat;
-		if (settings.separateOutputFormats) {
-			switch (trackedFile.supposedList) {
-				case "created":
-					outputFormatToUse = settings.createdFormat;
-					break;
-				case "modified":
-					outputFormatToUse = settings.modifiedFormat;
-					break;
-				case "deleted":
-					outputFormatToUse = settings.deletedFormat;
-					break;
-			}
-		}
-		const formattedOutput = replacementDictionary.getOutputPostReplacement(
-			outputFormatToUse,
-			file,
-			fileMetadataCacheProvider,
-			trackedFile.path
-		);
+
 		if (trackedFile.supposedList === "created") {
 			if (settings.combineCreatedAndModified) {
-				modified.push(formattedOutput);
+				modified.push({
+					file: file,
+					path: trackedFile.path,
+				});
 			} else {
-				created.push(formattedOutput);
+				created.push({
+					file: file,
+					path: trackedFile.path,
+				});
 			}
 		} else if (trackedFile.supposedList === "modified") {
-			modified.push(formattedOutput);
+			modified.push({
+				file: file,
+				path: trackedFile.path,
+			});
 		} else if (trackedFile.supposedList === "deleted") {
-			deleted.push(formattedOutput);
+			deleted.push({
+				file: file,
+				path: trackedFile.path,
+			});
 		}
 	}
 
-	return { created, modified, deleted };
+	// Sort the file lists based on settings
+	const sortedCreated = sortList(created, settings.sortCreated);
+
+	const sortedModified = sortList(modified, settings.sortModified);
+
+	const sortedDeleted = sortList(deleted, settings.sortDeleted);
+
+	// format
+	const formattedCreated = sortedCreated.map((file) => {
+		const outputFormatToUse = settings.separateOutputFormats
+			? settings.createdFormat
+			: settings.outputFormat;
+		return replacementDictionary.getOutputPostReplacement(
+			outputFormatToUse,
+			file.file,
+			fileMetadataCacheProvider,
+			file.path
+		);
+	});
+
+	const formattedModified = sortedModified.map((file) => {
+		const outputFormatToUse = settings.separateOutputFormats
+			? settings.modifiedFormat
+			: settings.outputFormat;
+		return replacementDictionary.getOutputPostReplacement(
+			outputFormatToUse,
+			file.file,
+			fileMetadataCacheProvider,
+			file.path
+		);
+	});
+
+	const formattedDeleted = sortedDeleted.map((file) => {
+		const outputFormatToUse = settings.separateOutputFormats
+			? settings.deletedFormat
+			: settings.outputFormat;
+		return replacementDictionary.getOutputPostReplacement(
+			outputFormatToUse,
+			file.file,
+			fileMetadataCacheProvider,
+			file.path
+		);
+	});
+
+	return {
+		created: formattedCreated,
+		modified: formattedModified,
+		deleted: formattedDeleted,
+	};
 }
