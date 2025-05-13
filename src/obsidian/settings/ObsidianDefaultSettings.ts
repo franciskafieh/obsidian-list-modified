@@ -14,6 +14,7 @@ export const OBSIDIAN_DEFAULT_SETTINGS: Settings = {
 	modifiedFormat: "- [[link]]",
 	deletedFormat: "- [[path]]",
 	timeFormat: "h:mm A",
+	autoEmbedAttachments: false,
 
 	// LOG NOTE
 	autoCreateLogNote: true,

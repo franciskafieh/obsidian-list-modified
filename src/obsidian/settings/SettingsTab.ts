@@ -269,6 +269,21 @@ export class SettingsTab extends PluginSettingTab {
 					})
 			);
 
+		new Setting(containerEl)
+			.setName("Auto embed attachments")
+			.setDesc(
+				"Automatically embed attachments in the log note. " +
+					"Primarily for generating previews for canvases."
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(settings.autoEmbedAttachments)
+					.onChange(async (value) => {
+						settings.autoEmbedAttachments = value;
+						saveSettingsAndWriteToLogNote();
+					});
+			});
+
 		// DIVIDERS
 		new Setting(containerEl).setName("Dividers").setHeading();
 

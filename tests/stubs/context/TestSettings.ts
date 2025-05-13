@@ -12,6 +12,7 @@ export class TestSettings implements Settings {
 	modifiedFormat = OBSIDIAN_DEFAULT_SETTINGS.modifiedFormat;
 	deletedFormat = OBSIDIAN_DEFAULT_SETTINGS.deletedFormat;
 	timeFormat = OBSIDIAN_DEFAULT_SETTINGS.timeFormat;
+	autoEmbedAttachments = OBSIDIAN_DEFAULT_SETTINGS.autoEmbedAttachments;
 	autoCreateLogNote = OBSIDIAN_DEFAULT_SETTINGS.autoCreateLogNote;
 	logNoteType = OBSIDIAN_DEFAULT_SETTINGS.logNoteType;
 	writeInterval = OBSIDIAN_DEFAULT_SETTINGS.writeInterval;

@@ -14,6 +14,7 @@ export interface Settings {
 	modifiedFormat: string;
 	deletedFormat: string;
 	timeFormat: string;
+	autoEmbedAttachments: boolean;
 
 	// LOG NOTE
 	autoCreateLogNote: boolean;

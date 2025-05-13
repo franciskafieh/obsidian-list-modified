@@ -90,6 +90,11 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
+	public setAutoEmbedAttachments(autoEmbed: boolean) {
+		this.testSettings.autoEmbedAttachments = autoEmbed;
+		return this;
+	}
+
 	public setAutoCreateLogNote(autoCreate: boolean) {
 		this.testSettings.autoCreateLogNote = autoCreate;
 		return this;

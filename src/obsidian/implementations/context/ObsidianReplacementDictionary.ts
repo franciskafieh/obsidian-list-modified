@@ -10,11 +10,7 @@ export class ObsidianReplacementDictionary extends ReplacementDictionary {
 		{ template: "path", replaceWith: (file: File) => file.path },
 		{
 			template: "link",
-			replaceWith: (file: File) =>
-				getPlugin().app.fileManager.generateMarkdownLink(
-					file as TFile,
-					getLogNote()?.path || ""
-				),
+			replaceWith: (file: File) => getLink(file),
 		},
 		{ template: "name", replaceWith: (file: File) => file.basename },
 		{
@@ -50,4 +46,20 @@ function getTags(
 	const tags = fileMetadataCacheProvider.getAllTagsFromFile(file);
 	if (!tags) return "";
 	return tags.map((tag) => "\\" + tag).join(", ");
+}
+
+function getLink(file: File): string {
+	const link = getPlugin().app.fileManager.generateMarkdownLink(
+		file as TFile,
+		getLogNote()?.path || ""
+	);
+
+	// remove "!" if autoEmbedAttachments is false
+	if (!getSettings().autoEmbedAttachments) {
+		if (link.startsWith("!")) {
+			return link.slice(1);
+		}
+	}
+
+	return link;
 }
