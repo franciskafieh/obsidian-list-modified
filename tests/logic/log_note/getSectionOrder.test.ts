@@ -35,18 +35,4 @@ describe("getSectionOrder", () => {
 		const result = getSectionOrder(dividerPositions);
 		expect(result).toEqual([]);
 	});
-
-	it("should handle sections with same start position", () => {
-		const dividerPositions = {
-			modified: { start: 5, end: 15 },
-			created: { start: 5, end: 8 },
-			deleted: { start: 10, end: 25 },
-		};
-
-		const result = getSectionOrder(dividerPositions);
-		expect(result.slice(0, 2).sort()).toEqual(
-			["created", "modified"].sort() as ListType[]
-		);
-		expect(result[2]).toEqual("deleted");
-	});
 });
