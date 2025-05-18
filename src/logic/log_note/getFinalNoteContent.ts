@@ -3,6 +3,7 @@ import { ListType } from "../../types";
 import { fillLineXToYWithContent } from "./fillLineXToYWithContent";
 import { getDividerPositions } from "./getDividerPositions";
 import { getFill } from "./getFill";
+import { getSectionOrder } from "./getSectionOrder";
 
 export function getFinalNoteContent(fileContent: string, context: Context) {
 	const settings = context.settings;
@@ -59,19 +60,13 @@ export function getFinalNoteContent(fileContent: string, context: Context) {
 
 	let finalContent = contentByLine;
 
+	// get sections in order of appearance in the note
+	const sectionOrder = getSectionOrder(dividerPositions);
+
 	// netLineOffset takes into account how many lines
 	// the content has been offset due to fill expansion/shrinking of dividers
 	let netLineOffset = 0;
-	for (const l in fill) {
-		const listType = l as ListType;
-
-		if (
-			dividerPositions[listType].start === -1 ||
-			dividerPositions[listType].end === -1
-		) {
-			continue;
-		}
-
+	for (const listType of sectionOrder) {
 		const filled = fillLineXToYWithContent(
 			finalContent,
 			dividerPositions[listType].start + 1 + netLineOffset,

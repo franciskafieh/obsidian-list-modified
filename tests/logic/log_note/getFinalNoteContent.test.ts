@@ -161,4 +161,28 @@ describe("final note content should be correct", () => {
 			)
 		).toEqual("start\n%% LIST MODIFIED %%\nabc");
 	});
+
+	it("should handle modified before created order correctly with no created modified file", () => {
+		expect(
+			getTestFinalNoteContent(
+				"%% LIST MODIFIED %%\nold modified\n%% END %%\n%% LIST CREATED %%\nold created\n%% END %%\n%% LIST DELETED %%\nold deleted\n%% END %%",
+				new TestSettingsBuilder()
+					.setTrackedFiles([
+						{
+							path: "modified.md",
+							matchesCriteria: true,
+							supposedList: "modified",
+						},
+						{
+							path: "deleted.md",
+							matchesCriteria: true,
+							supposedList: "deleted",
+						},
+					])
+					.build()
+			)
+		).toEqual(
+			"%% LIST MODIFIED %%\n- [[modified]]\n%% END %%\n%% LIST CREATED %%\n%% END %%\n%% LIST DELETED %%\n- [[deleted]]\n%% END %%"
+		);
+	});
 });

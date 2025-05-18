@@ -88,4 +88,21 @@ describe("dividers should be matched as expected", () => {
 			end: 1,
 		});
 	});
+
+	it("should handle modified before created order", () => {
+		const modifiedFirst = [
+			"%% LIST MODIFIED %%",
+			"%% END %%",
+			"%% LIST CREATED %%",
+			"%% END %%",
+			"%% LIST DELETED %%",
+			"%% END %%",
+		];
+
+		expect(getDividerPositions(modifiedFirst)).toEqual({
+			modified: { start: 0, end: 1 },
+			created: { start: 2, end: 3 },
+			deleted: { start: 4, end: 5 },
+		});
+	});
 });
