@@ -1,7 +1,7 @@
 {
     "id": "obsidian-list-modified",
     "name": "List Modified",
-    "version": "3.6.0",
+    "version": "3.7.0",
     "minAppVersion": "1.5.7",
     "description": "The advanced and adaptive changelog. Links all modified files meeting certain criteria to a timed (daily, weekly, monthly) note.",
     "author": "Francis Kafieh",
