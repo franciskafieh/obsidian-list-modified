@@ -12,46 +12,42 @@ import fileMatchesCriteria from "../../logic/file_tracking/fileMatchesCriteria";
 
 const onVaultRename = serialize(
 	async (file: TAbstractFile, oldPath: string) => {
-		if (file instanceof TFile) {
-			const settings = getSettings();
+		if (!(file instanceof TFile)) return;
 
-			consoleWarnIfVerboseMode(
-				"File renamed: " + file.path,
-				settings.verboseModeEnabled
-			);
+		const settings = getSettings();
 
-			// if entry with current new path, remove it (assume it was previously deleted)
-			const currFile = findTrackedFileWithPath(file.path, settings);
+		consoleWarnIfVerboseMode(
+			"File renamed: " + file.path,
+			settings.verboseModeEnabled
+		);
 
-			if (currFile) {
-				settings.trackedFiles.remove(currFile);
-			}
+		// if entry with current new path, remove it (assume it was previously deleted)
+		const currFile = findTrackedFileWithPath(file.path, settings);
 
-			const oldFile = findTrackedFileWithPath(oldPath, settings);
-			const tags =
-				// @ts-ignore
-				getAllTags(
-					getPlugin().app.metadataCache.getFileCache(file) || {}
-				)?.map((tag) => tag.substring(1)) || null;
+		if (currFile) {
+			settings.trackedFiles.remove(currFile);
+		}
 
-			if (oldFile) {
-				// rename file if exists previously in tracked files array
-				oldFile.path = file.path;
-				// update file matches criteria since the file was moved (e.g. new name, new path)
-				oldFile.matchesCriteria = fileMatchesCriteria(
-					file,
-					tags,
-					settings
-				);
-			}
-
-			// this makes sure link does not mess up if user has alwaysUpdateLinks disabled
+		const oldFile = findTrackedFileWithPath(oldPath, settings);
+		const tags =
 			// @ts-ignore
-			if (!getPlugin().app.vault.getConfig("alwaysUpdateLinks")) {
-				await saveSettings();
-			} else {
-				await saveSettingsAndWriteToLogNote();
-			}
+			getAllTags(
+				getPlugin().app.metadataCache.getFileCache(file) || {}
+			)?.map((tag) => tag.substring(1)) || null;
+
+		if (oldFile) {
+			// rename file if exists previously in tracked files array
+			oldFile.path = file.path;
+			// update file matches criteria since the file was moved (e.g. new name, new path)
+			oldFile.matchesCriteria = fileMatchesCriteria(file, tags, settings);
+		}
+
+		// this makes sure link does not mess up if user has alwaysUpdateLinks disabled
+		// @ts-ignore
+		if (!getPlugin().app.vault.getConfig("alwaysUpdateLinks")) {
+			await saveSettings();
+		} else {
+			await saveSettingsAndWriteToLogNote();
 		}
 	}
 );
