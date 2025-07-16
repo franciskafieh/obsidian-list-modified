@@ -48,7 +48,6 @@ const onVaultDelete = serialize(async (file: TAbstractFile) => {
 
 	if (currFile) {
 		currFile.supposedList = "deleted";
-		currFile.matchesCriteria = true;
 	} else {
 		settings.trackedFiles.push({
 			path: file.path,
