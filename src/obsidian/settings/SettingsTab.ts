@@ -21,7 +21,6 @@ import {
 	displayNoticeAndWarn,
 } from "../../utils/alerter";
 import fileMatchesCriteria from "../../logic/file_tracking/fileMatchesCriteria";
-import { get } from "http";
 
 export class SettingsTab extends PluginSettingTab {
 	display(): void {
