@@ -1,5 +1,12 @@
-import { PluginSettingTab, Setting } from "obsidian";
 import {
+	debounce,
+	getAllTags,
+	PluginSettingTab,
+	Setting,
+	TFile,
+} from "obsidian";
+import {
+	getPlugin,
 	getSettings,
 	saveSettings,
 	saveSettingsAndWriteToLogNote,
@@ -9,7 +16,12 @@ import { convertCommaListToArray } from "../../utils/converCommaListToArray";
 import { getLogNote } from "../log_note/logNote";
 import { getContentWithoutCreatedSection } from "../../logic/log_note/getContentWithoutCreatedSection";
 import { ConfirmModal } from "../modal/ConfirmModal";
-import { displayNoticeAndWarn } from "../../utils/alerter";
+import {
+	consoleWarnIfVerboseMode,
+	displayNoticeAndWarn,
+} from "../../utils/alerter";
+import fileMatchesCriteria from "../../logic/file_tracking/fileMatchesCriteria";
+import { get } from "http";
 
 export class SettingsTab extends PluginSettingTab {
 	display(): void {
@@ -96,7 +108,7 @@ export class SettingsTab extends PluginSettingTab {
 					.setValue(settings.excludedTags.join(", "))
 					.onChange(async (value) => {
 						settings.excludedTags = convertCommaListToArray(value);
-						saveSettingsAndWriteToLogNote();
+						updateCriteriaAndWriteToLogNote();
 					})
 			);
 
@@ -112,7 +124,7 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.excludedFolders =
 							convertCommaListToArray(value);
-						saveSettingsAndWriteToLogNote();
+						updateCriteriaAndWriteToLogNote();
 					})
 			);
 
@@ -128,7 +140,7 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.excludedNameContains =
 							convertCommaListToArray(value);
-						saveSettingsAndWriteToLogNote();
+						updateCriteriaAndWriteToLogNote();
 					})
 			);
 
@@ -146,7 +158,7 @@ export class SettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						settings.excludedExtensions =
 							convertCommaListToArray(value);
-						saveSettingsAndWriteToLogNote();
+						updateCriteriaAndWriteToLogNote();
 					})
 			);
 
@@ -540,3 +552,32 @@ export class SettingsTab extends PluginSettingTab {
 		coffeeImg.height = 30;
 	}
 }
+
+const updateCriteriaAndWriteToLogNote = debounce(
+	() => {
+		const settings = getSettings();
+		for (const trackedFile of settings.trackedFiles) {
+			const file = getPlugin().app.vault.getAbstractFileByPath(
+				trackedFile.path
+			);
+			if (!file || !(file instanceof TFile)) {
+				continue;
+			}
+
+			trackedFile.matchesCriteria = fileMatchesCriteria(
+				file,
+				getAllTags(
+					getPlugin().app.metadataCache.getFileCache(file) || {}
+				)?.map((tag) => tag.substring(1)) || null,
+				settings
+			);
+		}
+		consoleWarnIfVerboseMode(
+			"revalidated all file matches criteria.",
+			settings.verboseModeEnabled
+		);
+		saveSettingsAndWriteToLogNote();
+	},
+	2000, // 2 second delay
+	true // reset timer on every call
+);
