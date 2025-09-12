@@ -67,7 +67,7 @@ describe("dividers should be matched as expected", () => {
 		});
 	});
 
-	it("should match first end pos if duplicated", () => {
+	it("should match second end pos if duplicated", () => {
 		const duplicateEndPos = [
 			"%% LIST DELETED %%",
 			"%% END %%",
@@ -76,7 +76,7 @@ describe("dividers should be matched as expected", () => {
 
 		expect(getDividerPositions(duplicateEndPos).deleted).toEqual({
 			start: 0,
-			end: 1,
+			end: 2,
 		});
 	});
 
@@ -103,6 +103,30 @@ describe("dividers should be matched as expected", () => {
 			modified: { start: 0, end: 1 },
 			created: { start: 2, end: 3 },
 			deleted: { start: 4, end: 5 },
+		});
+	});
+
+	it("should handle duplicated start and end dividers for each section independently, selecting the last one", () => {
+		const duplicatedAll = [
+			"%% LIST MODIFIED %%",
+			"%% END %%",
+			"%% LIST CREATED %%",
+			"%% END %%",
+			"%% LIST DELETED %%",
+			"%% END %%",
+			"%% LIST MODIFIED %%",
+			"%% END %%",
+			"%% LIST CREATED %%",
+			"%% END %%",
+			"%% LIST DELETED %%",
+			"%% END %%",
+		];
+
+		const result = getDividerPositions(duplicatedAll);
+		expect(result).toEqual({
+			modified: { start: 6, end: 7 },
+			created: { start: 8, end: 9 },
+			deleted: { start: 10, end: 11 },
 		});
 	});
 });

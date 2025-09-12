@@ -29,19 +29,13 @@ export function getDividerPositions(text: string[]) {
 		} else if (text[i].trim() === "%% END %%") {
 			switch (prevMatched) {
 				case "created":
-					if (index.created.end === -1) {
-						index.created.end = i;
-					}
+					index.created.end = i;
 					break;
 				case "modified":
-					if (index.modified.end === -1) {
-						index.modified.end = i;
-					}
+					index.modified.end = i;
 					break;
 				case "deleted":
-					if (index.deleted.end === -1) {
-						index.deleted.end = i;
-					}
+					index.deleted.end = i;
 					break;
 			}
 		}
