@@ -16,10 +16,11 @@ const onVaultDelete = serialize(async (file: TAbstractFile) => {
 
 	if (
 		settings.excludedExtensions.includes(file.extension) ||
-		file.extension === "tmp"
+		file.extension === "tmp" ||
+		file.path.contains("/_gsdata_/")
 	) {
 		consoleWarnIfVerboseMode(
-			`ignoring deleted ${file.path} file since it has extension`,
+			`ignoring deleted ${file.path} file since it has bandaid extension or name`,
 			getSettings().verboseModeEnabled
 		);
 		return;
