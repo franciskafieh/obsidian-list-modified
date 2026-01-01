@@ -49,7 +49,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Auto create log note")
 			.setDesc(
 				"If this setting is turned off, your modified files will not " +
-					"be linked unless you create a log note yourself."
+				"be linked unless you create a log note yourself."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -81,9 +81,9 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Write interval")
 			.setDesc(
 				"The interval (in seconds) at which to write your modified files to your daily note. " +
-					"Set to 0 to disable the interval and write to your file directly after every change. " +
-					"This is recommended especially if you do not use a sync solution. " +
-					"Please restart Obsidian after changing this value."
+				"Set to 0 to disable the interval and write to your file directly after every change. " +
+				"This is recommended especially if you do not use a sync solution. " +
+				"Please restart Obsidian after changing this value."
 			)
 			.addText((text) =>
 				text
@@ -147,8 +147,8 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Excluded extensions")
 			.setDesc(
 				"Files with these extensions will not be tracked. " +
-					"Please exclude the period. This is mostly useful for " +
-					"deleted files that are not notes, for example temporary/sync files."
+				"Please exclude the period. This is mostly useful for " +
+				"deleted files that are not notes, for example temporary/sync files."
 			)
 			.addText((text) =>
 				text
@@ -284,7 +284,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Auto embed attachments")
 			.setDesc(
 				"Automatically embed attachments in the log note. " +
-					"Primarily for generating previews for canvases."
+				"Primarily for generating previews for canvases."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -302,7 +302,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Combine created and modified")
 			.setDesc(
 				"Combine the 'created' and 'modified' dividers into one. This will disable the " +
-					"created divider and use the modified divider for both."
+				"created divider and use the modified divider for both."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -325,7 +325,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Auto remove dividers")
 			.setDesc(
 				"Automatically remove the %% dividers %% in old log note " +
-					"when a new one is created."
+				"when a new one is created."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -341,7 +341,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Auto create created divider")
 			.setDesc(
 				"Automatically append a 'created' divider to " +
-					"the bottom of your note if it is not present."
+				"the bottom of your note if it is not present."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -356,7 +356,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Auto create modified divider")
 			.setDesc(
 				"Automatically append a 'modified' divider to " +
-					"the bottom of your note if it is not present."
+				"the bottom of your note if it is not present."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -371,7 +371,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Auto create deleted divider")
 			.setDesc(
 				"Automatically append a 'deleted' divider to " +
-					"the bottom of your note if it is not present."
+				"the bottom of your note if it is not present."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -433,7 +433,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Sort deleted files")
 			.setDesc(
 				"Method to sort files in the deleted list. For now, " +
-					"only sort by name is possible"
+				"only sort by name is possible"
 			)
 			.addDropdown((dropdown) => {
 				dropdown
@@ -466,7 +466,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Clear tracked files")
 			.setDesc(
 				"This will get rid of all current modified/created/deleted files, " +
-					"as if it were a new day."
+				"as if it were a new day."
 			)
 			.addButton((button) => {
 				button
@@ -475,8 +475,8 @@ export class SettingsTab extends PluginSettingTab {
 						new ConfirmModal(
 							this.app,
 							"Are you sure you want to clear tracked files? This will get " +
-								"rid of all current modified/created/deleted files, " +
-								"as if it is a new day. This cannot be undone.",
+							"rid of all current modified/created/deleted files, " +
+							"as if it is a new day. This cannot be undone.",
 							async (result) => {
 								if (result === "yes") {
 									displayNoticeAndWarn(
@@ -491,10 +491,27 @@ export class SettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
+			.setName("Ignored Interval (Seconds)")
+			.setDesc(
+				"Files modified within this number of seconds of their last modification will be ignored. " +
+				"Useful for preventing duplicate entries from automated tools. " +
+				"Default: 1s. Recommended for scripts: 60s."
+			)
+			.addText((text) =>
+				text
+					.setPlaceholder("1")
+					.setValue(String(settings.timeoutThreshold))
+					.onChange(async (value) => {
+						settings.timeoutThreshold = parseInt(value);
+						await saveSettings();
+					})
+			);
+
+		new Setting(containerEl)
 			.setName("Verbose mode")
 			.setDesc(
 				"Enable verbose mode for debugging. " +
-					"This only needs to be on for support and development purposes."
+				"This only needs to be on for support and development purposes."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -509,7 +526,7 @@ export class SettingsTab extends PluginSettingTab {
 			.setName("Disable plugin on this device")
 			.setDesc(
 				"Disable the plugin on this device. This setting will not sync. " +
-					"Use this to resolve sync conflicts or temporarily disable the plugin."
+				"Use this to resolve sync conflicts or temporarily disable the plugin."
 			)
 			.addToggle((toggle) => {
 				toggle

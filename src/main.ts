@@ -41,6 +41,21 @@ export default class ListModified extends Plugin {
 				// onLayoutReady prevents this from firing for every single file in the vault on startup.
 				this.registerEvent(this.app.vault.on("create", onVaultCreate));
 			});
+
+			// Register command to toggle timeout threshold
+			this.addCommand({
+				id: "toggle-timeout-threshold",
+				name: "Toggle Timeout Threshold (1s <-> 60s)",
+				callback: async () => {
+					const current = settings.timeoutThreshold;
+					const newThreshold = current === 1 ? 60 : 1;
+					settings.timeoutThreshold = newThreshold;
+					await saveSettings();
+					displayNoticeAndWarn(
+						`Timeout Threshold set to ${newThreshold} second(s).`
+					);
+				},
+			});
 		}
 
 		this.migrateToThreePointZeroIfNeeded(settings);
@@ -122,8 +137,8 @@ export default class ListModified extends Plugin {
 		saveSettings();
 		displayNoticeAndWarn(
 			"Migration complete. Your settings have been preserved, but this update adds new features. " +
-				"The plugin WILL NOT WORK until you configure the new settings. Please read " +
-				'<a href="https://github.com/franciskafieh/obsidian-list-modified/wiki">https://github.com/franciskafieh/obsidian-list-modified/wiki</a> for info.'
+			"The plugin WILL NOT WORK until you configure the new settings. Please read " +
+			'<a href="https://github.com/franciskafieh/obsidian-list-modified/wiki">https://github.com/franciskafieh/obsidian-list-modified/wiki</a> for info.'
 		);
 	}
 }

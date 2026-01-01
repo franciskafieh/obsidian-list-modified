@@ -165,6 +165,11 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
+	public setTimeoutThreshold(threshold: number) {
+		this.testSettings.timeoutThreshold = threshold;
+		return this;
+	}
+
 	public build() {
 		return this.testSettings;
 	}

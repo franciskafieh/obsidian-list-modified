@@ -29,6 +29,7 @@ export class TestSettings implements Settings {
 	sortModified = OBSIDIAN_DEFAULT_SETTINGS.sortModified;
 	sortDeleted = OBSIDIAN_DEFAULT_SETTINGS.sortDeleted;
 	verboseModeEnabled = OBSIDIAN_DEFAULT_SETTINGS.verboseModeEnabled;
+	timeoutThreshold = OBSIDIAN_DEFAULT_SETTINGS.timeoutThreshold;
 	lastTrackedDate = OBSIDIAN_DEFAULT_SETTINGS.lastTrackedDate;
 	trackedFiles = OBSIDIAN_DEFAULT_SETTINGS.trackedFiles;
 }
