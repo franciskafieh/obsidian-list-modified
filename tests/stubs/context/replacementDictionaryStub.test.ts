@@ -19,6 +19,19 @@ describe("built-in replacements should work as expected", () => {
 		expect(replacement).toBe("a/b/test.md");
 	});
 
+	it("should return folder of file if given a simple [[folder]] template", () => {
+		dict = new TestReplacementDictionary();
+
+		const replacement = dict.getOutputPostReplacement(
+			"[[folder]]",
+			getSingleFileWithPath("a/b/test.md"),
+			new TestFileMetadataCacheProvider(),
+			"a/b/test.md"
+		);
+
+		expect(replacement).toBe("a/b");
+	});
+
 	it("tag templates and stubbed cache should work", () => {
 		dict = new TestReplacementDictionary();
 
