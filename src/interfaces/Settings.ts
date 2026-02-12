@@ -9,10 +9,14 @@ export interface Settings {
 
 	// FORMATTING
 	outputFormat: string;
+	outputPrefix: string;
 	separateOutputFormats: boolean;
 	createdFormat: string;
+	createdPrefix: string;
 	modifiedFormat: string;
+	modifiedPrefix: string;
 	deletedFormat: string;
+	deletedPrefix: string;
 	timeFormat: string;
 	autoEmbedAttachments: boolean;
 

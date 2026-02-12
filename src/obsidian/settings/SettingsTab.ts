@@ -196,6 +196,22 @@ export class SettingsTab extends PluginSettingTab {
 		outputFormatSetting.settingEl.style.opacity =
 			settings.separateOutputFormats ? "0.5" : "1"; // fade out and disable if separate output formats
 
+		const outputPrefixSetting = new Setting(containerEl)
+			.setName("Output Prefix")
+			.setDesc("Prefix for the output. The line will be split on \\n")
+			.addText((text) =>
+				text
+					.setValue(settings.outputPrefix)
+					.onChange(async (value) => {
+						settings.outputPrefix = value;
+						saveSettingsAndWriteToLogNote();
+					})
+			);
+
+		outputPrefixSetting.setDisabled(settings.separateOutputFormats);
+		outputPrefixSetting.settingEl.style.opacity =
+			settings.separateOutputFormats ? "0.5" : "1"; // fade out and disable if separate output formats
+
 		new Setting(containerEl)
 			.setName("Separate output formats")
 			.setDesc(
@@ -209,6 +225,10 @@ export class SettingsTab extends PluginSettingTab {
 
 						outputFormatSetting.setDisabled(value);
 						outputFormatSetting.settingEl.style.opacity = value
+							? "0.5"
+							: "1";
+						outputPrefixSetting.setDisabled(value);
+						outputPrefixSetting.settingEl.style.opacity = value
 							? "0.5"
 							: "1";
 						separateOutputFormats.style.display = value
@@ -238,6 +258,18 @@ export class SettingsTab extends PluginSettingTab {
 			);
 
 		new Setting(separateOutputFormats)
+			.setName("↳ Created output prefix")
+			.setDesc("Output prefix for created files. The line will be split on \\n")
+			.addText((text) =>
+				text
+					.setValue(settings.createdPrefix)
+					.onChange(async (value) => {
+						settings.createdPrefix = value;
+						saveSettingsAndWriteToLogNote();
+					})
+			);
+
+		new Setting(separateOutputFormats)
 			.setName("↳ Modified output format")
 			.setDesc("Output format for modified files.")
 			.addText((text) =>
@@ -246,6 +278,18 @@ export class SettingsTab extends PluginSettingTab {
 					.setValue(settings.modifiedFormat)
 					.onChange(async (value) => {
 						settings.modifiedFormat = value;
+						saveSettingsAndWriteToLogNote();
+					})
+			);
+
+		new Setting(separateOutputFormats)
+			.setName("↳ Modified output prefix")
+			.setDesc("Output prefix for modified files. The line will be split on \\n")
+			.addText((text) =>
+				text
+					.setValue(settings.modifiedPrefix)
+					.onChange(async (value) => {
+						settings.modifiedPrefix = value;
 						saveSettingsAndWriteToLogNote();
 					})
 			);
@@ -261,6 +305,18 @@ export class SettingsTab extends PluginSettingTab {
 					.setValue(settings.deletedFormat)
 					.onChange(async (value) => {
 						settings.deletedFormat = value;
+						saveSettingsAndWriteToLogNote();
+					})
+			);
+
+		new Setting(separateOutputFormats)
+			.setName("↳ Deleted output prefix")
+			.setDesc("Output prefix for deleted files. The line will be split on \\n")
+			.addText((text) =>
+				text
+					.setValue(settings.deletedPrefix)
+					.onChange(async (value) => {
+						settings.deletedPrefix = value;
 						saveSettingsAndWriteToLogNote();
 					})
 			);

@@ -9,10 +9,14 @@ export const OBSIDIAN_DEFAULT_SETTINGS: Settings = {
 
 	// FORMATTING
 	outputFormat: "- [[link]]",
+	outputPrefix: "",
 	separateOutputFormats: false,
 	createdFormat: "- [[link]]",
+	createdPrefix: "",
 	modifiedFormat: "- [[link]]",
+	modifiedPrefix: "",
 	deletedFormat: "- [[path]]",
+	deletedPrefix: "",
 	timeFormat: "h:mm A",
 	autoEmbedAttachments: false,
 

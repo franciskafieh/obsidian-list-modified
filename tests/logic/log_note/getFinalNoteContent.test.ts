@@ -1,13 +1,13 @@
-import { describe, it, expect } from "bun:test";
-import { getFinalNoteContent } from "../../../src/logic/log_note/getFinalNoteContent";
-import { TestSettingsBuilder } from "../../stubs/context/TestSettingsBuilder";
+import {describe, expect, it} from "bun:test";
+import {getFinalNoteContent} from "../../../src/logic/log_note/getFinalNoteContent";
+import {TestSettingsBuilder} from "../../stubs/context/TestSettingsBuilder";
 
-import { TestReplacementDictionary } from "../../stubs/context/TestReplacementDictionary";
-import { TestFileConverter } from "../../stubs/context/TestFileConverter";
-import { Settings } from "../../../src/interfaces/Settings";
-import { TestVault } from "../../stubs/context/TestVault";
-import { TestContext } from "../../stubs/context/TestContext";
-import { TestFileMetadataCacheProvider } from "../../stubs/context/TestFileMetadataCacheProvider";
+import {TestReplacementDictionary} from "../../stubs/context/TestReplacementDictionary";
+import {TestFileConverter} from "../../stubs/context/TestFileConverter";
+import {Settings} from "../../../src/interfaces/Settings";
+import {TestVault} from "../../stubs/context/TestVault";
+import {TestContext} from "../../stubs/context/TestContext";
+import {TestFileMetadataCacheProvider} from "../../stubs/context/TestFileMetadataCacheProvider";
 
 // no complicated inner-working tests here. See inner function calls for those.
 // these tests are more of "integration" tests.
@@ -36,7 +36,7 @@ describe("final note content should be correct", () => {
 		expect(
 			getTestFinalNoteContent(
 				"%% LIST MODIFIED %%\n%% END %%\nabc",
-				new TestSettingsBuilder().build()
+				new TestSettingsBuilder().setOutputPrefix("This prefix should not appear").build()
 			)
 		).toEqual("%% LIST MODIFIED %%\n%% END %%\nabc");
 	});
@@ -56,6 +56,55 @@ describe("final note content should be correct", () => {
 					.build()
 			)
 		).toEqual("%% LIST MODIFIED %%\n- [[c]]\n%% END %%\nabc");
+	});
+
+	it("should add prefix content if tracked file and its divider exists", () => {
+		expect(
+			getTestFinalNoteContent(
+				"%% LIST MODIFIED %%\n%% END %%\nabc",
+				new TestSettingsBuilder()
+					.setTrackedFiles([
+						{
+							path: "c.md",
+							matchesCriteria: true,
+							supposedList: "modified",
+						},
+					])
+					.setOutputPrefix("Introductory prefix\nOn multiple lines.")
+					.build()
+			)
+		).toEqual("%% LIST MODIFIED %%\nIntroductory prefix\nOn multiple lines.\n- [[c]]\n%% END %%\nabc");
+	});
+
+	it("should add specific prefix content if separate output formats is enabled", () => {
+		expect(
+			getTestFinalNoteContent(
+				"%% LIST CREATED %%\n%% END %%\n%% LIST MODIFIED %%\n%% END %%\n%% LIST DELETED %%\n%% END %%\nabc",
+				new TestSettingsBuilder()
+					.setTrackedFiles([
+						{
+							path: "created.md",
+							matchesCriteria: true,
+							supposedList: "created",
+						},
+						{
+							path: "modified.md",
+							matchesCriteria: true,
+							supposedList: "modified",
+						},
+						{
+							path: "deleted.md",
+							matchesCriteria: true,
+							supposedList: "deleted",
+						},
+					])
+					.setSeparateOutputFormats(true)
+					.setCreatedPrefix("Created Prefix")
+					.setModifiedPrefix("Modified Prefix")
+					.setDeletedPrefix("Deleted Prefix")
+					.build()
+			)
+		).toEqual("%% LIST CREATED %%\nCreated Prefix\n- [[created]]\n%% END %%\n%% LIST MODIFIED %%\nModified Prefix\n- [[modified]]\n%% END %%\n%% LIST DELETED %%\nDeleted Prefix\n- deleted.md\n%% END %%\nabc");
 	});
 
 	it("should add content and divider if divider should be auto-created", () => {
