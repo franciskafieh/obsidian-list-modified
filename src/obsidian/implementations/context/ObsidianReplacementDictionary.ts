@@ -10,7 +10,7 @@ export class ObsidianReplacementDictionary extends ReplacementDictionary {
 		{ template: "path", replaceWith: (file: File) => file.path },
 		{
 			template: "folder",
-			replaceWith: (file: File) => file.parent?.path? file.parent?.path : ""
+			replaceWith: (file: File) => file.parent?.path ?? ""
 		},
 		{
 			template: "link",
