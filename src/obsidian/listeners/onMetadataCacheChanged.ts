@@ -22,12 +22,15 @@ const onMetadataCacheChanged = serialize(
 			settings.verboseModeEnabled
 		);
 
-		// if mtime is not within 1 second of now, ignore. Most likely a file being
-		// indexed/synced OR an old log note with the dividers being removed, mtime set to 0
+		// if mtime is not within the configured threshold of now, ignore.
+		// This is to prevent "echoes" (Obsidian reacting to its own internal updates)
+		// and to ignore old files during startup scans or cloud syncs.
+		// Default is 1 second (1000ms). Can be increased for external tools (CLI).
+		const threshold = settings.timeoutThreshold * 1000;
 
-		if (Date.now() - file.stat.mtime >= 1000) {
+		if (Date.now() - file.stat.mtime >= threshold) {
 			consoleWarnIfVerboseMode(
-				"Mtime not within 1 second of now. Returning...",
+				`Mtime not within ${settings.timeoutThreshold} second(s) of now. Returning...`,
 				settings.verboseModeEnabled
 			);
 			return;
