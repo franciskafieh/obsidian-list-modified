@@ -65,6 +65,11 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
+	public setOutputPrefix(prefix: string) {
+		this.testSettings.outputPrefix = prefix;
+		return this;
+	}
+
 	public setSeparateOutputFormats(separate: boolean) {
 		this.testSettings.separateOutputFormats = separate;
 		return this;
@@ -75,13 +80,28 @@ export class TestSettingsBuilder {
 		return this;
 	}
 
+	public setCreatedPrefix(prefix: string) {
+		this.testSettings.createdPrefix = prefix;
+		return this;
+	}
+
 	public setModifiedFormat(format: string) {
 		this.testSettings.modifiedFormat = format;
 		return this;
 	}
 
+	public setModifiedPrefix(prefix: string) {
+		this.testSettings.modifiedPrefix = prefix;
+		return this;
+	}
+
 	public setDeletedFormat(format: string) {
 		this.testSettings.deletedFormat = format;
+		return this;
+	}
+
+	public setDeletedPrefix(prefix: string) {
+		this.testSettings.deletedPrefix = prefix;
 		return this;
 	}
 
