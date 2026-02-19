@@ -4,7 +4,7 @@ import { fillLineXToYWithContent } from "./fillLineXToYWithContent";
 import { getDividerPositions } from "./getDividerPositions";
 import { getFill } from "./getFill";
 import { getSectionOrder } from "./getSectionOrder";
-import {Settings} from "../../interfaces/Settings.ts";
+import { Settings } from "../../interfaces/Settings.ts";
 
 export function getFinalNoteContent(fileContent: string, context: Context) {
 	const settings = context.settings;
@@ -72,7 +72,7 @@ export function getFinalNoteContent(fileContent: string, context: Context) {
 		let fillElement =  fill[listType];
 		let prefix = getPrefix(listType, settings);
 
-		if (fillElement?.length >0 && prefix && prefix.trim().length > 0){
+		if (fillElement?.length > 0 && prefix && prefix.trim().length > 0) {
 			fillElement = prefix.split("\\n").concat(fillElement);
 		}
 		const filled = fillLineXToYWithContent(

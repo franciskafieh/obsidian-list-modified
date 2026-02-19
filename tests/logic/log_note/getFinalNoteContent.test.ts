@@ -1,13 +1,13 @@
-import {describe, expect, it} from "bun:test";
-import {getFinalNoteContent} from "../../../src/logic/log_note/getFinalNoteContent";
-import {TestSettingsBuilder} from "../../stubs/context/TestSettingsBuilder";
+import { describe, expect, it } from "bun:test";
+import { getFinalNoteContent } from "../../../src/logic/log_note/getFinalNoteContent";
+import { TestSettingsBuilder } from "../../stubs/context/TestSettingsBuilder";
 
-import {TestReplacementDictionary} from "../../stubs/context/TestReplacementDictionary";
-import {TestFileConverter} from "../../stubs/context/TestFileConverter";
-import {Settings} from "../../../src/interfaces/Settings";
-import {TestVault} from "../../stubs/context/TestVault";
-import {TestContext} from "../../stubs/context/TestContext";
-import {TestFileMetadataCacheProvider} from "../../stubs/context/TestFileMetadataCacheProvider";
+import { TestReplacementDictionary } from "../../stubs/context/TestReplacementDictionary";
+import { TestFileConverter } from "../../stubs/context/TestFileConverter";
+import { Settings } from "../../../src/interfaces/Settings";
+import { TestVault } from "../../stubs/context/TestVault";
+import { TestContext } from "../../stubs/context/TestContext";
+import { TestFileMetadataCacheProvider  } from "../../stubs/context/TestFileMetadataCacheProvider";
 
 // no complicated inner-working tests here. See inner function calls for those.
 // these tests are more of "integration" tests.
