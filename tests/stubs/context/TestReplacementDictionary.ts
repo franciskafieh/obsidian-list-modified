@@ -7,6 +7,10 @@ export class TestReplacementDictionary extends ReplacementDictionary {
 	replacements = [
 		{ template: "path", replaceWith: (file: File) => file.path },
 		{
+			template: "folder",
+			replaceWith: (file: File) => file.parent?.path? file.parent?.path : ""
+		},
+		{
 			template: "link",
 			replaceWith: (file: File) => `[[${file.basename}]]`,
 		},
