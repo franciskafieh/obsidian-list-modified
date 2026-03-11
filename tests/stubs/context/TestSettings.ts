@@ -7,10 +7,14 @@ export class TestSettings implements Settings {
 	excludedNameContains = OBSIDIAN_DEFAULT_SETTINGS.excludedNameContains;
 	excludedExtensions = OBSIDIAN_DEFAULT_SETTINGS.excludedExtensions;
 	outputFormat = OBSIDIAN_DEFAULT_SETTINGS.outputFormat;
+	outputPrefix = OBSIDIAN_DEFAULT_SETTINGS.outputPrefix;
 	separateOutputFormats = OBSIDIAN_DEFAULT_SETTINGS.separateOutputFormats;
 	createdFormat = OBSIDIAN_DEFAULT_SETTINGS.createdFormat;
+	createdPrefix = OBSIDIAN_DEFAULT_SETTINGS.createdPrefix;
 	modifiedFormat = OBSIDIAN_DEFAULT_SETTINGS.modifiedFormat;
+	modifiedPrefix = OBSIDIAN_DEFAULT_SETTINGS.modifiedPrefix;
 	deletedFormat = OBSIDIAN_DEFAULT_SETTINGS.deletedFormat;
+	deletedPrefix = OBSIDIAN_DEFAULT_SETTINGS.deletedPrefix;
 	timeFormat = OBSIDIAN_DEFAULT_SETTINGS.timeFormat;
 	autoEmbedAttachments = OBSIDIAN_DEFAULT_SETTINGS.autoEmbedAttachments;
 	autoCreateLogNote = OBSIDIAN_DEFAULT_SETTINGS.autoCreateLogNote;
